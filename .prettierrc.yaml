@@ -1,3 +1,8 @@
 singleQuote: false
 semi: true
-printWidth: 80
+printWidth: 100
+
+tailwindConfig: "./tailwind.config.js"
+
+plugins:
+  - prettier-plugin-tailwindcss
