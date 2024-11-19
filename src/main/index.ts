@@ -1,7 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { app, protocol, shell, BrowserWindow } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
+import { AssetUrl } from "../protocols/asset-url";
+import { AssetServer } from "../protocols/asset-server";
 
 function createWindow(): void {
   // Create the browser window.
@@ -35,10 +37,32 @@ function createWindow(): void {
   }
 }
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: "app-asset",
+    privileges: {
+      standard: true,
+      supportFetchAPI: true,
+      bypassCSP: true,
+    },
+  },
+]);
+
+const server = new AssetServer();
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  protocol.handle("app-asset", (request) => {
+    const asset = new AssetUrl(request.url);
+
+    if (asset.isNodeModule) {
+      return server.fromNodeModules(asset.relativeUrl);
+    } else {
+      return server.fromPublic(asset.relativeUrl);
+    }
+  });
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
 
@@ -48,9 +72,6 @@ app.whenReady().then(() => {
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
-
-  // IPC test
-  ipcMain.on("ping", () => console.log("A7A"));
 
   createWindow();
 

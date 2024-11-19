@@ -1,13 +1,11 @@
-import { Button } from "./components/ui/button";
+import EditorPlayground from "@renderer/components/EditorPlayground";
 
-function App(): JSX.Element {
+const App: React.FC = () => {
   return (
-    <div className="grid min-h-screen place-content-center">
-      <h1 className="flex items-center justify-center gap-1 text-center text-4xl font-bold text-orange-100">
-        <Button variant="default">Click Me!</Button>
-      </h1>
-    </div>
+    <main className="grid min-h-svh">
+      <EditorPlayground />
+    </main>
   );
-}
+};
 
 export default App;
