@@ -2,8 +2,8 @@ import { app, protocol, shell, BrowserWindow } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { AssetUrl } from "../protocols/asset-url";
-import { AssetServer } from "../protocols/asset-server";
+import { AssetUrl } from "@shared/protocols/asset-url";
+import { AssetServer } from "@shared/protocols/asset-server";
 
 function createWindow(): void {
   // Create the browser window.
