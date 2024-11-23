@@ -4,9 +4,8 @@ import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 
 // Custom APIs for renderer
 const api = {
-  tokenize: (request: TokenizeRequest): Promise<TokenizeResponse> => {
-    return ipcRenderer.invoke(Channels.tokenize, request);
-  },
+  tokenize: (request: TokenizeRequest): Promise<TokenizeResponse> =>
+    ipcRenderer.invoke(Channels.tokenize, request),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
