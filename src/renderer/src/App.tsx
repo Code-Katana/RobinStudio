@@ -12,7 +12,7 @@ const App: React.FC = () => {
 
   async function handleTest(): Promise<void> {
     const response: TokenizeResponse = await window.api.tokenize({
-      scanner: ScannerOptions.FA,
+      scanner: scOption,
       source: code,
     });
 
