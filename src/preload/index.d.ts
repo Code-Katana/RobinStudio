@@ -1,8 +1,11 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
+import { TokenizeRequest, TokenizeResponse } from "@shared/channels";
 
 declare global {
   interface Window {
     electron: ElectronAPI;
-    api: unknown;
+    api: {
+      tokenize: (request: TokenizeRequest) => Promise<TokenizeResponse>;
+    };
   }
 }

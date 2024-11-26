@@ -9,11 +9,18 @@ export default defineConfig({
       alias: {
         "@main": resolve("src/main"),
         "@shared": resolve("src/shared"),
+        "@resources": resolve("resources"),
       },
     },
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        "@preload": resolve("src/preload"),
+        "@shared": resolve("src/shared"),
+      },
+    },
   },
   renderer: {
     resolve: {
