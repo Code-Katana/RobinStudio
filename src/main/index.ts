@@ -1,13 +1,17 @@
-import { app, protocol, shell, BrowserWindow, ipcMain } from "electron";
+import fs from "fs";
 import path, { join } from "path";
-import * as fs from "fs";
+import { WASI } from "wasi";
+
+import { app, protocol, shell, BrowserWindow, ipcMain } from "electron";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
+import icon from "@resources/icon.png?asset";
+
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
+
+import { splitSourceCode } from "@main/lib/utils";
 import { ScannerOptions, Token } from "@shared/types";
-import { WASI } from "wasi";
+import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 
 function createWindow(): void {
   // Create the browser window.
@@ -188,11 +192,13 @@ app.on("ready", async () => {
 
       console.log("DONE: wasm instance has been leaded successfully");
 
-      const { tokenize, malloc, free, free_result, memory } = wasmModule.instance.exports as {
+      const { setup_tokenizer, tokenize, malloc, free, free_result, memory } = wasmModule.instance
+        .exports as {
         malloc: (size: number) => number;
         free: (ptr: number) => void;
         free_result: (ptr: number) => void;
-        tokenize: (sourcePtr: number, scOpt: number) => number;
+        setup_tokenizer: (sourcePtr: number, scOpt: number) => void;
+        tokenize: () => number;
         memory: WebAssembly.Memory;
       };
 
@@ -202,34 +208,64 @@ app.on("ready", async () => {
 
       const memView = new Uint8Array(memory.buffer);
 
+      const chunks = splitSourceCode(request.source);
+
       const encoder = new TextEncoder();
-      const sourceBytes = encoder.encode(request.source + "\0");
-      const sourcePtr = malloc(sourceBytes.length);
+      let sourceBytes = encoder.encode(chunks[0] + "\0");
+      let sourcePtr = malloc(sourceBytes.length);
       memView.set(sourceBytes, sourcePtr);
 
+      function updateSourcePtr(str: string): void {
+        sourceBytes = encoder.encode(str + "\0");
+        sourcePtr = malloc(sourceBytes.length);
+        memView.set(sourceBytes, sourcePtr);
+      }
+
       let resultPtr: number;
+      const tokens: Token[] = [];
+      let currentToken: Token | null = null;
 
       try {
         console.log(
           `TASK: start tokenization using ${request.scanner === ScannerOptions.FA ? "Finite Automaton" : "Hand Coded"}`,
         );
 
-        resultPtr = tokenize(sourcePtr, request.scanner);
-        if (!resultPtr) {
-          throw new Error("Tokenize returned a null pointer.");
-        } else {
-          console.log(`$resultPtr = ${resultPtr}`);
-        }
+        chunks.forEach((chunk) => {
+          updateSourcePtr(chunk);
+          setup_tokenizer(sourcePtr, request.scanner);
 
-        let result = "";
-        for (let i = resultPtr; memView[i] !== 0; i++) {
-          result += String.fromCharCode(memView[i]);
-          // console.log(`loop#${i - resultPtr}: str = ${String.fromCharCode(memView[i])}`);
-        }
+          do {
+            resultPtr = tokenize(); // 84651
+
+            let str = "";
+
+            if (!resultPtr) {
+              throw new Error("Tokenize returned a null pointer.");
+            }
+
+            console.log(`$resultPtr = ${resultPtr}`);
+
+            for (let i = resultPtr; memView[i] !== 0; i++) {
+              str += String.fromCharCode(memView[i]);
+            }
+
+            // 84651 84652 84653 84654 84655 84656
+            // S     A     M     I     R     0
+
+            console.log(str);
+            currentToken = JSON.parse(str) as Token;
+
+            tokens.push(currentToken);
+
+            if (currentToken.value === "$") {
+              break;
+            }
+          } while (currentToken != null);
+        });
 
         console.log(`DONE: Tokenized successfully.`);
 
-        const tokens: Token[] = JSON.parse(result);
+        // const tokens: Token[] = JSON.parse(str);
         return { tokens };
       } catch (err) {
         console.log("ERROR: failed to tokenize the source you provided: ");
