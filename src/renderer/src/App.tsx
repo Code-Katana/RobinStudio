@@ -7,10 +7,10 @@ import { NavigationBar } from "./components/navigation-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { TokensTable } from "./components/tokens-table";
 import { Button } from "./components/ui/button";
-import { helloWorldProgram } from "./constants";
+import { displayPatternExample } from "./constants";
 
 const App: React.FC = () => {
-  const [code, setCode] = useState<string>(helloWorldProgram);
+  const [code, setCode] = useState<string>(displayPatternExample);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [direction, setDirection] = useState<"horizontal" | "vertical">("horizontal");
   const [scannerOption, setScannerOption] = useState<"FA" | "handCoded">("FA");

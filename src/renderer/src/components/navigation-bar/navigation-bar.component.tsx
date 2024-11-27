@@ -39,7 +39,7 @@ export const NavigationBar = ({
   }
 
   return (
-    <nav className="flex justify-between gap-4 bg-secondary/50 shadow-md">
+    <nav className="app-drag *:app-no-drag flex justify-between gap-4 bg-secondary/50 shadow-md">
       <div className="flex items-center justify-center gap-4 px-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -62,7 +62,7 @@ export const NavigationBar = ({
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="flex items-center justify-center gap-0.5 text-sm font-bold">
+        <div className="pointer-events-none flex select-none items-center justify-center gap-0.5 text-sm font-bold">
           <span>Wren</span>
           <span className="rounded-md bg-primary px-1 py-px">Studio</span>
         </div>

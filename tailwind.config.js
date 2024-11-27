@@ -70,7 +70,25 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      appRegion: {
+        drag: "drag",
+        "no-drag": "no-drag",
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities }) {
+      const appRegionUtils = {
+        ".app-drag": {
+          "-webkit-app-region": "drag",
+        },
+        ".app-no-drag": {
+          "-webkit-app-region": "no-drag",
+        },
+      };
+
+      addUtilities(appRegionUtils, ["responsive", "hover"]);
+    },
+  ],
 };

@@ -47,12 +47,11 @@
     --ring: 221 83.2% 53.3%;
     --radius: 0.5rem;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply overflow-hidden bg-background font-mono text-foreground;
     font-feature-settings:
