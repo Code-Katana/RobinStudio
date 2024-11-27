@@ -1,2 +1,2 @@
 export * from "./channel-type";
-export * from "./tokenizer-channel";
+export * from "./wren-lang";
