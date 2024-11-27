@@ -6,8 +6,7 @@ export const wrenLanguageConfig: monaco.languages.LanguageConfiguration = {
     blockComment: ["/*", "*/"],
   },
   brackets: [
-    ["is", "end"],
-    ["has", "end"],
+    ["begin", "end"],
     ["then", "end"],
     ["do", "end"],
     ["(", ")"],

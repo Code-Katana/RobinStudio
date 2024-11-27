@@ -13,12 +13,15 @@ import { splitSourceCode } from "@main/lib/utils";
 import { ScannerOptions, Token } from "@shared/types";
 import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 
+let mainWindow: BrowserWindow | null;
+
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 992,
     height: 560,
     show: false,
+    frame: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
@@ -28,7 +31,7 @@ function createWindow(): void {
   });
 
   mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
+    mainWindow?.show();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -105,7 +108,7 @@ const wasmBuffer = fs.readFileSync(wasmPath);
 
 app.on("ready", async () => {
   ipcMain.handle(
-    Channels.tokenize,
+    Channels.WrenLang.tokenize,
     async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
       console.log("TASK: loading wasm instance");
 
@@ -284,4 +287,21 @@ app.on("ready", async () => {
       }
     },
   );
+
+  ipcMain.on(Channels.BrowserWindowActions.closeWindow, () => {
+    mainWindow?.close();
+  });
+
+  ipcMain.on(Channels.BrowserWindowActions.minimizeWindow, () => {
+    mainWindow?.minimize();
+  });
+
+  ipcMain.on(Channels.BrowserWindowActions.maximizeWindow, () => {
+    if (mainWindow?.isMaximized()) {
+      mainWindow.restore();
+      return;
+    }
+
+    mainWindow?.maximize();
+  });
 });
