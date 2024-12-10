@@ -3,3 +3,5 @@ dist
 out
 .DS_Store
 *.log*
+resources/debug/*
+!resources/debug/.gitkeep
