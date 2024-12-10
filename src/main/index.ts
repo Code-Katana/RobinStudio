@@ -1,17 +1,13 @@
 import fs from "fs";
 import path, { join } from "path";
-import { WASI } from "wasi";
-
 import { app, protocol, shell, BrowserWindow, ipcMain } from "electron";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
-
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-
-import { splitSourceCode } from "@main/lib/utils";
-import { ScannerOptions, Token } from "@shared/types";
 import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
+import { exec } from "child_process";
+import { Token } from "@shared/types";
 
 let mainWindow: BrowserWindow | null;
 
@@ -102,189 +98,61 @@ app.on("window-all-closed", () => {
   }
 });
 
-// wasm integration for the wren-lang scanner
-const wasmPath = path.resolve(__dirname, "../../resources/wren-lang.wasm");
-const wasmBuffer = fs.readFileSync(wasmPath);
-
 app.on("ready", async () => {
   ipcMain.handle(
     Channels.WrenLang.tokenize,
     async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-      console.log("TASK: loading wasm instance");
+      const exePath = path.resolve("./resources/bin", "wren-lang.exe");
+      const inputFilePath = path.resolve("./resources/debug", "main.wren");
+      const outputFilePath = path.resolve("./resources/debug", "tokens_stream.json");
 
-      const envMemory = new WebAssembly.Memory({ initial: 256, maximum: 65536 });
+      const { source, scanner } = request;
 
-      const wasi = new WASI({
-        version: "preview1",
-        args: [],
-        env: {
-          memory: envMemory,
-        },
-        preopens: {},
-      });
-
-      const wasmModule = await WebAssembly.instantiate(wasmBuffer, {
-        env: {
-          envMemory,
-          table: new WebAssembly.Table({ initial: 0, element: "anyfunc" }),
-          __cxa_throw: () => {
-            throw new Error("__cxa_throw was called");
-          },
-          _emscripten_memcpy_js: (dest: number, src: number, num: number) => {
-            const memView = new Uint8Array(envMemory.buffer);
-            memView.copyWithin(dest, src, src + num);
-            return dest;
-          },
-          emscripten_resize_heap: (requestedSize: number) => {
-            // try {
-            //   const currentPages = envMemory.buffer.byteLength / 65536;
-            //   const requestedPages = Math.ceil(requestedSize / 65536);
-            //   if (requestedPages > currentPages) {
-            //     envMemory.grow(requestedPages - currentPages);
-            //     return 1;
-            //   }
-            //   return 0;
-            // } catch {
-            //   return -1;
-            // }
-            return requestedSize;
-          },
-          _abort_js: (messagePtr: number) => {
-            const memoryView = new Uint8Array(envMemory.buffer);
-            let message = "";
-            for (let i = messagePtr; memoryView[i] !== 0; i++) {
-              message += String.fromCharCode(memoryView[i]);
-            }
-            console.error("WebAssembly aborted:", message);
-            throw new Error(`WebAssembly aborted: ${message}`);
-          },
-          __assert_fail: (
-            messagePtr: number,
-            filePtr: number,
-            line: number,
-            functionPtr: number,
-          ) => {
-            const memoryView = new Uint8Array(envMemory.buffer);
-
-            const readCString = (ptr: number): string => {
-              let str = "";
-              for (let i = ptr; memoryView[i] !== 0; i++) {
-                str += String.fromCharCode(memoryView[i]);
-              }
-              return str;
-            };
-
-            const message = readCString(messagePtr);
-            const file = readCString(filePtr);
-            const functionName = readCString(functionPtr);
-
-            console.error(
-              `Assertion failed: ${message} at ${file}:${line} in function ${functionName}`,
-            );
-            throw new Error(
-              `Assertion failed: ${message} at ${file}:${line} in function ${functionName}`,
-            );
-          },
-        },
-        wasi_snapshot_preview1: wasi.wasiImport,
-      });
-
-      if (wasmModule.instance.exports._start) {
-        wasi.start(wasmModule.instance);
-      }
-
-      console.log("DONE: wasm instance has been leaded successfully");
-
-      const { setup_tokenizer, tokenize, malloc, free, free_result, memory } = wasmModule.instance
-        .exports as {
-        malloc: (size: number) => number;
-        free: (ptr: number) => void;
-        free_result: (ptr: number) => void;
-        setup_tokenizer: (sourcePtr: number, scOpt: number) => void;
-        tokenize: () => number;
-        memory: WebAssembly.Memory;
-      };
-
-      console.log("memory: \n");
-
-      console.log(JSON.stringify(memory) + "\n");
-
-      const memView = new Uint8Array(memory.buffer);
-
-      const chunks = splitSourceCode(request.source);
-
-      const encoder = new TextEncoder();
-      let sourceBytes = encoder.encode(chunks[0] + "\0");
-      let sourcePtr = malloc(sourceBytes.length);
-      memView.set(sourceBytes, sourcePtr);
-
-      function updateSourcePtr(str: string): void {
-        sourceBytes = encoder.encode(str + "\0");
-        sourcePtr = malloc(sourceBytes.length);
-        memView.set(sourceBytes, sourcePtr);
-      }
-
-      let resultPtr: number;
-      const tokens: Token[] = [];
-      let currentToken: Token | null = null;
-
-      try {
-        console.log(
-          `TASK: start tokenization using ${request.scanner === ScannerOptions.FA ? "Finite Automaton" : "Hand Coded"}`,
-        );
-
-        chunks.forEach((chunk) => {
-          updateSourcePtr(chunk);
-          setup_tokenizer(sourcePtr, request.scanner);
-
-          do {
-            resultPtr = tokenize(); // 84651
-
-            let str = "";
-
-            if (!resultPtr) {
-              throw new Error("Tokenize returned a null pointer.");
-            }
-
-            console.log(`$resultPtr = ${resultPtr}`);
-
-            for (let i = resultPtr; memView[i] !== 0; i++) {
-              str += String.fromCharCode(memView[i]);
-            }
-
-            // 84651 84652 84653 84654 84655 84656
-            // S     A     M     I     R     0
-
-            console.log(str);
-            currentToken = JSON.parse(str) as Token;
-
-            tokens.push(currentToken);
-
-            if (currentToken.value === "$") {
-              break;
-            }
-          } while (currentToken != null);
+      await new Promise<void>((resolve, reject) => {
+        fs.writeFile(inputFilePath, source, "utf8", (err) => {
+          if (err) {
+            console.log(`Write Error: ${err.message}`);
+            return reject(err);
+          }
+          resolve();
         });
+      });
 
-        console.log(`DONE: Tokenized successfully.`);
+      await new Promise<void>((resolve, reject) => {
+        const command = `"${exePath}" "${scanner}" "RecursiveDecent" "tokenize" "${inputFilePath}" "${outputFilePath}"`;
 
-        // const tokens: Token[] = JSON.parse(str);
-        return { tokens };
-      } catch (err) {
-        console.log("ERROR: failed to tokenize the source you provided: ");
-        console.error(err);
+        exec(command, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Exec Error: ${error.message}`);
+            return reject(error);
+          }
+          if (stderr) {
+            console.error(`Exec Stderr: ${stderr}`);
+            return reject(new Error(stderr));
+          }
+          console.log(`Exec Stdout: ${stdout || "Executed successfully"}`);
+          resolve();
+        });
+      });
 
-        // todo: change it to undefined or null and handle the case in the frontend.
-        return { tokens: [] };
-      } finally {
-        free(sourcePtr);
+      const jsonData = await new Promise<Token[]>((resolve, reject) => {
+        fs.readFile(outputFilePath, "utf8", (readError, data) => {
+          if (readError) {
+            console.error(`Read Error: ${readError.message}`);
+            return reject(readError);
+          }
 
-        if (typeof free_result === "function") {
-          free_result(resultPtr!);
-        }
+          try {
+            const json = JSON.parse(data);
+            resolve(json);
+          } catch (err) {
+            console.error(`Parse Error: ${err}`);
+            reject(err);
+          }
+        });
+      });
 
-        console.log("NOTE: release the pointer for results from memory.");
-      }
+      return { tokens: jsonData };
     },
   );
 
