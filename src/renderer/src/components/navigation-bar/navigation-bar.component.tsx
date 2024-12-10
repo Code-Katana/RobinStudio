@@ -1,11 +1,4 @@
-import {
-  Cross2Icon,
-  BoxIcon,
-  BoxModelIcon,
-  MinusIcon,
-  HamburgerMenuIcon,
-} from "@radix-ui/react-icons";
-import { useState } from "react";
+import { Cross2Icon, BoxIcon, MinusIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -24,8 +17,6 @@ export const NavigationBar = ({
   direction,
   setDirection,
 }: INavigationBarProps): JSX.Element => {
-  const [isMaximized, setIsMaximized] = useState<boolean>(false);
-
   function handleCloseWindow(): void {
     window.electron.closeWindow();
   }
@@ -35,11 +26,10 @@ export const NavigationBar = ({
   }
   function handleMaximizeWindow(): void {
     window.electron.maximizeWindow();
-    setIsMaximized((is) => !is);
   }
 
   return (
-    <nav className="flex justify-between gap-4 bg-secondary/50 shadow-md">
+    <nav className="app-drag *:app-no-drag flex justify-between gap-4 bg-secondary/50 shadow-md">
       <div className="flex items-center justify-center gap-4 px-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -62,7 +52,7 @@ export const NavigationBar = ({
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="flex items-center justify-center gap-0.5 text-sm font-bold">
+        <div className="pointer-events-none flex select-none items-center justify-center gap-0.5 text-sm font-bold">
           <span>Wren</span>
           <span className="rounded-md bg-primary px-1 py-px">Studio</span>
         </div>
@@ -81,7 +71,7 @@ export const NavigationBar = ({
           variant="ghost"
           onClick={handleMaximizeWindow}
         >
-          {isMaximized ? <BoxModelIcon /> : <BoxIcon />}
+          <BoxIcon />
         </Button>
         <Button
           className="rounded-none p-3 hover:bg-red-600"
