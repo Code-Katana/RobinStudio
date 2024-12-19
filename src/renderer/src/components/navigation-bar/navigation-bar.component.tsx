@@ -29,7 +29,7 @@ export const NavigationBar = ({
   }
 
   return (
-    <nav className="app-drag *:app-no-drag flex justify-between gap-4 bg-secondary/50 shadow-md">
+    <nav className="flex justify-between gap-4 bg-secondary/50 shadow-md app-drag *:app-no-drag">
       <div className="flex items-center justify-center gap-4 px-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
