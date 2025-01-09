@@ -1,5 +1,5 @@
 import { Cross2Icon, BoxIcon, MinusIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
+import { Button } from "@renderer/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,15 +8,15 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { INavigationBarProps } from "./navigation-bar.props";
+} from "@renderer/components/ui/dropdown-menu";
+import { ITitleBarProps } from "../interfaces/navigation-bar.props";
 
-export const NavigationBar = ({
+export const TitleBar = ({
   scannerOption,
   setScannerOption,
   direction,
   setDirection,
-}: INavigationBarProps): JSX.Element => {
+}: ITitleBarProps): JSX.Element => {
   function handleCloseWindow(): void {
     window.electron.closeWindow();
   }

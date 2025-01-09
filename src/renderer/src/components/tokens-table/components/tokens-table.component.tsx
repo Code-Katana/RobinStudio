@@ -6,8 +6,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { ITokensTableProps } from "./tokens-table.props";
+} from "@renderer/components/ui/table";
+import { ITokensTableProps } from "../interfaces/tokens-table.props";
 
 export const TokensTable = ({ tokens, scannerOption }: ITokensTableProps): JSX.Element => {
   return (

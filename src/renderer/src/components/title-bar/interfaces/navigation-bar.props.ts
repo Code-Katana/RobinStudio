@@ -1,4 +1,4 @@
-export interface INavigationBarProps {
+export interface ITitleBarProps {
   direction: string;
   setDirection: (dir: string) => void;
 
