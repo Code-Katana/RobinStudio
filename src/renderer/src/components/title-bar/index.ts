@@ -1,1 +1,1 @@
-export { TitleBar } from "./components/navigation-bar.component";
+export { TitleBar } from "./components/title-bar.component";

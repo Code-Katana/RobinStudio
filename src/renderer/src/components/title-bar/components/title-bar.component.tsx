@@ -9,14 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@renderer/components/ui/dropdown-menu";
-import { ITitleBarProps } from "../interfaces/navigation-bar.props";
+import { useAppSettings } from "@renderer/hooks/use-app-settings";
+import { ScannerOptions } from "@shared/types";
+import React from "react";
 
-export const TitleBar = ({
-  scannerOption,
-  setScannerOption,
-  direction,
-  setDirection,
-}: ITitleBarProps): JSX.Element => {
+export const TitleBar: React.FC = () => {
+  const { direction, scannerOption, setDirection, setScannerOption } = useAppSettings();
+
   function handleCloseWindow(): void {
     window.electron.closeWindow();
   }
@@ -39,16 +38,27 @@ export const TitleBar = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 translate-x-4">
             <DropdownMenuLabel>Editor Layout</DropdownMenuLabel>
-            <DropdownMenuRadioGroup value={direction} onValueChange={setDirection}>
-              <DropdownMenuRadioItem value="vertical">Vertical</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="horizontal">Horizontal</DropdownMenuRadioItem>
+            <DropdownMenuRadioGroup value={direction}>
+              <DropdownMenuRadioItem value="vertical" onClick={() => setDirection("vertical")}>
+                Vertical
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="horizontal" onClick={() => setDirection("horizontal")}>
+                Horizontal
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
 
             <DropdownMenuSeparator />
             <DropdownMenuLabel>Scanner Options</DropdownMenuLabel>
-            <DropdownMenuRadioGroup value={scannerOption} onValueChange={setScannerOption}>
-              <DropdownMenuRadioItem value="FA">Finite Automaton</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="handCoded">Hand Coded</DropdownMenuRadioItem>
+            <DropdownMenuRadioGroup value={scannerOption}>
+              <DropdownMenuRadioItem value="FA" onClick={() => setScannerOption(ScannerOptions.FA)}>
+                Finite Automaton
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem
+                value="handCoded"
+                onClick={() => setScannerOption(ScannerOptions.HandCoded)}
+              >
+                Hand Coded
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -57,7 +67,6 @@ export const TitleBar = ({
           <span className="rounded-md bg-primary px-1 py-px">Studio</span>
         </div>
       </div>
-
       <div>
         <Button
           className="rounded-none p-3 hover:bg-primary"

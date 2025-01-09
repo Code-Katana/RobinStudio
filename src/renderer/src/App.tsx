@@ -11,14 +11,14 @@ import { helloWorldProgram } from "./constants";
 import { AppSidebar } from "./components/app-sidebar";
 import { SidebarInset } from "./components/ui/sidebar";
 import { useCurrentProject } from "./hooks/use-current-project";
+import { useAppSettings } from "./hooks/use-app-settings";
 
 const App: React.FC = () => {
   const { rootPath, fileTree } = useCurrentProject();
+  const { direction, scannerOption } = useAppSettings();
 
   const [code, setCode] = useState<string>(helloWorldProgram);
   const [tokens, setTokens] = useState<Token[]>([]);
-  const [direction, setDirection] = useState<"horizontal" | "vertical">("horizontal");
-  const [scannerOption, setScannerOption] = useState<"FA" | "handCoded">("FA");
 
   async function handleTokenize(): Promise<void> {
     const response: TokenizeResponse = await window.api.tokenize({
@@ -43,12 +43,7 @@ const App: React.FC = () => {
     <>
       <AppSidebar rootPath={rootPath} fileTree={fileTree} />
       <SidebarInset>
-        <TitleBar
-          scannerOption={scannerOption}
-          setScannerOption={setScannerOption as (opt: string) => void}
-          direction={direction}
-          setDirection={setDirection as (dir: string) => void}
-        />
+        <TitleBar />
         <main className="relative grid h-svh w-full grid-rows-1">
           <ResizablePanelGroup direction={direction} className="h-svh font-mono">
             <ResizablePanel defaultSize={50}>
