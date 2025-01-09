@@ -2,41 +2,56 @@ import { useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 import { TokenizeResponse } from "@shared/channels";
-import { ScannerOptions, Token } from "@shared/types";
+import { Token } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { TokensTable } from "./components/tokens-table";
 import { Button } from "./components/ui/button";
-import { helloWorldProgram } from "./constants";
 import { AppSidebar } from "./components/app-sidebar";
 import { SidebarInset } from "./components/ui/sidebar";
 import { useCurrentProject } from "./hooks/use-current-project";
 import { useAppSettings } from "./hooks/use-app-settings";
+import { Tabs } from "./components/ui/tabs";
+import { TabsBar } from "./components/tabs-bar";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree } = useCurrentProject();
+  const { rootPath, fileTree, currentFile } = useCurrentProject();
   const { direction, scannerOption } = useAppSettings();
 
-  const [code, setCode] = useState<string>(helloWorldProgram);
   const [tokens, setTokens] = useState<Token[]>([]);
+  const [output, setOutput] = useState<"tokens" | "tree" | undefined>(undefined);
+
+  function clearOutput() {
+    setOutput(undefined);
+  }
 
   async function handleTokenize(): Promise<void> {
+    if (!currentFile) {
+      return;
+    }
+
+    await handleSaveFile();
+    setOutput("tokens");
+
     const response: TokenizeResponse = await window.api.tokenize({
-      scanner: ScannerOptions[scannerOption],
-      source: code,
+      scanner: scannerOption,
+      source: currentFile.path,
     });
 
     setTokens(response.tokens);
   }
 
-  function handleCodeUpdate(val: string | undefined): void {
-    if (val === undefined) {
-      setCode("");
+  async function handleSaveFile(): Promise<void> {
+    if (!currentFile) {
       return;
     }
 
-    setCode(val);
-    console.log(val);
+    const res = await window.fs.openFileByPath({ path: currentFile.path });
+
+    await window.fs.saveFile({
+      path: res.path,
+      content: res.content,
+    });
   }
 
   return (
@@ -44,29 +59,43 @@ const App: React.FC = () => {
       <AppSidebar rootPath={rootPath} fileTree={fileTree} />
       <SidebarInset>
         <TitleBar />
-        <main className="relative grid h-svh w-full grid-rows-1">
-          <ResizablePanelGroup direction={direction} className="h-svh font-mono">
-            <ResizablePanel defaultSize={50}>
-              <EditorPlayground source={code} onChange={handleCodeUpdate} />
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={50}>
-              <ScrollArea className="relative h-svh">
-                {tokens.length ? (
-                  <TokensTable tokens={tokens} scannerOption={scannerOption} />
-                ) : (
-                  <p className="absolute inset-1/2 w-max -translate-x-1/2 -translate-y-1/2">
-                    Write some code & Click tokenize
-                  </p>
-                )}
-              </ScrollArea>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+        <Tabs value={currentFile?.path}>
+          <TabsBar />
+          <main className="relative grid h-svh w-full grid-rows-1">
+            <section className="absolute inset-0">
+              <ResizablePanelGroup direction={direction} className="h-svh font-mono">
+                <ResizablePanel defaultSize={50}>
+                  <ResizablePanelGroup direction="horizontal">
+                    {currentFile && <EditorPlayground />}
+                  </ResizablePanelGroup>
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel defaultSize={50}>
+                  <ScrollArea className="relative h-svh">
+                    <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
+                      <Button size="sm" onClick={handleTokenize}>
+                        Tokenize
+                      </Button>
+                      <Button size="sm" onClick={clearOutput}>
+                        Clear
+                      </Button>
+                    </header>
 
-          <Button className="fixed bottom-8 right-8" onClick={handleTokenize}>
-            Tokenize
-          </Button>
-        </main>
+                    {currentFile ? (
+                      <>
+                        {output === "tokens" && (
+                          <TokensTable tokens={tokens} scannerOption={scannerOption} />
+                        )}
+                      </>
+                    ) : (
+                      <p className="pt-12 text-center">Write some code & Click tokenize</p>
+                    )}
+                  </ScrollArea>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </section>
+          </main>
+        </Tabs>
       </SidebarInset>
     </>
   );
