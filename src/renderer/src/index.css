@@ -33,6 +33,7 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 221 50% 5%;
     --foreground: 221 5% 90%;
@@ -63,12 +64,28 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: theme(colors.secondary.DEFAULT);
+    @apply bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-accent-foreground/10;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-foreground/50;
+  }
+
   body {
     @apply overflow-hidden bg-background font-mono text-foreground;
     font-feature-settings:
@@ -77,11 +94,30 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer components {
+  :is(.ast-root, .ast-node, .ast-leaf) {
+    & text:is(.rd3t-label__title) {
+      fill: var(--title-color, theme(colors.primary.foreground));
+    }
+
+    & text:is(.rd3t-label__attributes) {
+      fill: var(--attr-color, theme(colors.primary.foreground));
+    }
+
+    & > circle {
+      fill: var(--fill-color, theme(colors.primary.DEFAULT));
+    }
   }
-  body {
-    @apply bg-background text-foreground;
+
+  .ast-root {
+    --title-color: theme(colors.emerald.500);
+  }
+
+  .ast-node {
+    --title-color: theme(colors.amber.300);
+  }
+
+  .ast-leaf {
+    --fill-color: theme(colors.primary.foreground);
   }
 }

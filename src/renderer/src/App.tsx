@@ -13,11 +13,14 @@ import { useCurrentProject } from "./hooks/use-current-project";
 import { useAppSettings } from "./hooks/use-app-settings";
 import { Tabs } from "./components/ui/tabs";
 import { TabsBar } from "./components/tabs-bar";
+import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile } = useCurrentProject();
   const { direction, scannerOption } = useAppSettings();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [ast, setAst] = useState<any>({});
   const [tokens, setTokens] = useState<Token[]>([]);
   const [output, setOutput] = useState<"tokens" | "tree" | undefined>(undefined);
 
@@ -39,6 +42,21 @@ const App: React.FC = () => {
     });
 
     setTokens(response.tokens);
+  }
+
+  async function handleParse(): Promise<void> {
+    if (!currentFile) {
+      return;
+    }
+
+    await handleSaveFile();
+    setOutput("tree");
+
+    const response = await window.api.parse({
+      source: currentFile.path,
+    });
+
+    setAst(response.ast);
   }
 
   async function handleSaveFile(): Promise<void> {
@@ -76,6 +94,9 @@ const App: React.FC = () => {
                       <Button size="sm" onClick={handleTokenize}>
                         Tokenize
                       </Button>
+                      <Button size="sm" onClick={handleParse}>
+                        Parse
+                      </Button>
                       <Button size="sm" onClick={clearOutput}>
                         Clear
                       </Button>
@@ -86,6 +107,7 @@ const App: React.FC = () => {
                         {output === "tokens" && (
                           <TokensTable tokens={tokens} scannerOption={scannerOption} />
                         )}
+                        {output === "tree" && <AbstractSyntaxTree ast={ast} />}
                       </>
                     ) : (
                       <p className="pt-12 text-center">Write some code & Click tokenize</p>
