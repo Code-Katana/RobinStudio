@@ -1,1 +1,1 @@
-export { EditorPlayground } from "./editor-playground.component";
+export { EditorPlayground } from "./components/editor-playground.component";
