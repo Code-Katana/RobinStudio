@@ -5,15 +5,23 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
-import { exec } from "child_process";
-import { HnExpressionNode, HnNode, Token } from "@shared/types";
+import {
+  Channels,
+  ParseRequest,
+  ParseResponse,
+  TokenizeRequest,
+  TokenizeResponse,
+} from "@shared/channels";
+import { ScannerOptions, Token } from "@shared/types";
 import {
   OpenFileRequest,
   OpenFileResponse,
   OpenFolderResponse,
   SaveFileRequest,
 } from "@shared/channels/file-system";
+import { getFileTree } from "./lib/get-file-tree";
+import { executeCompiler } from "./lib/execute-compiler";
+import { readCompilerOutput } from "./lib/read-compiler-output";
 
 let mainWindow: BrowserWindow | null;
 
@@ -108,57 +116,35 @@ app.on("window-all-closed", () => {
 ipcMain.handle(
   Channels.wrenLang.tokenize,
   async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
-    const inputFilePath = path.resolve("./resources/debug", "main.wren");
-    const outputFilePath = path.resolve("./resources/debug", "tokens_stream.json");
-
     const { source, scanner } = request;
 
-    await new Promise<void>((resolve, reject) => {
-      fs.writeFile(inputFilePath, source, "utf8", (err) => {
-        if (err) {
-          console.log(`Write Error: ${err.message}`);
-          return reject(err);
-        }
-        resolve();
-      });
-    });
+    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
+    const inputFilePath = source;
+    const outputFilePath = path.resolve("./resources/debug", "token-stream.json");
 
-    await new Promise<void>((resolve, reject) => {
-      const command = `"${exePath}" "${scanner}" "RecursiveDecent" "tokenize" "${inputFilePath}" "${outputFilePath}"`;
+    await executeCompiler(exePath, scanner, "tokenize", inputFilePath, outputFilePath);
 
-      exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Exec Error: ${error.message}`);
-          return reject(error);
-        }
-        if (stderr) {
-          console.error(`Exec Stderr: ${stderr}`);
-          return reject(new Error(stderr));
-        }
-        console.log(`Exec Stdout: ${stdout || "Executed successfully"}`);
-        resolve();
-      });
-    });
-
-    const jsonData = await new Promise<Token[]>((resolve, reject) => {
-      fs.readFile(outputFilePath, "utf8", (readError, data) => {
-        if (readError) {
-          console.error(`Read Error: ${readError.message}`);
-          return reject(readError);
-        }
-
-        try {
-          const json = JSON.parse(data);
-          resolve(json);
-        } catch (err) {
-          console.error(`Parse Error: ${err}`);
-          reject(err);
-        }
-      });
-    });
+    const jsonData = await readCompilerOutput<Token[]>(outputFilePath);
 
     return { tokens: jsonData };
+  },
+);
+
+ipcMain.handle(
+  Channels.wrenLang.parse,
+  async (_event, request: ParseRequest): Promise<ParseResponse> => {
+    const { source } = request;
+
+    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
+    const inputFilePath = source;
+    const outputFilePath = path.resolve("./resources/debug", "parse-tree.json");
+
+    await executeCompiler(exePath, ScannerOptions.FA, "parse", inputFilePath, outputFilePath);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const jsonData = await readCompilerOutput<any>(outputFilePath);
+
+    return { ast: jsonData };
   },
 );
 
@@ -227,48 +213,3 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
 
   return null;
 });
-
-function getFileTree(dirPath: string): HnExpressionNode {
-  const rootStat = fs.statSync(dirPath);
-
-  const rootNode: HnNode = {
-    name: path.basename(dirPath),
-    type: rootStat.isDirectory() ? "folder" : "file",
-    path: dirPath,
-    size: rootStat.isDirectory() ? undefined : rootStat.size,
-  };
-
-  if (rootNode.type === "file") {
-    return [rootNode];
-  }
-
-  const rootContent = fs.readdirSync(dirPath);
-  const files: string[] = [];
-  const folders: string[] = [];
-
-  for (const item of rootContent) {
-    fs.statSync(path.join(dirPath, item)).isDirectory() ? folders.push(item) : files.push(item);
-  }
-
-  const children = [...folders, ...files].map((item) => {
-    const itemPath = path.join(dirPath, item);
-    return getNode(itemPath);
-  }) as HnExpressionNode[];
-
-  return [rootNode, children];
-}
-
-function getNode(itemPath: string): HnExpressionNode | HnNode {
-  const stat = fs.statSync(itemPath);
-
-  if (stat.isDirectory()) {
-    return getFileTree(itemPath);
-  }
-
-  return {
-    name: path.basename(itemPath),
-    type: "file",
-    path: itemPath,
-    size: stat.size,
-  };
-}

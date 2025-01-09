@@ -1,5 +1,5 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
-import { TokenizeRequest, TokenizeResponse } from "@shared/channels";
+import { ParseRequest, ParseResponse, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 import { OpenFolderResponse } from "@shared/channels/file-system";
 
 declare global {
@@ -12,8 +12,7 @@ declare global {
 
     api: {
       tokenize: (request: TokenizeRequest) => Promise<TokenizeResponse>;
-      // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
-      parse: (request: TokenizeRequest) => Promise<{ ast: any }>;
+      parse: (request: ParseRequest) => Promise<ParseResponse>;
     };
 
     fs: {

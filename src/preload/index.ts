@@ -1,6 +1,12 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI as electronToolkit } from "@electron-toolkit/preload";
-import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
+import {
+  Channels,
+  ParseRequest,
+  ParseResponse,
+  TokenizeRequest,
+  TokenizeResponse,
+} from "@shared/channels";
 import {
   OpenFileRequest,
   OpenFileResponse,
@@ -13,8 +19,7 @@ const api = {
   tokenize: (request: TokenizeRequest): Promise<TokenizeResponse> =>
     ipcRenderer.invoke(Channels.wrenLang.tokenize, request),
 
-  // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
-  parse: (request: TokenizeRequest): Promise<{ ast: any }> =>
+  parse: (request: ParseRequest): Promise<ParseResponse> =>
     ipcRenderer.invoke(Channels.wrenLang.parse, request),
 };
 
