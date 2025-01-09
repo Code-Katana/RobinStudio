@@ -1,1 +1,1 @@
-export { TokensTable } from "./tokens-table.component";
+export { TokensTable } from "./components/tokens-table.component";

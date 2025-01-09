@@ -3,7 +3,7 @@ import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 import { TokenizeResponse } from "@shared/channels";
 import { ScannerOptions, Token } from "@shared/types";
-import { NavigationBar } from "./components/navigation-bar";
+import { TitleBar } from "./components/title-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { TokensTable } from "./components/tokens-table";
 import { Button } from "./components/ui/button";
@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <NavigationBar
+      <TitleBar
         scannerOption={scannerOption}
         setScannerOption={setScannerOption as (opt: string) => void}
         direction={direction}
