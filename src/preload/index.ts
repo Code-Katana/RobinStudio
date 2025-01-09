@@ -1,18 +1,41 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI as electronToolkit } from "@electron-toolkit/preload";
 import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
+import {
+  OpenFileRequest,
+  OpenFileResponse,
+  OpenFolderResponse,
+  SaveFileRequest,
+} from "@shared/channels/file-system";
 
 // Custom APIs for renderer
 const api = {
   tokenize: (request: TokenizeRequest): Promise<TokenizeResponse> =>
-    ipcRenderer.invoke(Channels.WrenLang.tokenize, request),
+    ipcRenderer.invoke(Channels.wrenLang.tokenize, request),
+
+  // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
+  parse: (request: TokenizeRequest): Promise<{ ast: any }> =>
+    ipcRenderer.invoke(Channels.wrenLang.parse, request),
+};
+
+const fileSystem = {
+  openFile: (): Promise<OpenFileResponse | null> => ipcRenderer.invoke(Channels.fileChannels.open),
+
+  openFileByPath: (request: OpenFileRequest): Promise<OpenFileResponse | null> =>
+    ipcRenderer.invoke(Channels.fileChannels.openByPath, request),
+
+  openFolder: (): Promise<OpenFolderResponse | null> =>
+    ipcRenderer.invoke(Channels.folderChannels.open),
+
+  saveFile: (request: SaveFileRequest): Promise<void> =>
+    ipcRenderer.invoke(Channels.fileChannels.save, request),
 };
 
 const electronAPI = {
   ...electronToolkit,
-  closeWindow: (): void => ipcRenderer.send(Channels.BrowserWindowActions.closeWindow),
-  minimizeWindow: (): void => ipcRenderer.send(Channels.BrowserWindowActions.minimizeWindow),
-  maximizeWindow: (): void => ipcRenderer.send(Channels.BrowserWindowActions.maximizeWindow),
+  closeWindow: (): void => ipcRenderer.send(Channels.browserWindowActions.closeWindow),
+  minimizeWindow: (): void => ipcRenderer.send(Channels.browserWindowActions.minimizeWindow),
+  maximizeWindow: (): void => ipcRenderer.send(Channels.browserWindowActions.maximizeWindow),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -23,6 +46,7 @@ if (process.contextIsolated) {
     // contextBridge.exposeInMainWorld("electronToolkit", electronToolkit);
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
+    contextBridge.exposeInMainWorld("fs", fileSystem);
   } catch (error) {
     console.error(error);
   }
