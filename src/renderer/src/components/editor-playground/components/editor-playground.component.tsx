@@ -1,11 +1,14 @@
 import { editor } from "monaco-editor";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { wrenLanguageConfig, WrenStudioTheme, wrenTokensProvider } from "@renderer/languages/wren";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 
 export const EditorPlayground: React.FC = () => {
-  const { currentFile } = useCurrentProject();
+  const { currentFile, onUpdateCurrentFile } = useCurrentProject();
+
+  const value = useMemo<string>(() => currentFile?.content || "", [currentFile]);
+
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   function handleEditorDidMount(ref: editor.IStandaloneCodeEditor, monacoInstance: Monaco) {
@@ -25,7 +28,8 @@ export const EditorPlayground: React.FC = () => {
       defaultLanguage="wren"
       theme="wren-studio"
       path={currentFile?.path}
-      value={currentFile?.content}
+      value={value}
+      onChange={(val) => onUpdateCurrentFile(val)}
       onMount={handleEditorDidMount}
       options={{
         automaticLayout: true,

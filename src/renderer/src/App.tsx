@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 import { TokenizeResponse } from "@shared/channels";
@@ -16,7 +16,7 @@ import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile } = useCurrentProject();
+  const { rootPath, fileTree, currentFile, onSaveCurrentFile } = useCurrentProject();
   const { direction, scannerOption } = useAppSettings();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,13 +64,32 @@ const App: React.FC = () => {
       return;
     }
 
-    const res = await window.fs.openFileByPath({ path: currentFile.path });
-
     await window.fs.saveFile({
-      path: res.path,
-      content: res.content,
+      path: currentFile.path,
+      content: currentFile.content,
     });
+
+    onSaveCurrentFile();
   }
+
+  useEffect(() => {
+    const handleKeyDown = async (event: KeyboardEvent) => {
+      if (event.key === "s" && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        await handleSaveFile();
+      }
+    };
+
+    document.addEventListener("keydown", async (e) => await handleKeyDown(e));
+
+    return () => {
+      document.removeEventListener("keydown", async (e) => await handleKeyDown(e));
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(currentFile?.state);
+  }, [currentFile]);
 
   return (
     <>

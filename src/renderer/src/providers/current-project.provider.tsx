@@ -1,10 +1,17 @@
 import { HnExpressionNode } from "@shared/types";
 import { createContext, useState } from "react";
 
+export enum OpenFileStates {
+  Saved = "saved",
+  Unsaved = "unsaved",
+  Deleted = "deleted",
+}
+
 export type OpenFileType = {
   name: string;
   path: string;
   content: string;
+  state: OpenFileStates;
 };
 
 type CurrentProjectContextType = {
@@ -16,6 +23,8 @@ type CurrentProjectContextType = {
   onCloseProject: () => void;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
+  onUpdateCurrentFile: (value: string | undefined) => void;
+  onSaveCurrentFile: () => void;
 };
 
 export const CurrentProjectContext = createContext<CurrentProjectContextType | undefined>(
@@ -47,7 +56,7 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
   }
 
   function onOpenFile(name: string, path: string, content: string) {
-    const newFile = { name, path, content };
+    const newFile = { name, path, content, state: OpenFileStates.Saved };
 
     setOpenedFiles((prevOpenedFiles) => {
       const isExists = [...prevOpenedFiles].some((file) => file.path === newFile.path);
@@ -92,6 +101,36 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
     });
   }
 
+  function onUpdateCurrentFile(value: string | undefined) {
+    setCurrentFile((prevCurrentFile) => {
+      if (!prevCurrentFile) {
+        return undefined;
+      }
+
+      return {
+        name: prevCurrentFile.name,
+        path: prevCurrentFile.path,
+        content: value || "",
+        state: OpenFileStates.Unsaved,
+      } as OpenFileType;
+    });
+  }
+
+  function onSaveCurrentFile() {
+    setCurrentFile((prevCurrentFile) => {
+      if (!prevCurrentFile) {
+        return undefined;
+      }
+
+      return {
+        name: prevCurrentFile.name,
+        path: prevCurrentFile.path,
+        content: prevCurrentFile.content,
+        state: OpenFileStates.Saved,
+      } as OpenFileType;
+    });
+  }
+
   return (
     <CurrentProjectContext.Provider
       value={{
@@ -103,6 +142,8 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
         onCloseProject,
         onOpenFile,
         onCloseFile,
+        onUpdateCurrentFile,
+        onSaveCurrentFile,
       }}
     >
       {children}

@@ -1,6 +1,11 @@
 import { ElectronAPI } from "@electron-toolkit/preload";
 import { ParseRequest, ParseResponse, TokenizeRequest, TokenizeResponse } from "@shared/channels";
-import { OpenFolderResponse } from "@shared/channels/file-system";
+import {
+  SaveFileRequest,
+  OpenFileRequest,
+  OpenFileResponse,
+  OpenFolderResponse,
+} from "@shared/channels/file-system";
 
 declare global {
   interface Window {
@@ -17,8 +22,8 @@ declare global {
 
     fs: {
       openFile: () => Promise<OpenFileResponse | null>;
-      openFileByPath: (OpenFileRequest) => Promise<OpenFileResponse | null>;
-      saveFile: (SaveFileRequest) => Promise<void>;
+      openFileByPath: (req: OpenFileRequest) => Promise<OpenFileResponse | null>;
+      saveFile: (req: SaveFileRequest) => Promise<void>;
       openFolder: () => Promise<OpenFolderResponse | null>;
     };
   }
