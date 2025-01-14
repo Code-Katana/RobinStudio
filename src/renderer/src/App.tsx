@@ -16,7 +16,7 @@ import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onSaveCurrentFile } = useCurrentProject();
+  const { rootPath, fileTree, currentFile, onSaveCurrentFile, onCloseFile } = useCurrentProject();
   const { direction, scannerOption } = useAppSettings();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,17 +78,20 @@ const App: React.FC = () => {
         event.preventDefault();
         await handleSaveFile();
       }
+
+      if (event.key === "w" && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        if (currentFile) {
+          onCloseFile(currentFile.path);
+        }
+      }
     };
 
-    document.addEventListener("keydown", async (e) => await handleKeyDown(e));
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", async (e) => await handleKeyDown(e));
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
-
-  useEffect(() => {
-    console.log(currentFile?.state);
   }, [currentFile]);
 
   return (
