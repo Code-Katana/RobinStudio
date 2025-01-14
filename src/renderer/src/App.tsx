@@ -96,7 +96,7 @@ const App: React.FC = () => {
       <AppSidebar rootPath={rootPath} fileTree={fileTree} />
       <SidebarInset>
         <TitleBar />
-        <Tabs value={currentFile?.path}>
+        <Tabs value={currentFile?.path} className="grid">
           <TabsBar />
           <main className="relative grid h-svh w-full grid-rows-1">
             <section className="absolute inset-0">

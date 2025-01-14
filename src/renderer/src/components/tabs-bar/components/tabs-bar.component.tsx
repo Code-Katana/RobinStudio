@@ -18,7 +18,7 @@ export const TabsBar = () => {
   }
 
   return (
-    <TabsList className="flex h-fit w-full justify-start rounded-none bg-secondary p-0 text-secondary-foreground">
+    <TabsList className="flex h-fit w-full justify-start overflow-auto rounded-none bg-secondary p-0 text-secondary-foreground">
       {[...openedFiles].map((file: OpenFileType) => (
         <TabsTrigger
           key={file.path}
