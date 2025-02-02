@@ -1,12 +1,13 @@
-import { useContext } from "react";
-import { AppSettingsContext } from "@renderer/providers/app-settings.provider";
+// import { useContext } from "react";
+import {
+  AppSettingsContext,
+  AppSettingsContextType,
+} from "@renderer/providers/app-settings.provider";
+import { useCustomContext } from "./use-custom-context";
 
-export const useAppSettings = () => {
-  const context = useContext(AppSettingsContext);
-
-  if (!context) {
-    throw new Error("useCurrentProject hook must be used within a CurrentProjectProvider");
-  }
-
-  return context;
-};
+export const useAppSettings = () =>
+  useCustomContext<AppSettingsContextType>(
+    AppSettingsContext,
+    "useAppSettings",
+    "AppSettingsProvider",
+  );
