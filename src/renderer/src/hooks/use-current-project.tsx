@@ -1,12 +1,12 @@
-import { CurrentProjectContext } from "@renderer/providers/current-project.provider";
-import { useContext } from "react";
+import {
+  CurrentProjectContext,
+  CurrentProjectContextType,
+} from "@renderer/providers/current-project.provider";
+import { useCustomContext } from "./use-custom-context";
 
-export const useCurrentProject = () => {
-  const context = useContext(CurrentProjectContext);
-
-  if (!context) {
-    throw new Error("useCurrentProject hook must be used within a CurrentProjectProvider");
-  }
-
-  return context;
-};
+export const useCurrentProject = () =>
+  useCustomContext<CurrentProjectContextType>(
+    CurrentProjectContext,
+    "useCurrentProject",
+    "CurrentProjectProvider",
+  );

@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 
 type DirectionType = "horizontal" | "vertical";
 
-type AppSettingsContextType = {
+export type AppSettingsContextType = {
   direction: DirectionType;
   scannerOption: ScannerOptions;
   parserOption: ParserOptions;
