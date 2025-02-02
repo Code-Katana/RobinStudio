@@ -16,7 +16,7 @@ import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onSaveCurrentFile, onCloseFile } = useCurrentProject();
+  const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProject();
   const { direction, scannerOption } = useAppSettings();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,8 +68,6 @@ const App: React.FC = () => {
       path: currentFile.path,
       content: currentFile.content,
     });
-
-    onSaveCurrentFile();
   }
 
   useEffect(() => {

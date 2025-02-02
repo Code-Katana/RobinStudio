@@ -1,30 +1,22 @@
 import { HnExpressionNode } from "@shared/types";
 import { createContext, useState } from "react";
 
-export enum OpenFileStates {
-  Saved = "saved",
-  Unsaved = "unsaved",
-  Deleted = "deleted",
-}
-
 export type OpenFileType = {
   name: string;
   path: string;
   content: string;
-  state: OpenFileStates;
 };
 
-type CurrentProjectContextType = {
+export type CurrentProjectContextType = {
   rootPath: string | undefined;
   fileTree: HnExpressionNode | undefined;
-  openedFiles: Set<OpenFileType>;
+  openedFiles: Map<string, OpenFileType>;
   currentFile: OpenFileType | undefined;
   onOpenProject: (path: string | undefined, tree: HnExpressionNode | undefined) => void;
   onCloseProject: () => void;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
   onUpdateCurrentFile: (value: string | undefined) => void;
-  onSaveCurrentFile: () => void;
 };
 
 export const CurrentProjectContext = createContext<CurrentProjectContextType | undefined>(
@@ -34,7 +26,7 @@ export const CurrentProjectContext = createContext<CurrentProjectContextType | u
 export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [rootPath, setRootPath] = useState<string | undefined>(undefined);
   const [fileTree, setFileTree] = useState<HnExpressionNode | undefined>(undefined);
-  const [openedFiles, setOpenedFiles] = useState<Set<OpenFileType>>(new Set());
+  const [openedFiles, setOpenedFiles] = useState<Map<string, OpenFileType>>(new Map());
   const [currentFile, setCurrentFile] = useState<OpenFileType | undefined>(undefined);
 
   function onOpenProject(path: string | undefined, tree: HnExpressionNode | undefined) {
@@ -44,57 +36,48 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
 
     setRootPath(path);
     setFileTree(tree);
-    setOpenedFiles(new Set());
+    setOpenedFiles(new Map());
     setCurrentFile(undefined);
   }
 
   function onCloseProject() {
     setRootPath(undefined);
     setFileTree(undefined);
-    setOpenedFiles(new Set());
+    setOpenedFiles(new Map());
     setCurrentFile(undefined);
   }
 
   function onOpenFile(name: string, path: string, content: string) {
-    const newFile = { name, path, content, state: OpenFileStates.Saved };
-
     setOpenedFiles((prevOpenedFiles) => {
-      const isExists = [...prevOpenedFiles].some((file) => file.path === newFile.path);
-
-      if (isExists) {
+      if (prevOpenedFiles.has(path)) {
+        setCurrentFile(prevOpenedFiles.get(path));
         return prevOpenedFiles;
       }
 
-      return new Set(prevOpenedFiles).add(newFile);
-    });
+      const newFile: OpenFileType = { name, path, content };
+      const updatedFiles = new Map(prevOpenedFiles);
 
-    setCurrentFile(newFile);
+      updatedFiles.set(path, newFile);
+      setCurrentFile(newFile);
+      return updatedFiles;
+    });
   }
 
   function onCloseFile(filePath: string) {
     setOpenedFiles((prevOpenedFiles) => {
-      const updatedFiles = new Set(prevOpenedFiles);
+      if (!prevOpenedFiles.has(filePath)) return prevOpenedFiles;
 
-      updatedFiles.forEach((file) => {
-        if (file.path === filePath) {
-          updatedFiles.delete(file);
-        }
-      });
+      const updatedFiles = new Map(prevOpenedFiles);
+      updatedFiles.delete(filePath);
 
       setCurrentFile((prevCurrentFile) => {
-        if (prevCurrentFile?.path === filePath) {
-          const remainingFiles = [...updatedFiles];
+        if (prevCurrentFile?.path !== filePath) return prevCurrentFile;
+        if (updatedFiles.size === 0) return undefined;
 
-          if (remainingFiles.length > 0) {
-            const currentIndex = remainingFiles.findIndex((file) => file.path === filePath);
-            const nextIndex = (currentIndex + 1) % remainingFiles.length;
-            return remainingFiles[nextIndex];
-          }
-
-          return undefined;
-        }
-
-        return prevCurrentFile;
+        const fileArray = [...prevOpenedFiles.values()];
+        const closedFileIndex = fileArray.findIndex((file) => file.path === filePath);
+        const nextFileIndex = (closedFileIndex + 1) % fileArray.length;
+        return fileArray[nextFileIndex];
       });
 
       return updatedFiles;
@@ -103,31 +86,20 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
 
   function onUpdateCurrentFile(value: string | undefined) {
     setCurrentFile((prevCurrentFile) => {
-      if (!prevCurrentFile) {
-        return undefined;
-      }
+      if (!prevCurrentFile) return undefined;
 
-      return {
-        name: prevCurrentFile.name,
-        path: prevCurrentFile.path,
+      const updatedFile: OpenFileType = {
+        ...prevCurrentFile,
         content: value || "",
-        state: OpenFileStates.Unsaved,
-      } as OpenFileType;
-    });
-  }
+      };
 
-  function onSaveCurrentFile() {
-    setCurrentFile((prevCurrentFile) => {
-      if (!prevCurrentFile) {
-        return undefined;
-      }
+      setOpenedFiles((prevOpenedFiles) => {
+        const updatedFiles = new Map(prevOpenedFiles);
+        updatedFiles.set(updatedFile.path, updatedFile);
+        return updatedFiles;
+      });
 
-      return {
-        name: prevCurrentFile.name,
-        path: prevCurrentFile.path,
-        content: prevCurrentFile.content,
-        state: OpenFileStates.Saved,
-      } as OpenFileType;
+      return updatedFile;
     });
   }
 
@@ -143,7 +115,6 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
         onOpenFile,
         onCloseFile,
         onUpdateCurrentFile,
-        onSaveCurrentFile,
       }}
     >
       {children}
