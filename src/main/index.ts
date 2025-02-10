@@ -22,6 +22,7 @@ import {
 import { getFileTree } from "./lib/get-file-tree";
 import { executeCompiler } from "./lib/execute-compiler";
 import { readCompilerOutput } from "./lib/read-compiler-output";
+import chokidar from "chokidar";
 
 let mainWindow: BrowserWindow | null;
 
@@ -208,6 +209,26 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
   if (filePaths.length > 0) {
     const folderPath = filePaths[0];
     const hnExpression = getFileTree(folderPath);
+
+    const watcher = chokidar.watch(folderPath, {
+      persistent: true,
+      ignoreInitial: true,
+      ignored: /(^|[\\/\\])\../,
+    });
+
+    watcher
+      .on("add", (filePath) => console.log(`File added: ${filePath}`))
+      .on("change", (filePath) => console.log(`File changed: ${filePath}`))
+      .on("unlink", (filePath) => console.log(`File removed: ${filePath}`))
+      .on("addDir", (filePath) => console.log(`Directory added: ${filePath}`))
+      .on("unlinkDir", (filePath) => console.log(`Directory removed: ${filePath}`))
+      .on("error", (error) => console.error(`Watcher error: ${error}`))
+      .on("ready", () => console.log("Initial scan complete. Ready for changes"));
+
+    watcher.on("all", (event, filePath) => {
+      mainWindow?.webContents.send("folder-watcher-event", { event, filePath });
+    });
+
     return { folderPath, fileTree: hnExpression };
   }
 
