@@ -24,7 +24,16 @@
     --input: 221 30% 18%;
     --ring: 221 83.2% 53.3%;
     --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 221 50% 5%;
     --foreground: 221 5% 90%;
@@ -46,17 +55,69 @@
     --input: 221 30% 18%;
     --ring: 221 83.2% 53.3%;
     --radius: 0.5rem;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
+
+  ::-webkit-scrollbar {
+    @apply h-1 w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: theme(colors.secondary.DEFAULT);
+    @apply bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-accent-foreground/10;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-foreground/50;
+  }
+
   body {
     @apply overflow-hidden bg-background font-mono text-foreground;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+  }
+}
+
+@layer components {
+  :is(.ast-root, .ast-node, .ast-leaf) {
+    & text:is(.rd3t-label__title) {
+      fill: var(--title-color, theme(colors.primary.foreground));
+    }
+
+    & text:is(.rd3t-label__attributes) {
+      fill: var(--attr-color, theme(colors.primary.foreground));
+    }
+
+    & > circle {
+      fill: var(--fill-color, theme(colors.primary.DEFAULT));
+    }
+  }
+
+  .ast-root {
+    --title-color: theme(colors.emerald.500);
+  }
+
+  .ast-node {
+    --title-color: theme(colors.amber.300);
+  }
+
+  .ast-leaf {
+    --fill-color: theme(colors.primary.foreground);
   }
 }

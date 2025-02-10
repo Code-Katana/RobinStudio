@@ -1,9 +1,12 @@
-import { WrenLang } from "./wren-lang";
-import { BrowserWindowActions } from "./browser-window-actions";
+import { wrenLang } from "./wren-lang";
+import { browserWindowActions } from "./browser-window-actions";
+import { fileChannels, folderChannels } from "./file-system";
 
 export const Channels = {
-  WrenLang,
-  BrowserWindowActions,
+  wrenLang,
+  browserWindowActions,
+  fileChannels,
+  folderChannels,
 } as const;
 
 export type Channel = (typeof Channels)[keyof typeof Channels];

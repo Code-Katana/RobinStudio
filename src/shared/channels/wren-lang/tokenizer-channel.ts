@@ -8,5 +8,3 @@ export type TokenizeRequest = {
 export type TokenizeResponse = {
   tokens: Token[];
 };
-
-export type TokenizeFunction = (src: string, sc: number) => number;

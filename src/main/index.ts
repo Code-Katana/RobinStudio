@@ -1,13 +1,27 @@
 import fs from "fs";
 import path, { join } from "path";
-import { app, protocol, shell, BrowserWindow, ipcMain } from "electron";
+import { app, protocol, shell, BrowserWindow, ipcMain, dialog } from "electron";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import { Channels, TokenizeRequest, TokenizeResponse } from "@shared/channels";
-import { exec } from "child_process";
-import { Token } from "@shared/types";
+import {
+  Channels,
+  ParseRequest,
+  ParseResponse,
+  TokenizeRequest,
+  TokenizeResponse,
+} from "@shared/channels";
+import { ScannerOptions, Token } from "@shared/types";
+import {
+  OpenFileRequest,
+  OpenFileResponse,
+  OpenFolderResponse,
+  SaveFileRequest,
+} from "@shared/channels/file-system";
+import { getFileTree } from "./lib/get-file-tree";
+import { executeCompiler } from "./lib/execute-compiler";
+import { readCompilerOutput } from "./lib/read-compiler-output";
 
 let mainWindow: BrowserWindow | null;
 
@@ -98,78 +112,104 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("ready", async () => {
-  ipcMain.handle(
-    Channels.WrenLang.tokenize,
-    async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-      const exePath = path.resolve("./resources/bin", "wren-lang.exe");
-      const inputFilePath = path.resolve("./resources/debug", "main.wren");
-      const outputFilePath = path.resolve("./resources/debug", "tokens_stream.json");
+// Wren Compiler Actions
+ipcMain.handle(
+  Channels.wrenLang.tokenize,
+  async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
+    const { source, scanner } = request;
 
-      const { source, scanner } = request;
+    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
+    const inputFilePath = source;
+    const outputFilePath = path.resolve("./resources/debug", "token-stream.json");
 
-      await new Promise<void>((resolve, reject) => {
-        fs.writeFile(inputFilePath, source, "utf8", (err) => {
-          if (err) {
-            console.log(`Write Error: ${err.message}`);
-            return reject(err);
-          }
-          resolve();
-        });
-      });
+    await executeCompiler(exePath, scanner, "tokenize", inputFilePath, outputFilePath);
 
-      await new Promise<void>((resolve, reject) => {
-        const command = `"${exePath}" "${scanner}" "RecursiveDecent" "tokenize" "${inputFilePath}" "${outputFilePath}"`;
+    const jsonData = await readCompilerOutput<Token[]>(outputFilePath);
 
-        exec(command, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Exec Error: ${error.message}`);
-            return reject(error);
-          }
-          if (stderr) {
-            console.error(`Exec Stderr: ${stderr}`);
-            return reject(new Error(stderr));
-          }
-          console.log(`Exec Stdout: ${stdout || "Executed successfully"}`);
-          resolve();
-        });
-      });
+    return { tokens: jsonData };
+  },
+);
 
-      const jsonData = await new Promise<Token[]>((resolve, reject) => {
-        fs.readFile(outputFilePath, "utf8", (readError, data) => {
-          if (readError) {
-            console.error(`Read Error: ${readError.message}`);
-            return reject(readError);
-          }
+ipcMain.handle(
+  Channels.wrenLang.parse,
+  async (_event, request: ParseRequest): Promise<ParseResponse> => {
+    const { source } = request;
 
-          try {
-            const json = JSON.parse(data);
-            resolve(json);
-          } catch (err) {
-            console.error(`Parse Error: ${err}`);
-            reject(err);
-          }
-        });
-      });
+    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
+    const inputFilePath = source;
+    const outputFilePath = path.resolve("./resources/debug", "parse-tree.json");
 
-      return { tokens: jsonData };
-    },
-  );
+    await executeCompiler(exePath, ScannerOptions.FA, "parse", inputFilePath, outputFilePath);
 
-  ipcMain.on(Channels.BrowserWindowActions.closeWindow, () => {
-    mainWindow?.close();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const jsonData = await readCompilerOutput<any>(outputFilePath);
+
+    return { ast: jsonData };
+  },
+);
+
+// Browser Window Actions
+ipcMain.on(Channels.browserWindowActions.closeWindow, () => {
+  mainWindow?.close();
+});
+
+ipcMain.on(Channels.browserWindowActions.minimizeWindow, () => {
+  mainWindow?.minimize();
+});
+
+ipcMain.on(Channels.browserWindowActions.maximizeWindow, () => {
+  if (mainWindow?.isMaximized()) {
+    mainWindow.restore();
+    return;
+  }
+
+  mainWindow?.maximize();
+});
+
+// File Feature Actions
+ipcMain.handle(Channels.fileChannels.open, async (): Promise<OpenFileResponse | null> => {
+  const { filePaths } = await dialog.showOpenDialog(mainWindow!, {
+    properties: ["openFile"],
+    title: "Select a Robin file",
+    message: "Choose a .rbn file to open",
   });
 
-  ipcMain.on(Channels.BrowserWindowActions.minimizeWindow, () => {
-    mainWindow?.minimize();
-  });
+  if (filePaths.length > 0) {
+    const content = fs.readFileSync(filePaths[0], "utf-8");
+    return { path: filePaths[0], content };
+  }
 
-  ipcMain.on(Channels.BrowserWindowActions.maximizeWindow, () => {
-    if (mainWindow?.isMaximized()) {
-      mainWindow.restore();
-      return;
+  return null;
+});
+
+ipcMain.handle(
+  Channels.fileChannels.openByPath,
+  async (_, request: OpenFileRequest): Promise<OpenFileResponse | null> => {
+    if (!request.path) {
+      return null;
     }
 
-    mainWindow?.maximize();
+    const content = fs.readFileSync(request.path, "utf-8");
+    return { path: request.path, content };
+  },
+);
+
+ipcMain.handle(Channels.fileChannels.save, async (_, request: SaveFileRequest) => {
+  fs.writeFileSync(request.path, request.content, "utf-8");
+});
+
+ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderResponse | null> => {
+  const { filePaths } = await dialog.showOpenDialog(mainWindow!, {
+    properties: ["openDirectory"],
+    title: "Select a Folder",
+    message: "Choose a folder to open",
   });
+
+  if (filePaths.length > 0) {
+    const folderPath = filePaths[0];
+    const hnExpression = getFileTree(folderPath);
+    return { folderPath, fileTree: hnExpression };
+  }
+
+  return null;
 });
