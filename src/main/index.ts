@@ -22,8 +22,37 @@ import {
 import { getFileTree } from "./lib/get-file-tree";
 import { executeCompiler } from "./lib/execute-compiler";
 import { readCompilerOutput } from "./lib/read-compiler-output";
+import { ChildProcess, spawn } from "child_process";
 
 let mainWindow: BrowserWindow | null;
+let lspProcess: ChildProcess;
+
+function startLSP() {
+  console.log("Starting LSP...");
+
+  const lspPath = path.join(__dirname, "../language-server/server.js");
+
+  lspProcess = spawn("node", [lspPath, "--stdio"], {
+    // stdio: "inherit",
+    stdio: ["pipe", "pipe", "inherit"],
+  });
+
+  lspProcess.stdout?.on("data", (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  lspProcess.on("exit", (code) => {
+    console.log(`LSP process exited with code ${code}`);
+  });
+
+  lspProcess.on("error", (error) => {
+    console.error(`Failed to start LSP process: ${error.message}`);
+  });
+
+  lspProcess.stderr?.on("data", (data) => {
+    console.error(`stderr: ${data}`);
+  });
+}
 
 function createWindow(): void {
   // Create the browser window.
@@ -94,6 +123,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
+  startLSP();
   createWindow();
 
   app.on("activate", function () {

@@ -10,6 +10,7 @@ export default defineConfig({
         "@main": resolve("src/main"),
         "@shared": resolve("src/shared"),
         "@resources": resolve("resources"),
+        "@language-server": resolve("src/language-server"),
       },
     },
   },
