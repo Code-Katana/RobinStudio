@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.node.json",
-  "include": ["src/language-server/**/*",],
+  "include": ["src/language-server/**/*"],
   "compilerOptions": {
     "outDir": "./out/language-server",
     "module": "CommonJS",

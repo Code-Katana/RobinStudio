@@ -15,7 +15,7 @@ const connection = createConnection(ProposedFeatures.all);
 // Create a document manager to store text documents
 const documents = new TextDocuments(TextDocument);
 
-console.log("Welcome from Robin LSP.");
+console.log("Welcome from Amin LSP.");
 
 // Handle `initialize` request from the client (Electron app)
 connection.onInitialize((params: InitializeParams): InitializeResult => {
