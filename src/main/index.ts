@@ -23,49 +23,38 @@ import { getFileTree } from "./lib/get-file-tree";
 import { executeCompiler } from "./lib/execute-compiler";
 import { readCompilerOutput } from "./lib/read-compiler-output";
 import { ChildProcess, spawn } from "child_process";
+import WebSocket from "ws";
 
 let mainWindow: BrowserWindow | null;
-let lspProcess: ChildProcess | null;
+let lspSocket: WebSocket | null;
 
 function startLSP() {
-  console.log("Starting LSP...");
+  console.log("Starting WebSocket connection to LSP...");
 
-  const lspPath =
-    process.env.NODE_ENV === "development"
-      ? path.resolve(__dirname, "../language-server/server.js")
-      : path.join(__dirname, "language-server", "server.js");
+  lspSocket = new WebSocket("ws://localhost:8081");
 
-  lspProcess = spawn("node", [lspPath, "--stdio"], {
-    stdio: ["pipe", "pipe", "inherit"],
+  lspSocket.on("open", () => {
+    console.log("Connected to LSP via WebSocket");
   });
 
-  if (!lspProcess || !lspProcess.stdin) {
-    console.error("Failed to spawn LSP process.");
-    return;
-  }
-
-  lspProcess.stdout?.on("data", (data) => {
-    console.log(`LSP Response: ${data.toString()}`);
+  lspSocket.on("message", (message) => {
+    console.log("LSP Response:", message.toString());
+    mainWindow?.webContents.send("lsp-response", JSON.parse(message.toString()));
   });
 
-  lspProcess.stderr?.on("data", (data) => {
-    console.error(`LSP stderr: ${data.toString()}`);
+  lspSocket.on("close", () => {
+    console.log("WebSocket connection to LSP closed.");
+    lspSocket = null;
   });
 
-  lspProcess.on("exit", (code) => {
-    console.log(`LSP process exited with code ${code}`);
-    lspProcess = null;
-  });
-
-  lspProcess.on("error", (error) => {
-    console.error(`Failed to start LSP process: ${error.message}`);
-    lspProcess = null;
+  lspSocket.on("error", (error) => {
+    console.error("WebSocket error:", error);
   });
 }
 
 function sendLSPRequest(method: string, params: object = {}) {
-  if (!lspProcess || !lspProcess.stdin) {
-    console.error("LSP process is not running.");
+  if (!lspSocket || lspSocket.readyState !== WebSocket.OPEN) {
+    console.error("LSP WebSocket is not connected.");
     return;
   }
 
@@ -76,11 +65,7 @@ function sendLSPRequest(method: string, params: object = {}) {
     params,
   };
 
-  const message = JSON.stringify(request);
-  const messagesLength = message.length;
-
-  lspProcess.stdin.write(`Content-Length: ${messagesLength}\r\n\r\n${message}`);
-  console.log(`Content-Length: ${messagesLength}\r\n\r\n${message}`);
+  lspSocket.send(JSON.stringify(request));
 }
 
 function createWindow(): void {
@@ -135,14 +120,11 @@ const server = new AssetServer();
 app.whenReady().then(() => {
   protocol.handle("app-asset", (request) => {
     const asset = new AssetUrl(request.url);
-
-    if (asset.isNodeModule) {
-      return server.fromNodeModules(asset.relativeUrl);
-    } else {
-      return server.fromPublic(asset.relativeUrl);
-    }
+    return asset.isNodeModule
+      ? server.fromNodeModules(asset.relativeUrl)
+      : server.fromPublic(asset.relativeUrl);
   });
-  // Set app user model id for windows
+
   electronApp.setAppUserModelId("com.electron");
 
   // Default open or close DevTools by F12 in development
@@ -168,7 +150,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    lspProcess?.kill();
+    lspSocket?.close();
     app.quit();
   }
 });
