@@ -19,69 +19,12 @@ import {
   OpenFolderResponse,
   SaveFileRequest,
 } from "@shared/channels/file-system";
-import { getFileTree } from "./lib/get-file-tree";
-import { executeCompiler } from "./lib/execute-compiler";
-import { readCompilerOutput } from "./lib/read-compiler-output";
-import { ChildProcess, spawn } from "child_process";
+import { getFileTree } from "@main/lib/get-file-tree";
+import { executeCompiler } from "@main/lib/execute-compiler";
+import { readCompilerOutput } from "@main/lib/read-compiler-output";
+import { lspProcess, startLSP } from "@main/language-server";
 
 let mainWindow: BrowserWindow | null;
-let lspProcess: ChildProcess | null;
-
-function startLSP() {
-  console.log("Starting LSP...");
-
-  const lspPath =
-    process.env.NODE_ENV === "development"
-      ? path.resolve(__dirname, "../language-server/server.js")
-      : path.join(__dirname, "language-server", "server.js");
-
-  lspProcess = spawn("node", [lspPath, "--stdio"], {
-    stdio: ["pipe", "pipe", "inherit"],
-  });
-
-  if (!lspProcess || !lspProcess.stdin) {
-    console.error("Failed to spawn LSP process.");
-    return;
-  }
-
-  lspProcess.stdout?.on("data", (data) => {
-    console.log(`LSP Response: ${data.toString()}`);
-  });
-
-  lspProcess.stderr?.on("data", (data) => {
-    console.error(`LSP stderr: ${data.toString()}`);
-  });
-
-  lspProcess.on("exit", (code) => {
-    console.log(`LSP process exited with code ${code}`);
-    lspProcess = null;
-  });
-
-  lspProcess.on("error", (error) => {
-    console.error(`Failed to start LSP process: ${error.message}`);
-    lspProcess = null;
-  });
-}
-
-function sendLSPRequest(method: string, params: object = {}) {
-  if (!lspProcess || !lspProcess.stdin) {
-    console.error("LSP process is not running.");
-    return;
-  }
-
-  const request = {
-    jsonrpc: "2.0",
-    id: Date.now(),
-    method,
-    params,
-  };
-
-  const message = JSON.stringify(request);
-  const messagesLength = message.length;
-
-  lspProcess.stdin.write(`Content-Length: ${messagesLength}\r\n\r\n${message}`);
-  console.log(`Content-Length: ${messagesLength}\r\n\r\n${message}`);
-}
 
 function createWindow(): void {
   // Create the browser window.
@@ -177,25 +120,17 @@ app.on("window-all-closed", () => {
 ipcMain.handle(
   Channels.wrenLang.tokenize,
   async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-    // const { source, scanner } = request;
+    const { source, scanner } = request;
 
-    // const exePath = path.resolve("./resources/bin", "wren-lang.exe");
-    // const inputFilePath = source;
-    // const outputFilePath = path.resolve("./resources/debug", "token-stream.json");
+    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
+    const inputFilePath = source;
+    const outputFilePath = path.resolve("./resources/debug", "token-stream.json");
 
-    // await executeCompiler(exePath, scanner, "tokenize", inputFilePath, outputFilePath);
+    await executeCompiler(exePath, scanner, "tokenize", inputFilePath, outputFilePath);
 
-    // const jsonData = await readCompilerOutput<Token[]>(outputFilePath);
+    const jsonData = await readCompilerOutput<Token[]>(outputFilePath);
 
-    // return { tokens: jsonData };
-
-    sendLSPRequest("initialize", {
-      processId: process.pid,
-      rootUri: request.source,
-      capabilities: {},
-    });
-
-    return { tokens: [] };
+    return { tokens: jsonData };
   },
 );
 
