@@ -12,7 +12,7 @@ import {
   TokenizeRequest,
   TokenizeResponse,
 } from "@shared/channels";
-import { ScannerOptions, Token } from "@shared/types";
+import { ScannerOptions } from "@shared/types";
 import {
   OpenFileRequest,
   OpenFileResponse,
@@ -22,13 +22,34 @@ import {
 import { getFileTree } from "./lib/get-file-tree";
 import { executeCompiler } from "./lib/execute-compiler";
 import { readCompilerOutput } from "./lib/read-compiler-output";
-import { ChildProcess, spawn } from "child_process";
 import WebSocket from "ws";
+import { ChildProcess, spawn } from "child_process";
 
 let mainWindow: BrowserWindow | null;
+let lspProcess: ChildProcess | null;
 let lspSocket: WebSocket | null;
 
 function startLSP() {
+  console.log("Starting LSP process...");
+  const lspPath =
+    process.env.NODE_ENV === "development"
+      ? path.resolve(__dirname, "../language-server/server.js")
+      : path.join(__dirname, "language-server", "server.js");
+
+  lspProcess = spawn("node", [lspPath], {
+    stdio: ["pipe", "pipe", "inherit"], // Pipe logs to the main process console
+  });
+
+  lspProcess.on("exit", (code) => {
+    console.log(`LSP Server exited with code ${code}`);
+  });
+
+  lspProcess.on("error", (err) => {
+    console.error("Failed to start LSP Server:", err);
+  });
+}
+
+function connectToLSP() {
   console.log("Starting WebSocket connection to LSP...");
 
   lspSocket = new WebSocket("ws://localhost:8081");
@@ -136,6 +157,7 @@ app.whenReady().then(() => {
 
   // Example Usage
   startLSP();
+  connectToLSP();
   createWindow();
 
   app.on("activate", function () {

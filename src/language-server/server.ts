@@ -10,8 +10,9 @@ import {
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 
-const wsServer = new WebSocket.Server({ port: 6969 });
-console.log("Robin LSP WebSocket server running on ws://localhost:8081");
+const PORT = 8081;
+const wsServer = new WebSocket.Server({ port: PORT });
+console.log(`Robin LSP WebSocket server running on ws://localhost:${PORT}`);
 
 wsServer.on("connection", (socket) => {
   console.log("WebSocket connection established with the renderer.");
@@ -40,11 +41,13 @@ wsServer.on("connection", (socket) => {
   });
 
   documents.listen(connection);
-  connection.listen();
+  connection.listen(); // Ensure LSP server is listening
 
   // Forward LSP notifications to WebSocket
   connection.onNotification((method, params) => {
-    socket.send(JSON.stringify({ type: "notification", method, params }));
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: "notification", method, params }));
+    }
   });
 
   // Handle WebSocket messages from the renderer
@@ -54,7 +57,9 @@ wsServer.on("connection", (socket) => {
       console.log(`Received request: ${method}`);
 
       connection.sendRequest(method, params).then((response) => {
-        socket.send(JSON.stringify({ type: "response", method, response }));
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({ type: "response", method, response }));
+        }
       });
     } catch (error) {
       console.error("Error parsing message:", error);
@@ -64,4 +69,8 @@ wsServer.on("connection", (socket) => {
   socket.on("close", () => {
     console.log("WebSocket connection closed.");
   });
+});
+
+wsServer.on("error", (error) => {
+  console.error("WebSocket server error:", error);
 });
