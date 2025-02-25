@@ -10,7 +10,7 @@ import { BrowserWindow, ipcMain } from "electron";
 import { Channels } from "@shared/channels";
 
 let lspProcess: ChildProcess | null;
-let lspConnection: MessageConnection | null;
+let lspConnection: MessageConnection | null = null;
 
 function startLSP() {
   console.log("Starting LSP...");
@@ -43,14 +43,15 @@ function startLSP() {
   });
 
   // Handle LSP requests from the renderer
-  ipcMain.on(Channels.lsp.request, (_event, msg) => {
+  ipcMain.on(Channels.lsp.request, (event, msg) => {
     lspConnection
       ?.sendRequest(msg.method, msg.params)
       .then((response) => {
-        _event.reply(Channels.lsp.response, { method: msg.method, response });
+        event.reply(Channels.lsp.response, { method: msg.method, response });
       })
       .catch((err) => {
         console.error("LSP Request Error:", err);
+        event.reply(Channels.lsp.error, err.message);
       });
   });
 
@@ -66,6 +67,8 @@ function startLSP() {
     console.log(`LSP process exited with code ${code}`);
     lspProcess = null;
     lspConnection = null;
+
+    setTimeout(startLSP, 3000);
   });
 
   lspProcess.on("error", (error) => {
