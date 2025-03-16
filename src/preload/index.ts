@@ -43,6 +43,25 @@ const electronAPI = {
   maximizeWindow: (): void => ipcRenderer.send(Channels.browserWindowActions.maximizeWindow),
 };
 
+// TODO: Add types for the json-rpc params.
+const languageServer = {
+  sendRequest: (method: string, params?: object | object[]) => {
+    return new Promise((resolve, reject) => {
+      ipcRenderer.once(Channels.lsp.response, (_, response) => resolve(response));
+      ipcRenderer.once(Channels.lsp.error, (_, error) => reject(new Error(error)));
+      ipcRenderer.send(Channels.lsp.request, { method, params });
+    });
+  },
+
+  onNotification: (callback: (method: string, params: object | object[]) => void) => {
+    ipcRenderer.on(Channels.lsp.notification, (_, { method, params }) => {
+      callback(method, params);
+    });
+
+    return () => ipcRenderer.removeAllListeners(Channels.lsp.notification);
+  },
+};
+
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
@@ -52,6 +71,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("fs", fileSystem);
+    contextBridge.exposeInMainWorld("languageServer", languageServer);
   } catch (error) {
     console.error(error);
   }

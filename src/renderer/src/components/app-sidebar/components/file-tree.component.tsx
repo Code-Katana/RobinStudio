@@ -12,6 +12,7 @@ import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { HnExpressionNode, HnNode } from "@shared/types";
 import { ChevronRight, Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
+import { OpenFileResponse } from "@shared/channels/file-system";
 
 export const FileTree = ({ item }: { item: HnExpressionNode }) => {
   const [node, children] = item;
@@ -47,9 +48,9 @@ const FileNode = ({ file }: { file: HnNode }) => {
   const { onOpenFile } = useCurrentProject();
 
   async function handleOpenFile() {
-    const response = await window.fs.openFileByPath({ path: file.path });
+    const response = (await window.fs.openFileByPath({ path: file.path })) as OpenFileResponse;
 
-    if (response === null) {
+    if (response === null || !response.content) {
       return;
     }
 

@@ -19,9 +19,10 @@ import {
   OpenFolderResponse,
   SaveFileRequest,
 } from "@shared/channels/file-system";
-import { getFileTree } from "./lib/get-file-tree";
-import { executeCompiler } from "./lib/execute-compiler";
-import { readCompilerOutput } from "./lib/read-compiler-output";
+import { getFileTree } from "@main/lib/get-file-tree";
+import { executeCompiler } from "@main/lib/execute-compiler";
+import { readCompilerOutput } from "@main/lib/read-compiler-output";
+import { lspProcess, startLSP } from "@main/language-server";
 
 let mainWindow: BrowserWindow | null;
 
@@ -94,6 +95,8 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
+  // Example Usage
+  startLSP();
   createWindow();
 
   app.on("activate", function () {
@@ -108,6 +111,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
+    lspProcess?.kill();
     app.quit();
   }
 });
