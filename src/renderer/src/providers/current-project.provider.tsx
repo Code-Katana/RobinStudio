@@ -1,5 +1,8 @@
+import { useDebounceValue } from "@renderer/hooks/use-debounce-value";
 import { HnExpressionNode } from "@shared/types";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+
+type OptionalString = string | undefined;
 
 export type OpenFileType = {
   name: string;
@@ -8,15 +11,15 @@ export type OpenFileType = {
 };
 
 export type CurrentProjectContextType = {
-  rootPath: string | undefined;
+  rootPath: OptionalString;
   fileTree: HnExpressionNode | undefined;
   openedFiles: Map<string, OpenFileType>;
   currentFile: OpenFileType | undefined;
-  onOpenProject: (path: string | undefined, tree: HnExpressionNode | undefined) => void;
+  onOpenProject: (path: OptionalString, tree: HnExpressionNode | undefined) => void;
   onCloseProject: () => void;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
-  onUpdateCurrentFile: (value: string | undefined) => void;
+  onUpdateCurrentFile: (value: OptionalString) => void;
 };
 
 export const CurrentProjectContext = createContext<CurrentProjectContextType | undefined>(
@@ -24,12 +27,15 @@ export const CurrentProjectContext = createContext<CurrentProjectContextType | u
 );
 
 export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [rootPath, setRootPath] = useState<string | undefined>(undefined);
+  const [rootPath, setRootPath] = useState<OptionalString>(undefined);
   const [fileTree, setFileTree] = useState<HnExpressionNode | undefined>(undefined);
   const [openedFiles, setOpenedFiles] = useState<Map<string, OpenFileType>>(new Map());
   const [currentFile, setCurrentFile] = useState<OpenFileType | undefined>(undefined);
 
-  function onOpenProject(path: string | undefined, tree: HnExpressionNode | undefined) {
+  const [bufferedContent, setBufferedContent] = useState<OptionalString>(undefined);
+  const debouncedContent = useDebounceValue<OptionalString>(bufferedContent);
+
+  function onOpenProject(path: OptionalString, tree: HnExpressionNode | undefined) {
     if (!path || !tree) {
       return;
     }
@@ -84,13 +90,19 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
     });
   }
 
-  function onUpdateCurrentFile(value: string | undefined) {
+  function onUpdateCurrentFile(value: OptionalString) {
+    setBufferedContent(value);
+  }
+
+  useEffect(() => {
+    if (!currentFile) return;
+
     setCurrentFile((prevCurrentFile) => {
       if (!prevCurrentFile) return undefined;
 
       const updatedFile: OpenFileType = {
         ...prevCurrentFile,
-        content: value || "",
+        content: debouncedContent || "",
       };
 
       setOpenedFiles((prevOpenedFiles) => {
@@ -99,9 +111,11 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
         return updatedFiles;
       });
 
+      console.log(updatedFile.content);
+
       return updatedFile;
     });
-  }
+  }, [debouncedContent]);
 
   return (
     <CurrentProjectContext.Provider
