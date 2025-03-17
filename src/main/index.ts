@@ -1,5 +1,5 @@
 import fs from "fs";
-import path, { join } from "path";
+import { join } from "path";
 import { app, protocol, shell, BrowserWindow, ipcMain, dialog } from "electron";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
@@ -12,7 +12,7 @@ import {
   TokenizeRequest,
   TokenizeResponse,
 } from "@shared/channels";
-import { ScannerOptions, Token } from "@shared/types";
+import { Token } from "@shared/types";
 import {
   OpenFileRequest,
   OpenFileResponse,
@@ -20,9 +20,9 @@ import {
   SaveFileRequest,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
-import { executeCompiler } from "@main/lib/execute-compiler";
-import { readCompilerOutput } from "@main/lib/read-compiler-output";
-import { lspProcess, startLSP } from "@main/language-server";
+// import { executeCompiler } from "@main/lib/execute-compiler";
+// import { readCompilerOutput } from "@main/lib/read-compiler-output";
+import { lspConnection, lspProcess, startLSP } from "@main/language-server";
 
 let mainWindow: BrowserWindow | null;
 
@@ -120,35 +120,44 @@ app.on("window-all-closed", () => {
 ipcMain.handle(
   Channels.wrenLang.tokenize,
   async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-    const { source, scanner } = request;
+    try {
+      if (!lspConnection) {
+        throw new Error("Language server is down...");
+      }
 
-    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
-    const inputFilePath = source;
-    const outputFilePath = path.resolve("./resources/debug", "token-stream.json");
+      const { source, scanner } = request;
+      const tokens: Token[] = await lspConnection.sendRequest("rbn/tokenize", {
+        source,
+        scannerOption: scanner,
+      });
 
-    await executeCompiler(exePath, scanner, "tokenize", inputFilePath, outputFilePath);
+      console.log(` my tokens from main :${tokens}`);
 
-    const jsonData = await readCompilerOutput<Token[]>(outputFilePath);
-
-    return { tokens: jsonData };
+      return { tokens };
+    } catch (error) {
+      console.error(error);
+      return { tokens: [] };
+    }
   },
 );
 
 ipcMain.handle(
   Channels.wrenLang.parse,
   async (_event, request: ParseRequest): Promise<ParseResponse> => {
-    const { source } = request;
+    try {
+      if (!lspConnection) {
+        throw new Error("Language server is down...");
+      }
 
-    const exePath = path.resolve("./resources/bin", "wren-lang.exe");
-    const inputFilePath = source;
-    const outputFilePath = path.resolve("./resources/debug", "parse-tree.json");
+      const { source } = request;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ast: any = await lspConnection.sendRequest("rbn/parse", { source });
 
-    await executeCompiler(exePath, ScannerOptions.FA, "parse", inputFilePath, outputFilePath);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const jsonData = await readCompilerOutput<any>(outputFilePath);
-
-    return { ast: jsonData };
+      return { ast };
+    } catch (error) {
+      console.error(error);
+      return { ast: [] };
+    }
   },
 );
 
