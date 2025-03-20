@@ -217,17 +217,30 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
     });
 
     watcher
-      .on("add", (filePath) => console.log(`File added: ${filePath}`))
-      .on("change", (filePath) => console.log(`File changed: ${filePath}`))
-      .on("unlink", (filePath) => console.log(`File removed: ${filePath}`))
-      .on("addDir", (filePath) => console.log(`Directory added: ${filePath}`))
-      .on("unlinkDir", (filePath) => console.log(`Directory removed: ${filePath}`))
-      .on("error", (error) => console.error(`Watcher error: ${error}`))
-      .on("ready", () => console.log("Initial scan complete. Ready for changes"));
-
-    watcher.on("all", (event, filePath) => {
-      mainWindow?.webContents.send("folder-watcher-event", { event, filePath });
-    });
+      .on("ready", () => console.log("Initial scan complete. Ready for changes"))
+      .on("add", (filePath) => {
+        console.log(`File added: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "add", path: filePath });
+      })
+      .on("change", (filePath) => {
+        console.log(`File changed: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "change", path: filePath });
+      })
+      .on("unlink", (filePath) => {
+        console.log(`File removed: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "remove", path: filePath });
+      })
+      .on("addDir", (filePath) => {
+        console.log(`Directory added: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "addDir", path: filePath });
+      })
+      .on("unlinkDir", (filePath) => {
+        console.log(`Directory removed: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "unlinkDir", path: filePath });
+      })
+      .on("error", (error) => {
+        console.error(`Watcher error: ${error}`);
+      });
 
     return { folderPath, fileTree: hnExpression };
   }

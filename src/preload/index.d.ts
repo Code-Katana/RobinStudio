@@ -26,5 +26,10 @@ declare global {
       saveFile: (req: SaveFileRequest) => Promise<void>;
       openFolder: () => Promise<OpenFolderResponse | null>;
     };
+
+    electronWatcher: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onFileEvent: (callback: (event: any, data: { type: string; path: string }) => void) => void;
+    };
   }
 }

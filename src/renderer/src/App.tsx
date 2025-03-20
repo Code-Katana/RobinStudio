@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 import { TokenizeResponse } from "@shared/channels";
-import { Token } from "@shared/types";
+import { FileEvent, Token } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { TokensTable } from "./components/tokens-table";
@@ -22,7 +22,8 @@ const App: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ast, setAst] = useState<any>({});
   const [tokens, setTokens] = useState<Token[]>([]);
-  const [output, setOutput] = useState<"tokens" | "tree" | undefined>(undefined);
+  const [output, setOutput] = useState<"tokens" | "tree" | "file-events" | undefined>(undefined);
+  const [events, setEvents] = useState<FileEvent[]>([]);
 
   function clearOutput() {
     setOutput(undefined);
@@ -92,6 +93,15 @@ const App: React.FC = () => {
     };
   }, [currentFile]);
 
+  useEffect(() => {
+    window.electronWatcher.onFileEvent((data: FileEvent) => {
+      setEvents((prev) => [...prev, data]);
+      events.forEach((event) => {
+        console.log(`[${event.type}] ${event.path}`);
+      });
+    });
+  }, [events]);
+
   return (
     <>
       <AppSidebar rootPath={rootPath} fileTree={fileTree} />
@@ -117,6 +127,7 @@ const App: React.FC = () => {
                       <Button size="sm" onClick={handleParse}>
                         Parse
                       </Button>
+
                       <Button size="sm" onClick={clearOutput}>
                         Clear
                       </Button>
