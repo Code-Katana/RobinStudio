@@ -28,8 +28,7 @@ declare global {
     };
 
     electronWatcher: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onFileEvent: (callback: (event: any, data: { type: string; path: string }) => void) => void;
+      onFileEvent: (callback: (data: { type: string; path: string }) => void) => void;
     };
   }
 }

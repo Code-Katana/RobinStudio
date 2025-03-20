@@ -45,7 +45,6 @@ const electronAPI = {
 };
 
 const electronWatcher = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFileEvent: (callback: (event: FileEvent) => void) => {
     ipcRenderer.on("file-event", (_, data) => callback(data));
   },
