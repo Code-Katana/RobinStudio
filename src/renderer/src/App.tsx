@@ -14,7 +14,6 @@ import { useAppSettings } from "./hooks/use-app-settings";
 import { Tabs } from "./components/ui/tabs";
 import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
-import { FileWatcherTable } from "./components/file-watcher-table";
 
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProject();
@@ -72,10 +71,6 @@ const App: React.FC = () => {
     });
   }
 
-  function handleFileWatcher() {
-    setOutput("file-events");
-  }
-
   useEffect(() => {
     const handleKeyDown = async (event: KeyboardEvent) => {
       if (event.key === "s" && (event.ctrlKey || event.metaKey)) {
@@ -101,10 +96,11 @@ const App: React.FC = () => {
   useEffect(() => {
     window.electronWatcher.onFileEvent((data: FileEvent) => {
       setEvents((prev) => [...prev, data]);
-      console.log(`Data ${data}`);
-      console.log(events);
+      events.forEach((event) => {
+        console.log(`[${event.type}] ${event.path}`);
+      });
     });
-  }, []);
+  }, [events]);
 
   return (
     <>
@@ -131,9 +127,6 @@ const App: React.FC = () => {
                       <Button size="sm" onClick={handleParse}>
                         Parse
                       </Button>
-                      <Button size="sm" onClick={handleFileWatcher}>
-                        File Watcher
-                      </Button>
                       <Button size="sm" onClick={clearOutput}>
                         Clear
                       </Button>
@@ -145,7 +138,6 @@ const App: React.FC = () => {
                           <TokensTable tokens={tokens} scannerOption={scannerOption} />
                         )}
                         {output === "tree" && <AbstractSyntaxTree ast={ast} />}
-                        {output === "file-events" && <FileWatcherTable events={events} />}
                       </>
                     ) : (
                       <p className="pt-12 text-center">Write some code & Click tokenize</p>

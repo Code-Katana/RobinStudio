@@ -9,6 +9,7 @@ import {
   SidebarMenuSub,
 } from "@renderer/components/ui/sidebar";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
+import { useFileWatcher } from "@renderer/hooks/use-file-watcher";
 import { HnExpressionNode, HnNode } from "@shared/types";
 import { ChevronRight, Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
@@ -45,6 +46,7 @@ export const FileTree = ({ item }: { item: HnExpressionNode }) => {
 
 const FileNode = ({ file }: { file: HnNode }) => {
   const { onOpenFile } = useCurrentProject();
+  const fileStatuses = useFileWatcher();
 
   async function handleOpenFile() {
     const response = await window.fs.openFileByPath({ path: file.path });
@@ -55,11 +57,27 @@ const FileNode = ({ file }: { file: HnNode }) => {
 
     onOpenFile(file.name, file.path, response.content);
   }
+  function getFileIndicator(path: string) {
+    const statusMap: Record<string, { label: string; color: string }> = {
+      change: { label: "M", color: "text-yellow-500" },
+      remove: { label: "D", color: "text-red-500" },
+      add: { label: "+", color: "text-green-500" },
+    };
 
+    const status = fileStatuses[path];
+    return status ? (
+      <span className={`${statusMap[status]?.color}`}>{statusMap[status]?.label}</span>
+    ) : null;
+  }
+
+  const fileIndicator = getFileIndicator(file.path);
   return (
     <SidebarMenuButton className="data-[active=true]:bg-transparent" onClick={handleOpenFile}>
       <FileTextIcon className="text-primary" />
-      {file.name}
+      <span className={`flex items-center gap-1 ${fileIndicator?.props.className}`}>
+        {file.name}
+        {getFileIndicator(file.path)}
+      </span>
     </SidebarMenuButton>
   );
 };
