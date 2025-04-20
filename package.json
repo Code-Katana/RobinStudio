@@ -41,10 +41,7 @@
     "react-d3-tree": "^3.6.2",
     "react-resizable-panels": "^2.1.7",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7",
-    "vscode-jsonrpc": "^8.2.1",
-    "vscode-languageserver": "^9.0.1",
-    "vscode-languageserver-textdocument": "^1.0.12"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
