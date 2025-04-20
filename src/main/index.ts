@@ -20,9 +20,6 @@ import {
   SaveFileRequest,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
-// import { executeCompiler } from "@main/lib/execute-compiler";
-// import { readCompilerOutput } from "@main/lib/read-compiler-output";
-import { lspConnection, lspProcess, startLSP } from "@main/language-server";
 
 let mainWindow: BrowserWindow | null;
 
@@ -96,7 +93,7 @@ app.whenReady().then(() => {
   });
 
   // Example Usage
-  startLSP();
+  // startLSP();
   createWindow();
 
   app.on("activate", function () {
@@ -111,7 +108,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    lspProcess?.kill();
+    // lspProcess?.kill();
     app.quit();
   }
 });
@@ -120,44 +117,14 @@ app.on("window-all-closed", () => {
 ipcMain.handle(
   Channels.wrenLang.tokenize,
   async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-    try {
-      if (!lspConnection) {
-        throw new Error("Language server is down...");
-      }
-
-      const { source, scanner } = request;
-      const tokens: Token[] = await lspConnection.sendRequest("rbn/tokenize", {
-        source,
-        scannerOption: scanner,
-      });
-
-      console.log(` my tokens from main :${tokens}`);
-
-      return { tokens };
-    } catch (error) {
-      console.error(error);
-      return { tokens: [] };
-    }
+    return { tokens: [] };
   },
 );
 
 ipcMain.handle(
   Channels.wrenLang.parse,
   async (_event, request: ParseRequest): Promise<ParseResponse> => {
-    try {
-      if (!lspConnection) {
-        throw new Error("Language server is down...");
-      }
-
-      const { source } = request;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const ast: any = await lspConnection.sendRequest("rbn/parse", { source });
-
-      return { ast };
-    } catch (error) {
-      console.error(error);
-      return { ast: [] };
-    }
+    return { ast: [] };
   },
 );
 
