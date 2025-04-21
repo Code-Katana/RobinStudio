@@ -9,15 +9,15 @@ import { TokensTable } from "./components/tokens-table";
 import { Button } from "./components/ui/button";
 import { AppSidebar } from "./components/app-sidebar";
 import { SidebarInset } from "./components/ui/sidebar";
-import { useCurrentProject } from "./hooks/use-current-project";
-import { useAppSettings } from "./hooks/use-app-settings";
 import { Tabs } from "./components/ui/tabs";
 import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
+import { useCurrentProjectStore } from "./stores/current-project.store";
+import { useAppSettingsStore } from "./stores/app-settings.store";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProject();
-  const { direction, scannerOption } = useAppSettings();
+  const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProjectStore();
+  const { direction, scannerOption } = useAppSettingsStore();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ast, setAst] = useState<any>({});
