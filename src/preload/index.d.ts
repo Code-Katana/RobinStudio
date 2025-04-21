@@ -27,7 +27,7 @@ declare global {
       openFolder: () => Promise<OpenFolderResponse | null>;
     };
 
-    languageServer: {
+    lsp: {
       sendRequest: (method: string, params?: object | object[]) => Promise<void>;
       onNotification: (
         callback: (method: string, params: object | object[]) => void,

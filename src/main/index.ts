@@ -12,7 +12,6 @@ import {
   TokenizeRequest,
   TokenizeResponse,
 } from "@shared/channels";
-import { Token } from "@shared/types";
 import {
   OpenFileRequest,
   OpenFileResponse,
@@ -20,10 +19,17 @@ import {
   SaveFileRequest,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
+import { robinConnection, startRobinConnection } from "./language-server";
+
+type Message = {
+  method: string;
+  params?: object | object[];
+};
 
 let mainWindow: BrowserWindow | null;
 
 function createWindow(): void {
+  console.log("Creating app window");
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 992,
@@ -54,6 +60,22 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+}
+
+function createLanguageServer(): void {
+  console.log("Creating language server");
+  startRobinConnection();
+  // When renderer sends a message to LSP
+  ipcMain.on(Channels.lsp.notification, (_, msg: Message) => {
+    console.log("clinet: :" + msg.method);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    robinConnection.sendNotification(msg.method as any, msg.params);
+  });
+
+  // Forward LSP responses back to renderer
+  robinConnection.onNotification((method, params) => {
+    mainWindow?.webContents.send(Channels.lsp.notification, { method, params });
+  });
 }
 
 protocol.registerSchemesAsPrivileged([
@@ -93,8 +115,8 @@ app.whenReady().then(() => {
   });
 
   // Example Usage
-  // startLSP();
   createWindow();
+  createLanguageServer();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
@@ -116,14 +138,14 @@ app.on("window-all-closed", () => {
 // Wren Compiler Actions
 ipcMain.handle(
   Channels.wrenLang.tokenize,
-  async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
+  async (_event, _request: TokenizeRequest): Promise<TokenizeResponse> => {
     return { tokens: [] };
   },
 );
 
 ipcMain.handle(
   Channels.wrenLang.parse,
-  async (_event, request: ParseRequest): Promise<ParseResponse> => {
+  async (_event, _request: ParseRequest): Promise<ParseResponse> => {
     return { ast: [] };
   },
 );
