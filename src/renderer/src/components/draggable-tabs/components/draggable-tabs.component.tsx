@@ -2,8 +2,8 @@ import { useRef } from "react";
 import { Cross2Icon, FileTextIcon } from "@radix-ui/react-icons";
 import { Button } from "@renderer/components/ui/button";
 import { TabsTrigger } from "@renderer/components/ui/tabs";
-import { OpenFileType } from "@renderer/providers/current-project.provider";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd/dist/hooks";
+import { OpenFileType } from "@renderer/stores/current-project.store";
 
 const ItemType = "TAB";
 
@@ -13,7 +13,7 @@ interface DraggableTabProps extends React.ComponentProps<typeof TabsTrigger> {
   onClick: () => void;
   onClose: (e: React.MouseEvent) => void;
   onMoveTab: (dragIndex: number, hoverIndex: number) => void;
-  fileIndicator: React.ReactNode | null;
+  fileIndicator: JSX.Element | null;
 }
 
 export const DraggableTab: React.FC<DraggableTabProps> = ({
@@ -59,7 +59,7 @@ export const DraggableTab: React.FC<DraggableTabProps> = ({
         opacity: isDragging ? 0.5 : 1,
         cursor: isDragging ? "grabbing" : "grab",
       }}
-      className="flex items-center justify-center gap-1 p-2 space-y-1 border-r rounded-none hover:bg-primary/50"
+      className="flex items-center justify-center gap-1 space-y-1 rounded-none border-r p-2 hover:bg-primary/50"
       onClick={onClick}
     >
       <span className="text-primary">
@@ -72,7 +72,7 @@ export const DraggableTab: React.FC<DraggableTabProps> = ({
         <Button
           variant="ghost"
           size="sm"
-          className="p-1 size-6 hover:bg-primary-foreground/10"
+          className="size-6 p-1 hover:bg-primary-foreground/10"
           onClick={onClose}
         >
           <Cross2Icon />
