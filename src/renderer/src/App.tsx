@@ -94,7 +94,11 @@ const App: React.FC = () => {
 
   return (
     <>
-      <AppSidebar rootPath={rootPath} fileTree={fileTree} />
+      <div className="container p-0">
+        <TitleBar />
+        {/* <AppSidebar rootPath={rootPath} fileTree={fileTree} /> */}
+      </div>
+      {/* <AppSidebar rootPath={rootPath} fileTree={fileTree} />
       <SidebarInset>
         <TitleBar />
         <Tabs value={currentFile?.path} className="grid">
@@ -138,7 +142,7 @@ const App: React.FC = () => {
             </section>
           </main>
         </Tabs>
-      </SidebarInset>
+      </SidebarInset> */}
     </>
   );
 };
