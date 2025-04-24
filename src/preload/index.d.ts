@@ -27,6 +27,10 @@ declare global {
       openFolder: () => Promise<OpenFolderResponse | null>;
     };
 
+    electronWatcher: {
+      onFileEvent: (callback: (data: { type: string; path: string }) => void) => void;
+    };
+
     languageServer: {
       sendRequest: (method: string, params?: object | object[]) => Promise<void>;
       onNotification: (

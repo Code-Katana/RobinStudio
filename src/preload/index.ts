@@ -13,6 +13,7 @@ import {
   OpenFolderResponse,
   SaveFileRequest,
 } from "@shared/channels/file-system";
+import { FileEvent } from "@shared/types";
 
 // Custom APIs for renderer
 const api = {
@@ -43,6 +44,12 @@ const electronAPI = {
   maximizeWindow: (): void => ipcRenderer.send(Channels.browserWindowActions.maximizeWindow),
 };
 
+const electronWatcher = {
+  onFileEvent: (callback: (event: FileEvent) => void) => {
+    ipcRenderer.on("file-event", (_, data) => callback(data));
+  },
+};
+
 // TODO: Add types for the json-rpc params.
 const languageServer = {
   sendRequest: (method: string, params?: object | object[]) => {
@@ -71,6 +78,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("fs", fileSystem);
+    contextBridge.exposeInMainWorld("electronWatcher", electronWatcher);
     contextBridge.exposeInMainWorld("languageServer", languageServer);
   } catch (error) {
     console.error(error);
