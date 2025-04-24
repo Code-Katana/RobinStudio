@@ -30,5 +30,12 @@ declare global {
     electronWatcher: {
       onFileEvent: (callback: (data: { type: string; path: string }) => void) => void;
     };
+
+    languageServer: {
+      sendRequest: (method: string, params?: object | object[]) => Promise<void>;
+      onNotification: (
+        callback: (method: string, params: object | object[]) => void,
+      ) => () => Electron.IpcRenderer;
+    };
   }
 }

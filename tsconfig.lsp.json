@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.node.json",
+  "include": ["src/language-server/**/*"],
+  "compilerOptions": {
+    "outDir": "./out/language-server",
+    "module": "CommonJS",
+    "composite": true,
+    "types": ["electron-vite/node"],
+    "baseUrl": ".",
+    "paths": {
+      "@language-server/*": [
+        "src/language-server/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ],
+    }
+  }
+}
