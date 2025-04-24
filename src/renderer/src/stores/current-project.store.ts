@@ -16,7 +16,8 @@ export interface CurrentProjectState {
   onCloseProject: () => void;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
-  onUpdateCurrentFile: (value: string | undefined) => void;
+  onUpdateCurrentFile: (value?: string) => void;
+  moveTab: (dragIndex: number, hoverIndex: number) => void;
 }
 
 export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
@@ -102,6 +103,36 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
       return {
         openedFiles: updatedFiles,
         currentFile: updatedFile,
+      };
+    });
+  },
+
+  moveTab: (dragIndex: number, hoverIndex: number) => {
+    set((state) => {
+      const filesArray = Array.from(state.openedFiles.values());
+
+      // Don't do anything if indices are invalid
+      if (
+        dragIndex < 0 ||
+        hoverIndex < 0 ||
+        dragIndex >= filesArray.length ||
+        hoverIndex >= filesArray.length
+      ) {
+        return {};
+      }
+
+      // Reorder the array
+      const [removed] = filesArray.splice(dragIndex, 1);
+      filesArray.splice(hoverIndex, 0, removed);
+
+      // Create new Map with updated order
+      const newFilesMap = new Map<string, OpenFileType>();
+      filesArray.forEach((file) => {
+        newFilesMap.set(file.path, file);
+      });
+
+      return {
+        openedFiles: newFilesMap,
       };
     });
   },
