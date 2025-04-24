@@ -20,9 +20,8 @@ import {
   SaveFileRequest,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
-// import { executeCompiler } from "@main/lib/execute-compiler";
-// import { readCompilerOutput } from "@main/lib/read-compiler-output";
 import { lspConnection, lspProcess, startLSP } from "@main/language-server";
+import chokidar from "chokidar";
 
 let mainWindow: BrowserWindow | null;
 
@@ -221,6 +220,39 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
   if (filePaths.length > 0) {
     const folderPath = filePaths[0];
     const hnExpression = getFileTree(folderPath);
+
+    const watcher = chokidar.watch(folderPath, {
+      persistent: true,
+      ignoreInitial: true,
+      ignored: /(^|[\\/\\])\../,
+    });
+
+    watcher
+      .on("ready", () => console.log("Initial scan complete. Ready for changes"))
+      .on("add", (filePath) => {
+        console.log(`File added: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "add", path: filePath });
+      })
+      .on("change", (filePath) => {
+        console.log(`File changed: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "change", path: filePath });
+      })
+      .on("unlink", (filePath) => {
+        console.log(`File removed: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "remove", path: filePath });
+      })
+      .on("addDir", (filePath) => {
+        console.log(`Directory added: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "addDir", path: filePath });
+      })
+      .on("unlinkDir", (filePath) => {
+        console.log(`Directory removed: ${filePath}`);
+        mainWindow?.webContents.send("file-event", { type: "unlinkDir", path: filePath });
+      })
+      .on("error", (error) => {
+        console.error(`Watcher error: ${error}`);
+      });
+
     return { folderPath, fileTree: hnExpression };
   }
 

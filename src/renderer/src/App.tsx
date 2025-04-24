@@ -2,27 +2,28 @@ import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 import { TokenizeResponse } from "@shared/channels";
-import { Token } from "@shared/types";
+import { FileEvent, Token } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { TokensTable } from "./components/tokens-table";
 import { Button } from "./components/ui/button";
 import { AppSidebar } from "./components/app-sidebar";
 import { SidebarInset } from "./components/ui/sidebar";
-import { useCurrentProject } from "./hooks/use-current-project";
-import { useAppSettings } from "./hooks/use-app-settings";
 import { Tabs } from "./components/ui/tabs";
 import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
+import { useCurrentProjectStore } from "./stores/current-project.store";
+import { useAppSettingsStore } from "./stores/app-settings.store";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProject();
-  const { direction, scannerOption } = useAppSettings();
+  const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProjectStore();
+  const { direction, scannerOption } = useAppSettingsStore();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ast, setAst] = useState<any>({});
   const [tokens, setTokens] = useState<Token[]>([]);
-  const [output, setOutput] = useState<"tokens" | "tree" | undefined>(undefined);
+  const [output, setOutput] = useState<"tokens" | "tree" | "file-events" | undefined>(undefined);
+  const [events, setEvents] = useState<FileEvent[]>([]);
 
   function clearOutput() {
     setOutput(undefined);
@@ -91,6 +92,15 @@ const App: React.FC = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [currentFile]);
+
+  useEffect(() => {
+    window.electronWatcher.onFileEvent((data: FileEvent) => {
+      setEvents((prev) => [...prev, data]);
+      events.forEach((event) => {
+        console.log(`[${event.type}] ${event.path}`);
+      });
+    });
+  }, [events]);
 
   return (
     <>

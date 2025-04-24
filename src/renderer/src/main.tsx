@@ -4,7 +4,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { loader } from "@monaco-editor/react";
 import App from "./App";
-import { AppProviders } from "./providers";
 
 loader.config({
   paths: {
@@ -14,8 +13,6 @@ loader.config({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <AppProviders>
-      <App />
-    </AppProviders>
+    <App />
   </React.StrictMode>,
 );
