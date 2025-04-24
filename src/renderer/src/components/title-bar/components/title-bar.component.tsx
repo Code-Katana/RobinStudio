@@ -33,8 +33,8 @@ export const TitleBar: React.FC = () => {
   const iconSize = "w-5 h-5";
 
   return (
-    <nav className="mb-4 flex w-full items-start justify-between gap-4 shadow-md app-drag *:app-no-drag">
-      <div className="flex items-center justify-center gap-4 rounded-br-lg border-8 border-l-0 border-t-0 border-secondary/50 bg-secondary/50 p-3">
+    <nav className="z-50 flex w-full items-start justify-between gap-4 shadow-md app-drag *:app-no-drag">
+      <div className="flex items-center justify-center gap-4 p-3">
         <div className="flex items-center gap-2 text-sm">
           <img src={RobinLogo} alt="Robin Logo" className="h-6 w-6 rounded-sm" />
           <span>

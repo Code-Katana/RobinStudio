@@ -3,6 +3,8 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { useMemo, useRef } from "react";
 import { wrenLanguageConfig, WrenStudioTheme, wrenTokensProvider } from "@renderer/languages/wren";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
+import { TabsBar } from "@renderer/components/tabs-bar";
+import { Tabs } from "@renderer/components/ui/tabs";
 
 export const EditorPlayground: React.FC = () => {
   const { currentFile, onUpdateCurrentFile } = useCurrentProject();
@@ -22,22 +24,26 @@ export const EditorPlayground: React.FC = () => {
   }
 
   return (
-    <Editor
-      height="100%"
-      width="100%"
-      defaultLanguage="wren"
-      theme="wren-studio"
-      path={currentFile?.path}
-      value={value}
-      onChange={(val) => onUpdateCurrentFile(val)}
-      onMount={handleEditorDidMount}
-      options={{
-        automaticLayout: true,
-        minimap: { enabled: false },
-        bracketPairColorization: {
-          enabled: false,
-        },
-      }}
-    />
+    <Tabs value={currentFile?.path} className="grid">
+      <TabsBar />
+      <Editor
+        height="100%"
+        width="100%"
+        className="bg-secondary"
+        defaultLanguage="wren"
+        theme="wren-studio"
+        path={currentFile?.path}
+        value={value}
+        onChange={(val) => onUpdateCurrentFile(val)}
+        onMount={handleEditorDidMount}
+        options={{
+          automaticLayout: true,
+          minimap: { enabled: false },
+          bracketPairColorization: {
+            enabled: false,
+          },
+        }}
+      />
+    </Tabs>
   );
 };

@@ -94,9 +94,54 @@ const App: React.FC = () => {
 
   return (
     <>
-      <div className="container p-0">
+      <div className="container flex flex-col p-0">
         <TitleBar />
-        {/* <AppSidebar rootPath={rootPath} fileTree={fileTree} /> */}
+        <div className="main-container">
+          <main className="relative grid h-svh w-full grid-rows-1">
+            <section className="absolute inset-0">
+              <ResizablePanelGroup direction={direction} className="h-svh font-mono">
+                <ResizablePanel className="rounded-tr-lg bg-secondary" defaultSize={50}>
+                  <ResizablePanelGroup direction="horizontal">
+                    {currentFile && <EditorPlayground />}
+                  </ResizablePanelGroup>
+                </ResizablePanel>
+
+                <ResizableHandle className="w-1.5" withHandle />
+
+                <ResizablePanel className="rounded-tl-lg bg-secondary" defaultSize={50}>
+                  <ScrollArea className="relative h-svh">
+                    <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
+                      <Button size="sm" onClick={handleTokenize}>
+                        Tokenize
+                      </Button>
+                      <Button size="sm" onClick={handleParse}>
+                        Parse
+                      </Button>
+                      <Button size="sm" onClick={clearOutput}>
+                        Clear
+                      </Button>
+                    </header>
+
+                    {currentFile ? (
+                      <>
+                        {output === "tokens" && (
+                          <TokensTable tokens={tokens} scannerOption={scannerOption} />
+                        )}
+                        {output === "tree" && <AbstractSyntaxTree ast={ast} />}
+                      </>
+                    ) : (
+                      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
+                        <p className="text-center text-muted-foreground">
+                          Write some code & Click tokenize
+                        </p>
+                      </div>
+                    )}
+                  </ScrollArea>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </section>
+          </main>
+        </div>
       </div>
       {/* <AppSidebar rootPath={rootPath} fileTree={fileTree} />
       <SidebarInset>

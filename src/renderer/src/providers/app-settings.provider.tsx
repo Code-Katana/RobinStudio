@@ -15,7 +15,7 @@ export type AppSettingsContextType = {
 export const AppSettingsContext = createContext<AppSettingsContextType | undefined>(undefined);
 
 export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [direction, _setDirection] = useState<DirectionType>("vertical");
+  const [direction, _setDirection] = useState<DirectionType>("horizontal");
   const [scannerOption, _setScannerOption] = useState<ScannerOptions>(ScannerOptions.FA);
   const [parserOption, _setParserOption] = useState<ParserOptions>(ParserOptions.RecursiveDecent);
 
