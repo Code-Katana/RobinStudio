@@ -17,8 +17,8 @@ function startLSP() {
 
   const lspPath =
     process.env.NODE_ENV === "development"
-      ? path.resolve(__dirname, "../language-server/server.js")
-      : path.join(__dirname, "language-server", "server.js");
+      ? path.resolve(__dirname, "../language-server/index.js")
+      : path.join(__dirname, "language-server", "index.js");
 
   lspProcess = spawn("node", [lspPath, "--stdio"], {
     stdio: ["pipe", "pipe", "inherit"],
