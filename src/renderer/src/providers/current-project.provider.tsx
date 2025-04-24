@@ -2,8 +2,6 @@ import { useDebounceValue } from "@renderer/hooks/use-debounce-value";
 import { HnExpressionNode } from "@shared/types";
 import { createContext, useState, useEffect } from "react";
 
-type OptionalString = string | undefined;
-
 export type OpenFileType = {
   name: string;
   path: string;
@@ -19,7 +17,9 @@ export type CurrentProjectContextType = {
   onCloseProject: () => void;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
-  onUpdateCurrentFile: (value: OptionalString) => void;
+  onUpdateCurrentFile: (value?: string) => void;
+  moveTab: (dragIndex: number, hoverIndex: number) => void;
+  onUpdateCurrentFile: (value?: string) => void;
 };
 
 export const CurrentProjectContext = createContext<CurrentProjectContextType | undefined>(
@@ -117,6 +117,34 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
     });
   }, [debouncedContent]);
 
+  function moveTab(dragIndex: number, hoverIndex: number) {
+    setOpenedFiles((prevOpenedFiles) => {
+      const filesArray = Array.from(prevOpenedFiles.values());
+
+      // Don't do anything if indices are invalid
+      if (
+        dragIndex < 0 ||
+        hoverIndex < 0 ||
+        dragIndex >= filesArray.length ||
+        hoverIndex >= filesArray.length
+      ) {
+        return prevOpenedFiles;
+      }
+
+      // Reorder the array
+      const [removed] = filesArray.splice(dragIndex, 1);
+      filesArray.splice(hoverIndex, 0, removed);
+
+      // Create new Map with updated order
+      const newFilesMap = new Map();
+      filesArray.forEach((file) => {
+        newFilesMap.set(file.path, file);
+      });
+
+      return newFilesMap;
+    });
+  }
+
   return (
     <CurrentProjectContext.Provider
       value={{
@@ -129,6 +157,7 @@ export const CurrentProjectProvider: React.FC<{ children: React.ReactNode }> = (
         onOpenFile,
         onCloseFile,
         onUpdateCurrentFile,
+        moveTab,
       }}
     >
       {children}
