@@ -12,12 +12,13 @@ import {
 } from "@renderer/components/ui/dropdown-menu";
 import { useAppSettings } from "@renderer/hooks/use-app-settings";
 import { ScannerOptions } from "@shared/types";
-import React from "react";
 import RobinLogo from "@renderer/assets/images/rbnLogo.jpg";
 import { Arrow, Search, Separator } from "@renderer/assets/icons";
+import { useState } from "react";
 
 export const TitleBar: React.FC = () => {
   const { direction, scannerOption, setDirection, setScannerOption } = useAppSettings();
+  const [isOpen, setIsOpen] = useState(false);
 
   function handleCloseWindow(): void {
     window.electron.closeWindow();
@@ -34,20 +35,29 @@ export const TitleBar: React.FC = () => {
 
   return (
     <nav className="z-50 flex w-full items-start justify-between gap-4 shadow-md app-drag *:app-no-drag">
-      <div className="flex items-center justify-center gap-4 p-3">
+      <div className="flex items-center justify-center gap-4 p-2">
         <div className="flex items-center gap-2 text-sm">
           <img src={RobinLogo} alt="Robin Logo" className="h-6 w-6 rounded-sm" />
           <span>
-            <p>Project Name</p>
+            <p>{"RobinStudio"}</p>
           </span>
-          <Arrow className={iconSize} />
+          <Arrow
+            className={twMerge(
+              isOpen ? "rotate-180" : "",
+              iconSize,
+              "cursor-pointer transition-transform duration-300",
+            )}
+            onClick={() => setIsOpen(!isOpen)}
+          />
 
           <Separator className={twMerge("mx-1 text-neutral-600", iconSize)} />
           <Search className={twMerge("text-neutral-600", iconSize)} />
 
-          <span>
-            <p className="text-sm text-neutral-600">Search File</p>
-          </span>
+          <input
+            type="text"
+            placeholder="Search File"
+            className="rounded-md bg-transparent px-3 py-1.5 text-sm text-stone-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
         </div>
       </div>
       <div>

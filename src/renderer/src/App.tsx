@@ -96,98 +96,59 @@ const App: React.FC = () => {
     <>
       <div className="container flex flex-col p-0">
         <TitleBar />
-        <div className="main-container">
-          <main className="relative grid h-svh w-full grid-rows-1">
-            <section className="absolute inset-0">
-              <ResizablePanelGroup direction={direction} className="h-svh font-mono">
-                <ResizablePanel className="rounded-tr-lg bg-secondary" defaultSize={50}>
-                  <ResizablePanelGroup direction="horizontal">
-                    {currentFile && <EditorPlayground />}
-                  </ResizablePanelGroup>
-                </ResizablePanel>
+        <div className="main-container flex justify-between gap-2">
+          <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[50px]" />
+          <SidebarInset>
+            <main className="relative grid h-svh w-full grid-rows-1">
+              <section className="absolute inset-0">
+                <ResizablePanelGroup direction={direction} className="h-svh font-mono">
+                  <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
+                    <Tabs value={currentFile?.path} className="grid h-full">
+                      <TabsBar />
+                      <ResizablePanelGroup direction="horizontal">
+                        {currentFile && <EditorPlayground />}
+                      </ResizablePanelGroup>
+                    </Tabs>
+                  </ResizablePanel>
 
-                <ResizableHandle className="w-1.5" withHandle />
+                  <ResizableHandle className="w-1.5" withHandle />
 
-                <ResizablePanel className="rounded-tl-lg bg-secondary" defaultSize={50}>
-                  <ScrollArea className="relative h-svh">
-                    <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
-                      <Button size="sm" onClick={handleTokenize}>
-                        Tokenize
-                      </Button>
-                      <Button size="sm" onClick={handleParse}>
-                        Parse
-                      </Button>
-                      <Button size="sm" onClick={clearOutput}>
-                        Clear
-                      </Button>
-                    </header>
+                  <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
+                    <ScrollArea className="relative h-svh">
+                      <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
+                        <Button size="sm" onClick={handleTokenize}>
+                          Tokenize
+                        </Button>
+                        <Button size="sm" onClick={handleParse}>
+                          Parse
+                        </Button>
+                        <Button size="sm" onClick={clearOutput}>
+                          Clear
+                        </Button>
+                      </header>
 
-                    {currentFile ? (
-                      <>
-                        {output === "tokens" && (
-                          <TokensTable tokens={tokens} scannerOption={scannerOption} />
-                        )}
-                        {output === "tree" && <AbstractSyntaxTree ast={ast} />}
-                      </>
-                    ) : (
-                      <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-                        <p className="text-center text-muted-foreground">
-                          Write some code & Click tokenize
-                        </p>
-                      </div>
-                    )}
-                  </ScrollArea>
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </section>
-          </main>
+                      {currentFile ? (
+                        <>
+                          {output === "tokens" && (
+                            <TokensTable tokens={tokens} scannerOption={scannerOption} />
+                          )}
+                          {output === "tree" && <AbstractSyntaxTree ast={ast} />}
+                        </>
+                      ) : (
+                        <div className="flex h-[calc(100vh-64px)] items-center justify-center">
+                          <p className="text-center text-muted-foreground">
+                            Write some code & Click tokenize
+                          </p>
+                        </div>
+                      )}
+                    </ScrollArea>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              </section>
+            </main>
+          </SidebarInset>
         </div>
       </div>
-      {/* <AppSidebar rootPath={rootPath} fileTree={fileTree} />
-      <SidebarInset>
-        <TitleBar />
-        <Tabs value={currentFile?.path} className="grid">
-          <TabsBar />
-          <main className="relative grid h-svh w-full grid-rows-1">
-            <section className="absolute inset-0">
-              <ResizablePanelGroup direction={direction} className="h-svh font-mono">
-                <ResizablePanel defaultSize={50}>
-                  <ResizablePanelGroup direction="horizontal">
-                    {currentFile && <EditorPlayground />}
-                  </ResizablePanelGroup>
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={50}>
-                  <ScrollArea className="relative h-svh">
-                    <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
-                      <Button size="sm" onClick={handleTokenize}>
-                        Tokenize
-                      </Button>
-                      <Button size="sm" onClick={handleParse}>
-                        Parse
-                      </Button>
-                      <Button size="sm" onClick={clearOutput}>
-                        Clear
-                      </Button>
-                    </header>
-
-                    {currentFile ? (
-                      <>
-                        {output === "tokens" && (
-                          <TokensTable tokens={tokens} scannerOption={scannerOption} />
-                        )}
-                        {output === "tree" && <AbstractSyntaxTree ast={ast} />}
-                      </>
-                    ) : (
-                      <p className="pt-12 text-center">Write some code & Click tokenize</p>
-                    )}
-                  </ScrollArea>
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </section>
-          </main>
-        </Tabs>
-      </SidebarInset> */}
     </>
   );
 };

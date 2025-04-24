@@ -24,26 +24,22 @@ export const EditorPlayground: React.FC = () => {
   }
 
   return (
-    <Tabs value={currentFile?.path} className="grid">
-      <TabsBar />
-      <Editor
-        height="100%"
-        width="100%"
-        className="bg-secondary"
-        defaultLanguage="wren"
-        theme="wren-studio"
-        path={currentFile?.path}
-        value={value}
-        onChange={(val) => onUpdateCurrentFile(val)}
-        onMount={handleEditorDidMount}
-        options={{
-          automaticLayout: true,
-          minimap: { enabled: false },
-          bracketPairColorization: {
-            enabled: false,
-          },
-        }}
-      />
-    </Tabs>
+    <Editor
+      height="100%"
+      width="100%"
+      defaultLanguage="wren"
+      theme="wren-studio"
+      path={currentFile?.path}
+      value={value}
+      onChange={(val) => onUpdateCurrentFile(val)}
+      onMount={handleEditorDidMount}
+      options={{
+        automaticLayout: true,
+        minimap: { enabled: false },
+        bracketPairColorization: {
+          enabled: false,
+        },
+      }}
+    />
   );
 };
