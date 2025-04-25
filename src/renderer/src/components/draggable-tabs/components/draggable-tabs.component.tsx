@@ -52,7 +52,7 @@ export const DraggableTab: React.FC<DraggableTabProps> = ({
   drag(drop(ref));
 
   return (
-    <div className="p-1">
+    <div className="px-px py-1">
       <TabsTrigger
         ref={ref}
         {...props}
