@@ -1,4 +1,3 @@
-import { DialogClose } from "@radix-ui/react-dialog";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +29,7 @@ export const FileFinder = () => {
         <DialogTrigger>
           <SearchButton />
         </DialogTrigger>
-        <DialogContent className="p-0 overflow-hidden">
+        <DialogContent className="overflow-hidden p-0">
           <DialogHeader className="[&~button]:hidden">
             <DialogTitle className="sr-only">File Finder</DialogTitle>
             <DialogDescription className="sr-only">

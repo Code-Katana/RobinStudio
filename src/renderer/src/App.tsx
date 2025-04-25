@@ -18,6 +18,7 @@ import { useAppSettingsStore } from "./stores/app-settings.store";
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile, openedFiles } = useCurrentProjectStore();
   const { direction, scannerOption } = useAppSettingsStore();
+  const [isOutputVisible, setIsOutputVisible] = useState(true);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ast, setAst] = useState<any>({});
@@ -105,13 +106,13 @@ const App: React.FC = () => {
   return (
     <>
       <div className="container flex flex-col p-0">
-        <TitleBar />
-        <div className="flex justify-between gap-2 main-container">
+        <TitleBar onOutputVisibilityChange={setIsOutputVisible} onSettingsClick={() => {}} />
+        <div className="main-container flex justify-between gap-2">
           <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[50px]" />
           <SidebarInset>
-            <main className="relative grid w-full grid-rows-1 h-svh">
+            <main className="relative grid h-svh w-full grid-rows-1">
               <section className="absolute inset-0">
-                <ResizablePanelGroup direction={direction} className="font-mono h-svh">
+                <ResizablePanelGroup direction={direction} className="h-svh font-mono">
                   <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
                     {openedFiles.size > 0 && (
                       <Tabs value={currentFile?.path} className="grid h-full">
@@ -123,38 +124,41 @@ const App: React.FC = () => {
                     )}
                   </ResizablePanel>
 
-                  <ResizableHandle className="w-1.5" withHandle />
+                  {isOutputVisible && (
+                    <>
+                      <ResizableHandle className="w-1.5" withHandle />
+                      <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
+                        <ScrollArea className="relative h-svh">
+                          <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
+                            <Button size="sm" onClick={handleTokenize}>
+                              Tokenize
+                            </Button>
+                            <Button size="sm" onClick={handleParse}>
+                              Parse
+                            </Button>
+                            <Button size="sm" onClick={clearOutput}>
+                              Clear
+                            </Button>
+                          </header>
 
-                  <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
-                    <ScrollArea className="relative h-svh">
-                      <header className="flex flex-row-reverse items-center gap-2 px-6 py-4">
-                        <Button size="sm" onClick={handleTokenize}>
-                          Tokenize
-                        </Button>
-                        <Button size="sm" onClick={handleParse}>
-                          Parse
-                        </Button>
-                        <Button size="sm" onClick={clearOutput}>
-                          Clear
-                        </Button>
-                      </header>
-
-                      {currentFile ? (
-                        <>
-                          {output === "tokens" && (
-                            <TokensTable tokens={tokens} scannerOption={scannerOption} />
+                          {currentFile ? (
+                            <>
+                              {output === "tokens" && (
+                                <TokensTable tokens={tokens} scannerOption={scannerOption} />
+                              )}
+                              {output === "tree" && <AbstractSyntaxTree ast={ast} />}
+                            </>
+                          ) : (
+                            <div className="flex h-[calc(100vh-64px)] items-center justify-center">
+                              <p className="text-center text-muted-foreground">
+                                Write some code & Click tokenize
+                              </p>
+                            </div>
                           )}
-                          {output === "tree" && <AbstractSyntaxTree ast={ast} />}
-                        </>
-                      ) : (
-                        <div className="flex h-[calc(100vh-64px)] items-center justify-center">
-                          <p className="text-center text-muted-foreground">
-                            Write some code & Click tokenize
-                          </p>
-                        </div>
-                      )}
-                    </ScrollArea>
-                  </ResizablePanel>
+                        </ScrollArea>
+                      </ResizablePanel>
+                    </>
+                  )}
                 </ResizablePanelGroup>
               </section>
             </main>
