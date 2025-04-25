@@ -25,6 +25,7 @@ declare global {
       openFileByPath: (req: OpenFileRequest) => Promise<OpenFileResponse | null>;
       saveFile: (req: SaveFileRequest) => Promise<void>;
       openFolder: () => Promise<OpenFolderResponse | null>;
+      resolvePath: (...rest: string[]) => string;
     };
 
     electronWatcher: {

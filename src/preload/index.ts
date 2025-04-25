@@ -14,6 +14,7 @@ import {
   SaveFileRequest,
 } from "@shared/channels/file-system";
 import { FileEvent } from "@shared/types";
+import path from "path";
 
 // Custom APIs for renderer
 const api = {
@@ -35,6 +36,8 @@ const fileSystem = {
 
   saveFile: (request: SaveFileRequest): Promise<void> =>
     ipcRenderer.invoke(Channels.fileChannels.save, request),
+
+  resolvePath: (...rest: string[]): string => path.resolve(...rest),
 };
 
 const electronAPI = {

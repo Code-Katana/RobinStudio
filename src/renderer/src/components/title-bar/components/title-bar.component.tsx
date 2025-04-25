@@ -1,6 +1,6 @@
 import { Cross2Icon, BoxIcon, MinusIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "@renderer/components/ui/button";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@renderer/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +13,13 @@ import {
 import { useAppSettings } from "@renderer/hooks/use-app-settings";
 import { ScannerOptions } from "@shared/types";
 import RobinLogo from "@renderer/assets/images/rbnLogo.jpg";
-import { Arrow, Search, Separator } from "@renderer/assets/icons";
+import { Arrow, Separator } from "@renderer/assets/icons";
 import { useState } from "react";
+import { FileFinder } from "@renderer/components/file-finder";
+import { useCurrentProject } from "@renderer/hooks/use-current-project";
 
 export const TitleBar: React.FC = () => {
+  const { rootPath } = useCurrentProject();
   const { direction, scannerOption, setDirection, setScannerOption } = useAppSettings();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,12 +40,12 @@ export const TitleBar: React.FC = () => {
     <nav className="z-50 flex w-full items-start justify-between gap-4 shadow-md app-drag *:app-no-drag">
       <div className="flex items-center justify-center gap-4 p-2">
         <div className="flex items-center gap-2 text-sm">
-          <img src={RobinLogo} alt="Robin Logo" className="h-6 w-6 rounded-sm" />
+          <img src={RobinLogo} alt="Robin Logo" className="w-6 h-6 rounded-sm" />
           <span>
             <p>{"RobinStudio"}</p>
           </span>
           <Arrow
-            className={twMerge(
+            className={cn(
               isOpen ? "rotate-180" : "",
               iconSize,
               "cursor-pointer transition-transform duration-300",
@@ -50,18 +53,19 @@ export const TitleBar: React.FC = () => {
             onClick={() => setIsOpen(!isOpen)}
           />
 
-          <Separator className={twMerge("mx-1 text-neutral-600", iconSize)} />
-          <Search className={twMerge("text-neutral-600", iconSize)} />
-
-          <input
-            type="text"
-            placeholder="Search File"
-            className="rounded-md bg-transparent px-3 py-1.5 text-sm text-stone-100 placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />
+          <div
+            className={cn(
+              "flex items-center gap-2",
+              !rootPath && "pointer-events-none select-none opacity-0",
+            )}
+          >
+            <Separator className={cn("text-neutral-600", iconSize)} />
+            <FileFinder />
+          </div>
         </div>
       </div>
       <div>
-        <div className="flex w-fit items-center justify-center rounded-bl-lg border-8 border-r-0 border-t-0 border-secondary/50 bg-secondary/50 pl-2">
+        <div className="flex items-center justify-center pl-2 border-8 border-t-0 border-r-0 rounded-bl-lg w-fit border-secondary/50 bg-secondary/50">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div>
@@ -101,23 +105,23 @@ export const TitleBar: React.FC = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Separator className={twMerge("mx-1 text-neutral-600", iconSize)} />
+          <Separator className={cn("mx-1 text-neutral-600", iconSize)} />
           <Button
-            className="rounded-none p-3 hover:bg-primary"
+            className="p-3 rounded-none hover:bg-primary"
             variant="ghost"
             onClick={handleMinimizeWindow}
           >
             <MinusIcon />
           </Button>
           <Button
-            className="rounded-none p-3 hover:bg-primary"
+            className="p-3 rounded-none hover:bg-primary"
             variant="ghost"
             onClick={handleMaximizeWindow}
           >
             <BoxIcon />
           </Button>
           <Button
-            className="rounded-none p-3 hover:bg-red-600"
+            className="p-3 rounded-none hover:bg-red-600"
             variant="ghost"
             onClick={handleCloseWindow}
           >
