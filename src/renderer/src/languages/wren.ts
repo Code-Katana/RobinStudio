@@ -138,7 +138,7 @@ export const WrenStudioTheme: monaco.editor.IStandaloneThemeData = {
   ],
 
   colors: {
-    "editor.background": "#060a13", // Dark background
+    "editor.background": "#121721", // Dark background
     "editor.foreground": "#e5e5e5", // Light gray text
     "editor.lineHighlightBackground": "#e5e5e51f", // Subtle highlight for current line
     "editorCursor.foreground": "#a390ff", // Purple cursor

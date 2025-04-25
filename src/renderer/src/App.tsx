@@ -16,7 +16,7 @@ import { useCurrentProjectStore } from "./stores/current-project.store";
 import { useAppSettingsStore } from "./stores/app-settings.store";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onCloseFile } = useCurrentProjectStore();
+  const { rootPath, fileTree, currentFile, onCloseFile, openedFiles } = useCurrentProjectStore();
   const { direction, scannerOption } = useAppSettingsStore();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,19 +106,21 @@ const App: React.FC = () => {
     <>
       <div className="container flex flex-col p-0">
         <TitleBar />
-        <div className="main-container flex justify-between gap-2">
+        <div className="flex justify-between gap-2 main-container">
           <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[50px]" />
           <SidebarInset>
-            <main className="relative grid h-svh w-full grid-rows-1">
+            <main className="relative grid w-full grid-rows-1 h-svh">
               <section className="absolute inset-0">
-                <ResizablePanelGroup direction={direction} className="h-svh font-mono">
+                <ResizablePanelGroup direction={direction} className="font-mono h-svh">
                   <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
-                    <Tabs value={currentFile?.path} className="grid h-full">
-                      <TabsBar />
-                      <ResizablePanelGroup direction="horizontal">
-                        {currentFile && <EditorPlayground />}
-                      </ResizablePanelGroup>
-                    </Tabs>
+                    {openedFiles.size > 0 && (
+                      <Tabs value={currentFile?.path} className="grid h-full">
+                        <TabsBar />
+                        <ResizablePanelGroup direction="horizontal">
+                          {currentFile && <EditorPlayground />}
+                        </ResizablePanelGroup>
+                      </Tabs>
+                    )}
                   </ResizablePanel>
 
                   <ResizableHandle className="w-1.5" withHandle />

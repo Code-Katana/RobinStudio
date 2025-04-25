@@ -25,7 +25,7 @@ export const TabsBar = () => {
   }
 
   return (
-    <TabsList className="flex h-fit w-full justify-start overflow-auto rounded-none bg-secondary p-0 text-secondary-foreground">
+    <TabsList className="mb-2 flex h-fit w-full justify-start overflow-auto rounded-none border-b-2 border-background bg-secondary px-0 py-1 text-secondary-foreground">
       {[...openedFiles.values()].map((file, index) => (
         <DraggableTab
           key={file.path}

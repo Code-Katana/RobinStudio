@@ -52,32 +52,34 @@ export const DraggableTab: React.FC<DraggableTabProps> = ({
   drag(drop(ref));
 
   return (
-    <TabsTrigger
-      ref={ref}
-      {...props}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-        cursor: isDragging ? "grabbing" : "grab",
-      }}
-      className="flex items-center justify-center gap-1 p-2 space-y-1 border-r rounded-none hover:bg-primary/50"
-      onClick={onClick}
-    >
-      <span className="text-primary">
-        <FileTextIcon className="mr-1" />
-      </span>
-      <span className={`flex items-center gap-1 ${fileIndicator?.props.className}`}>
-        {file.name} {fileIndicator}
-      </span>
-      <span>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="p-1 size-6 hover:bg-primary-foreground/10"
-          onClick={onClose}
-        >
-          <Cross2Icon />
-        </Button>
-      </span>
-    </TabsTrigger>
+    <div className="p-1">
+      <TabsTrigger
+        ref={ref}
+        {...props}
+        style={{
+          opacity: isDragging ? 0.5 : 1,
+          cursor: isDragging ? "grabbing" : "grab",
+        }}
+        className="cursor-pointer px-1.5 hover:bg-background/50 data-[state='active']:bg-primary/30"
+        onClick={onClick}
+      >
+        <span className="text-primary">
+          <FileTextIcon className="mr-1" />
+        </span>
+        <span className={`flex items-center gap-1 ${fileIndicator?.props.className}`}>
+          {file.name} {fileIndicator}
+        </span>
+        <span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-1 ml-2 size-6 hover:bg-primary-foreground/10"
+            onClick={onClose}
+          >
+            <Cross2Icon />
+          </Button>
+        </span>
+      </TabsTrigger>
+    </div>
   );
 };
