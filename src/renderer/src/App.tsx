@@ -106,7 +106,7 @@ const App: React.FC = () => {
   return (
     <>
       <div className="container flex flex-col p-0">
-        <TitleBar onOutputVisibilityChange={setIsOutputVisible} onSettingsClick={() => {}} />
+        <TitleBar onOutputVisibilityChange={setIsOutputVisible} />
         <div className="main-container flex justify-between gap-2">
           <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[50px]" />
           <SidebarInset>

@@ -14,7 +14,6 @@ import { useAppSettings } from "@renderer/hooks/use-app-settings";
 import { ScannerOptions } from "@shared/types";
 import RobinLogo from "@renderer/assets/images/rbnLogo.jpg";
 import {
-  Arrow,
   OutputRightOn,
   OutputRightOff,
   Separator,
@@ -26,19 +25,16 @@ import { useState } from "react";
 import { FileFinder } from "@renderer/components/file-finder";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useSidebar } from "@renderer/components/ui/sidebar";
+import { FileOperations } from "@renderer/components/file-operation";
 
 interface TitleBarProps {
   onOutputVisibilityChange: (visible: boolean) => void;
-  onSettingsClick: () => void;
 }
 
-export const TitleBar: React.FC<TitleBarProps> = ({
-  onOutputVisibilityChange,
-  onSettingsClick,
-}) => {
+export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange }) => {
   const { projectName } = useCurrentProject();
   const { direction, scannerOption, setDirection, setScannerOption } = useAppSettings();
-  const [isOpen, setIsOpen] = useState(false);
+
   const { state, toggleSidebar } = useSidebar();
   const [isOutputVisible, setIsOutputVisible] = useState(true);
   const [isSettingsClicked, setIsSettingsClicked] = useState(false);
@@ -64,7 +60,6 @@ export const TitleBar: React.FC<TitleBarProps> = ({
 
   const handleSettingsClick = () => {
     setIsSettingsClicked(!isSettingsClicked);
-    onSettingsClick();
   };
 
   return (
@@ -75,14 +70,14 @@ export const TitleBar: React.FC<TitleBarProps> = ({
           <span>
             <p>{projectName || "RobinStudio"}</p>
           </span>
-          <Arrow
+          <div
             className={cn(
-              isOpen ? "rotate-180" : "",
-              iconSize,
-              "cursor-pointer transition-transform duration-300",
+              "flex items-center",
+              !projectName && "pointer-events-none select-none opacity-0",
             )}
-            onClick={() => setIsOpen(!isOpen)}
-          />
+          >
+            <FileOperations />
+          </div>
 
           <div
             className={cn(
