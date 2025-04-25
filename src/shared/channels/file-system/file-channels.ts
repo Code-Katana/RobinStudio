@@ -12,4 +12,8 @@ export type OpenFileResponse = { path: string; content?: string };
 
 export type SaveFileRequest = { path: string; content: string };
 
-export type OpenFolderResponse = { folderPath: string; fileTree: HnExpressionNode };
+export type OpenFolderResponse = {
+  folderName: string;
+  folderPath: string;
+  fileTree: HnExpressionNode;
+};

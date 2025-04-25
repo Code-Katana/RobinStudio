@@ -23,7 +23,7 @@ export const AppSidebar = ({ rootPath, fileTree, ...props }: AppSidebarProps) =>
       alert("Oops, cant open this folder, please try again.");
     }
 
-    onOpenProject(res?.folderPath, res?.fileTree);
+    onOpenProject(res?.folderName, res?.folderPath, res?.fileTree);
   }
 
   return (
@@ -40,7 +40,7 @@ export const AppSidebar = ({ rootPath, fileTree, ...props }: AppSidebarProps) =>
           </SidebarGroup>
         </SidebarContent>
       ) : (
-        <SidebarContent className="flex h-full flex-col items-center justify-center space-y-4 p-3">
+        <SidebarContent className="flex flex-col items-center justify-center h-full p-3 space-y-4">
           <p className="text-sm text-gray-600">
             You didn&apos;t open a folder yet. Please open one.
           </p>

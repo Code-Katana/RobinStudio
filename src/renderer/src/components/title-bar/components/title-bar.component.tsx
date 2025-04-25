@@ -19,7 +19,7 @@ import { FileFinder } from "@renderer/components/file-finder";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 
 export const TitleBar: React.FC = () => {
-  const { rootPath } = useCurrentProject();
+  const { projectName } = useCurrentProject();
   const { direction, scannerOption, setDirection, setScannerOption } = useAppSettings();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +42,7 @@ export const TitleBar: React.FC = () => {
         <div className="flex items-center gap-2 text-sm">
           <img src={RobinLogo} alt="Robin Logo" className="w-6 h-6 rounded-sm" />
           <span>
-            <p>{"RobinStudio"}</p>
+            <p>{projectName || "RobinStudio"}</p>
           </span>
           <Arrow
             className={cn(
@@ -56,7 +56,7 @@ export const TitleBar: React.FC = () => {
           <div
             className={cn(
               "flex items-center gap-2",
-              !rootPath && "pointer-events-none select-none opacity-0",
+              !projectName && "pointer-events-none select-none opacity-0",
             )}
           >
             <Separator className={cn("text-neutral-600", iconSize)} />

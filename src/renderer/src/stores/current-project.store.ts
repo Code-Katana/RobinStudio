@@ -8,11 +8,16 @@ export type OpenFileType = {
 };
 
 export interface CurrentProjectState {
+  projectName: string | undefined;
   rootPath: string | undefined;
   fileTree: HnExpressionNode | undefined;
   openedFiles: Map<string, OpenFileType>;
   currentFile: OpenFileType | undefined;
-  onOpenProject: (path: string | undefined, tree: HnExpressionNode | undefined) => void;
+  onOpenProject: (
+    projectName: string | undefined,
+    path: string | undefined,
+    tree: HnExpressionNode | undefined,
+  ) => void;
   onCloseProject: () => void;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
@@ -21,14 +26,16 @@ export interface CurrentProjectState {
 }
 
 export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
+  projectName: undefined,
   rootPath: undefined,
   fileTree: undefined,
   openedFiles: new Map(),
   currentFile: undefined,
 
-  onOpenProject: (path, tree) => {
+  onOpenProject: (projectName, path, tree) => {
     if (!path || !tree) return;
     set({
+      projectName: projectName,
       rootPath: path,
       fileTree: tree,
       openedFiles: new Map(),

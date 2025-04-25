@@ -219,7 +219,8 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
 
   if (filePaths.length > 0) {
     const folderPath = filePaths[0];
-    const hnExpression = getFileTree(folderPath);
+    const fileTree = getFileTree(folderPath);
+    const folderName = fileTree[0].name;
 
     const watcher = chokidar.watch(folderPath, {
       persistent: true,
@@ -253,7 +254,7 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
         console.error(`Watcher error: ${error}`);
       });
 
-    return { folderPath, fileTree: hnExpression };
+    return { folderName, folderPath, fileTree };
   }
 
   return null;
