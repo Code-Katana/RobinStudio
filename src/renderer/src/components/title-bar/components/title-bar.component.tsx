@@ -96,11 +96,6 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange }) 
             <div onClick={toggleSidebar} className="cursor-pointer">
               {state === "expanded" ? <SidebarLeftOn /> : <SidebarLeftOff />}
             </div>
-
-            <div onClick={toggleOutput} className="cursor-pointer">
-              {isOutputVisible ? <OutputRightOn /> : <OutputRightOff />}
-            </div>
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div>
@@ -139,6 +134,9 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange }) 
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
+            <div onClick={toggleOutput} className="cursor-pointer">
+              {isOutputVisible ? <OutputRightOn /> : <OutputRightOff />}
+            </div>
 
             <Settings
               className={cn(
