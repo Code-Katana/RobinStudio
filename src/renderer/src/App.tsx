@@ -15,10 +15,19 @@ import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 import { useCurrentProjectStore } from "./stores/current-project.store";
 import { useAppSettingsStore } from "./stores/app-settings.store";
 
+type CompilerPhase =
+  | "tokenize"
+  | "parse"
+  | "typecheck"
+  | "ir-generation"
+  | "ir-optimization"
+  | "compile";
+
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile, openedFiles } = useCurrentProjectStore();
   const { direction, scannerOption } = useAppSettingsStore();
   const [isOutputVisible, setIsOutputVisible] = useState(true);
+  const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [ast, setAst] = useState<any>({});
@@ -103,10 +112,17 @@ const App: React.FC = () => {
     });
   }, [events]);
 
+  const handlePhaseChange = (phase: CompilerPhase | null) => {
+    setSelectedPhase(phase);
+    if (phase) {
+      setOutput(undefined);
+    }
+  };
+
   return (
     <>
       <div className="container flex flex-col p-0">
-        <TitleBar onOutputVisibilityChange={setIsOutputVisible} />
+        <TitleBar onOutputVisibilityChange={setIsOutputVisible} onPhaseChange={handlePhaseChange} />
         <div className="main-container flex justify-between gap-2">
           <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[50px]" />
           <SidebarInset>
@@ -140,6 +156,20 @@ const App: React.FC = () => {
                               Clear
                             </Button>
                           </header>
+
+                          {selectedPhase && (
+                            <div className="px-6 py-2">
+                              <h3 className="text-lg font-semibold">Selected Phase:</h3>
+                              <p className="text-muted-foreground">
+                                {selectedPhase === "tokenize" && "Tokenize (Lexical Analysis)"}
+                                {selectedPhase === "parse" && "Parse (Syntax Analysis)"}
+                                {selectedPhase === "typecheck" && "Typecheck (Semantic Analysis)"}
+                                {selectedPhase === "ir-generation" && "IR Generation"}
+                                {selectedPhase === "ir-optimization" && "IR Optimization"}
+                                {selectedPhase === "compile" && "Compile (Get Executable)"}
+                              </p>
+                            </div>
+                          )}
 
                           {currentFile ? (
                             <>

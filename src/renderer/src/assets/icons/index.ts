@@ -6,3 +6,5 @@ export { SidebarLeftOff } from "./sideBarOff.icon";
 export { OutputRightOn } from "./outputOn.icon";
 export { OutputRightOff } from "./outputOff.icon";
 export { Settings } from "./settings.icon";
+export { Run } from "./run.icon";
+export { Phases } from "./phases.icon";
