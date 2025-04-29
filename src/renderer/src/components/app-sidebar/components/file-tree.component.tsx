@@ -14,8 +14,13 @@ import { HnExpressionNode, HnNode } from "@shared/types";
 import { ChevronRight, Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
+import { useRef } from "react";
 
-export const FileTree = ({ item }: { item: HnExpressionNode }) => {
+interface FileTreeProps {
+  item: HnExpressionNode;
+}
+
+export const FileTree = ({ item }: FileTreeProps) => {
   const [node, children] = item;
   const { name } = node;
 
@@ -48,6 +53,7 @@ export const FileTree = ({ item }: { item: HnExpressionNode }) => {
 const FileNode = ({ file }: { file: HnNode }) => {
   const { onOpenFile } = useCurrentProject();
   const fileStatuses = useFileWatcher();
+  const ref = useRef<HTMLSpanElement>(null);
 
   async function handleOpenFile() {
     const response = (await window.fs.openFileByPath({ path: file.path })) as OpenFileResponse;
@@ -72,12 +78,31 @@ const FileNode = ({ file }: { file: HnNode }) => {
   }
 
   const fileIndicator = getFileIndicator(file.path);
+
+  // useEffect(() => {
+  //   if (!ref.current) return;
+
+  //   const el = ref.current;
+  //   const char = +window.getComputedStyle(el).fontSize.slice(0, -2);
+  //   const width = +getComputedStyle(el).width.slice(0, -2);
+  //   const text = el.textContent ?? "";
+  //   const charCount = text.length;
+  //   const textSize = charCount * char;
+  //   if (textSize > width) {
+  //     const newCharCount = Math.floor(width / char);
+  //     el.innerText = text.slice(0, newCharCount) + "...";
+  //   }
+  // }, [ref]);
+
   return (
-    <SidebarMenuButton className="data-[active=true]:bg-transparent" onClick={handleOpenFile}>
-      <FileTextIcon className="text-primary" />
-      <span className={`flex items-center gap-1 ${fileIndicator?.props.className}`}>
-        {file.name}
-        {getFileIndicator(file.path)}
+    <SidebarMenuButton
+      className="truncate data-[active=true]:bg-transparent"
+      onClick={handleOpenFile}
+    >
+      <FileTextIcon className="shrink-0 text-primary" />
+      <span className="flex min-w-0 items-center gap-1">
+        <span className="truncate">{file.name}</span>
+        {fileIndicator}
       </span>
     </SidebarMenuButton>
   );

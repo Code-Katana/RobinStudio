@@ -40,7 +40,7 @@ export const AppSidebar = ({ rootPath, fileTree, ...props }: AppSidebarProps) =>
           </SidebarGroup>
         </SidebarContent>
       ) : (
-        <SidebarContent className="flex flex-col items-center justify-center h-full p-3 space-y-4">
+        <SidebarContent className="flex h-full flex-col items-center justify-center space-y-4 p-3">
           <p className="text-sm text-gray-600">
             You didn&apos;t open a folder yet. Please open one.
           </p>

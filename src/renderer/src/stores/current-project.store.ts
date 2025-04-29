@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { HnExpressionNode } from "@shared/types";
+import { useRecentFilesStore } from "./recent-files.store";
 
 export type OpenFileType = {
   name: string;
@@ -45,6 +46,7 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
 
   onCloseProject: () => {
     set({
+      projectName: undefined,
       rootPath: undefined,
       fileTree: undefined,
       openedFiles: new Map(),
@@ -61,6 +63,9 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
       const newFile: OpenFileType = { name, path, content };
       const updatedFiles = new Map(state.openedFiles);
       updatedFiles.set(path, newFile);
+
+      const { addRecentFile } = useRecentFilesStore.getState();
+      addRecentFile(name, path);
 
       return {
         openedFiles: updatedFiles,

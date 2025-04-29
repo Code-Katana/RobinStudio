@@ -24,7 +24,8 @@ type CompilerPhase =
   | "compile";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onCloseFile, openedFiles } = useCurrentProjectStore();
+  const { rootPath, fileTree, currentFile, openedFiles, onCloseFile, onCloseProject } =
+    useCurrentProjectStore();
   const { direction, scannerOption } = useAppSettingsStore();
   const [isOutputVisible, setIsOutputVisible] = useState(true);
   const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
@@ -34,6 +35,7 @@ const App: React.FC = () => {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [output, setOutput] = useState<"tokens" | "tree" | "file-events" | undefined>(undefined);
   const [events, setEvents] = useState<FileEvent[]>([]);
+  const [, setKeySequence] = useState<string[]>([]);
 
   function clearOutput() {
     setOutput(undefined);
@@ -94,12 +96,31 @@ const App: React.FC = () => {
           onCloseFile(currentFile.path);
         }
       }
+
+      if (event.ctrlKey || event.metaKey) {
+        const key = event.key.toLowerCase();
+        setKeySequence((prev) => {
+          const newSequence = [...prev, key].slice(-2);
+          if (newSequence.length >= 2 && newSequence[0] === "n" && newSequence[1] === "k") {
+            event.preventDefault();
+            onCloseProject();
+            return [];
+          }
+          return newSequence;
+        });
+      }
+    };
+
+    const handleKeyUp = () => {
+      setKeySequence([]);
     };
 
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
     };
   }, [currentFile]);
 
@@ -124,7 +145,7 @@ const App: React.FC = () => {
       <div className="container flex flex-col p-0">
         <TitleBar onOutputVisibilityChange={setIsOutputVisible} onPhaseChange={handlePhaseChange} />
         <div className="main-container flex justify-between gap-2">
-          <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[50px]" />
+          <AppSidebar rootPath={rootPath} fileTree={fileTree} className="mt-[52px]" />
           <SidebarInset>
             <main className="relative grid h-svh w-full grid-rows-1">
               <section className="absolute inset-0">

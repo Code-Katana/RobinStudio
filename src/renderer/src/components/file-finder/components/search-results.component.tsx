@@ -21,7 +21,6 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ files }) => {
     }
 
     console.log(rootPath + "/" + file.path);
-
     onOpenFile(file.name, response.path, response.content);
   };
 
