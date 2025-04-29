@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useRecentFilesStore } from "@renderer/stores/recent-files.store";
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 
 export const FileOperations = () => {
   const { onOpenProject, onOpenFile, currentFile, openedFiles, onCloseFile, onCloseProject } =

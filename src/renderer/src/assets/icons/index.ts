@@ -8,3 +8,6 @@ export { OutputRightOff } from "./outputOff.icon";
 export { Settings } from "./settings.icon";
 export { Run } from "./run.icon";
 export { Phases } from "./phases.icon";
+export { NewFile } from "./newFile.icon";
+export { NewFolder } from "./newFolder.icon";
+export { CollapseAll } from "./collapseAll.icon";

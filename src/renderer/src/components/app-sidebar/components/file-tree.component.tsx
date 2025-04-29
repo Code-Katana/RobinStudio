@@ -11,36 +11,71 @@ import {
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useFileWatcher } from "@renderer/hooks/use-file-watcher";
 import { HnExpressionNode, HnNode } from "@shared/types";
-import { ChevronRight, Folder } from "lucide-react";
+import { Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { Arrow } from "@renderer/assets/icons";
+import { cn } from "@renderer/lib/utils";
 
 interface FileTreeProps {
   item: HnExpressionNode;
+  currentFolder?: string | null;
+  onFolderClick?: (path: string) => void;
 }
 
-export const FileTree = ({ item }: FileTreeProps) => {
+export const FileTree = ({ item, currentFolder, onFolderClick }: FileTreeProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [node, children] = item;
-  const { name } = node;
+  const { name, path } = node;
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    onFolderClick?.(path);
+  };
 
   return (
     <SidebarMenuItem>
-      <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
+      <Collapsible className="group/collapsible [&[data-state=closed]>button>div>div>svg:first-child]:-rotate-90 [&[data-state=open]>button>div>div>svg:first-child]:rotate-0">
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton>
-            <ChevronRight className="transition-transform" />
-            <Folder className="text-amber-400" />
-            {name}
+          <SidebarMenuButton className="w-full" onClick={handleClick}>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex cursor-pointer items-center gap-1">
+                <Arrow
+                  onClick={() => setIsOpen(!isOpen)}
+                  className={cn(isOpen ? "rotate-0" : "-rotate-90", "h-5 w-5 transition-transform")}
+                />
+                <Folder
+                  className={cn(
+                    "h-5 w-5",
+                    currentFolder === path ? "text-primary" : "text-amber-400",
+                  )}
+                />
+                <span className={cn("truncate", currentFolder === path && "text-primary")}>
+                  {name}
+                </span>
+              </div>
+            </div>
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent asChild>
           <SidebarMenuSub>
             {children?.map((subItem, index) =>
               Array.isArray(subItem) ? (
-                <FileTree key={index} item={subItem} />
+                <FileTree
+                  key={index}
+                  item={subItem}
+                  currentFolder={currentFolder}
+                  onFolderClick={onFolderClick}
+                />
               ) : (
-                <FileNode key={index} file={subItem as HnNode} />
+                <FileNode
+                  key={index}
+                  file={subItem as HnNode}
+                  parentPath={path}
+                  onFileClick={onFolderClick}
+                />
               ),
             )}
           </SidebarMenuSub>
@@ -50,7 +85,13 @@ export const FileTree = ({ item }: FileTreeProps) => {
   );
 };
 
-const FileNode = ({ file }: { file: HnNode }) => {
+interface FileNodeProps {
+  file: HnNode;
+  parentPath: string;
+  onFileClick?: (path: string) => void;
+}
+
+const FileNode = ({ file, parentPath, onFileClick }: FileNodeProps) => {
   const { onOpenFile } = useCurrentProject();
   const fileStatuses = useFileWatcher();
   const ref = useRef<HTMLSpanElement>(null);
@@ -63,7 +104,9 @@ const FileNode = ({ file }: { file: HnNode }) => {
     }
 
     onOpenFile(file.name, file.path, response.content);
+    onFileClick?.(parentPath);
   }
+
   function getFileIndicator(path: string) {
     const statusMap: Record<string, { label: string; color: string }> = {
       change: { label: "M", color: "text-yellow-500" },
@@ -78,21 +121,6 @@ const FileNode = ({ file }: { file: HnNode }) => {
   }
 
   const fileIndicator = getFileIndicator(file.path);
-
-  // useEffect(() => {
-  //   if (!ref.current) return;
-
-  //   const el = ref.current;
-  //   const char = +window.getComputedStyle(el).fontSize.slice(0, -2);
-  //   const width = +getComputedStyle(el).width.slice(0, -2);
-  //   const text = el.textContent ?? "";
-  //   const charCount = text.length;
-  //   const textSize = charCount * char;
-  //   if (textSize > width) {
-  //     const newCharCount = Math.floor(width / char);
-  //     el.innerText = text.slice(0, newCharCount) + "...";
-  //   }
-  // }, [ref]);
 
   return (
     <SidebarMenuButton

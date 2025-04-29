@@ -8,12 +8,18 @@ export type OpenFileType = {
   content: string;
 };
 
+export type CurrentFolderType = {
+  name: string;
+  path: string;
+};
+
 export interface CurrentProjectState {
   projectName: string | undefined;
   rootPath: string | undefined;
   fileTree: HnExpressionNode | undefined;
   openedFiles: Map<string, OpenFileType>;
   currentFile: OpenFileType | undefined;
+  currentFolder: CurrentFolderType | undefined;
   onOpenProject: (
     projectName: string | undefined,
     path: string | undefined,
@@ -23,6 +29,7 @@ export interface CurrentProjectState {
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
   onUpdateCurrentFile: (value?: string) => void;
+  onSetCurrentFolder: (name: string, path: string) => void;
   moveTab: (dragIndex: number, hoverIndex: number) => void;
 }
 
@@ -32,6 +39,7 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
   fileTree: undefined,
   openedFiles: new Map(),
   currentFile: undefined,
+  currentFolder: undefined,
 
   onOpenProject: (projectName, path, tree) => {
     if (!path || !tree) return;
@@ -41,6 +49,7 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
       fileTree: tree,
       openedFiles: new Map(),
       currentFile: undefined,
+      currentFolder: { name: path.split("/").pop() || "", path: path },
     });
   },
 
@@ -51,6 +60,7 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
       fileTree: undefined,
       openedFiles: new Map(),
       currentFile: undefined,
+      currentFolder: undefined,
     });
   },
 
@@ -67,9 +77,13 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
       const { addRecentFile } = useRecentFilesStore.getState();
       addRecentFile(name, path);
 
+      const parentPath = path.split("/").slice(0, -1).join("/");
+      const parentName = parentPath.split("/").pop() || "";
+
       return {
         openedFiles: updatedFiles,
         currentFile: newFile,
+        currentFolder: { name: parentName, path: parentPath },
       };
     });
   },
@@ -117,6 +131,10 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
         currentFile: updatedFile,
       };
     });
+  },
+
+  onSetCurrentFolder: (name, path) => {
+    set({ currentFolder: { name, path } });
   },
 
   moveTab: (dragIndex: number, hoverIndex: number) => {
