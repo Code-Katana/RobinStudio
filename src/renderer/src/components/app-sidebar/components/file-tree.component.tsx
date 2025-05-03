@@ -14,7 +14,7 @@ import { HnExpressionNode, HnNode } from "@shared/types";
 import { Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Arrow } from "@renderer/assets/icons";
 import { cn } from "@renderer/lib/utils";
 
@@ -94,15 +94,16 @@ interface FileNodeProps {
 const FileNode = ({ file, parentPath, onFileClick }: FileNodeProps) => {
   const { onOpenFile } = useCurrentProject();
   const fileStatuses = useFileWatcher();
-  const ref = useRef<HTMLSpanElement>(null);
 
   async function handleOpenFile() {
     const response = (await window.fs.openFileByPath({ path: file.path })) as OpenFileResponse;
 
-    if (response === null || !response.content) {
+    if (response === null) {
       return;
     }
-
+    if (!response.content) {
+      response.content = "";
+    }
     onOpenFile(file.name, file.path, response.content);
     onFileClick?.(parentPath);
   }

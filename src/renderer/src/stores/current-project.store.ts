@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { HnExpressionNode } from "@shared/types";
 import { useRecentFilesStore } from "./recent-files.store";
+// import { getFileTree } from "@main/lib/get-file-tree";
 
 export type OpenFileType = {
   name: string;
@@ -26,6 +27,8 @@ export interface CurrentProjectState {
     tree: HnExpressionNode | undefined,
   ) => void;
   onCloseProject: () => void;
+  onCreateFile: (name: string) => Promise<void>;
+  onCreateFolder: (name: string) => Promise<void>;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
   onUpdateCurrentFile: (value?: string) => void;
@@ -33,7 +36,7 @@ export interface CurrentProjectState {
   moveTab: (dragIndex: number, hoverIndex: number) => void;
 }
 
-export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
+export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => ({
   projectName: undefined,
   rootPath: undefined,
   fileTree: undefined,
@@ -165,5 +168,60 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
         openedFiles: newFilesMap,
       };
     });
+  },
+
+  onCreateFile: async (name: string) => {
+    const state = get();
+    if (!state.currentFolder?.path) {
+      throw new Error("No folder selected");
+    }
+
+    try {
+      await window.fs.createFile({
+        path: state.currentFolder.path,
+        name: name,
+      });
+
+      // Open the newly created file
+      const filePath = window.fs.resolvePath(state.currentFolder.path, name);
+      const content = "";
+      state.onOpenFile(name, filePath, content);
+
+      // Update the file tree
+      if (state.rootPath) {
+        const { tree } = await window.fs.updateTree({ path: state.rootPath });
+        set({ fileTree: tree });
+      }
+    } catch (error) {
+      console.error("Error creating file:", error);
+      throw error;
+    }
+  },
+
+  onCreateFolder: async (name: string) => {
+    const state = get();
+    if (!state.currentFolder?.path) {
+      throw new Error("No folder selected");
+    }
+
+    try {
+      const response = await window.fs.createFolder({
+        path: state.currentFolder.path,
+        name: name,
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || "Failed to create folder");
+      }
+
+      // Update the file tree
+      if (state.rootPath) {
+        const { tree } = await window.fs.updateTree({ path: state.rootPath });
+        set({ fileTree: tree });
+      }
+    } catch (error) {
+      console.error("Error creating folder:", error);
+      throw error;
+    }
   },
 }));

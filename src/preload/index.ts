@@ -8,11 +8,16 @@ import {
   TokenizeResponse,
 } from "@shared/channels";
 import {
+  CreateFileRequest,
+  CreateFolderRequest,
   OpenFileRequest,
   OpenFileResponse,
   OpenFolderResponse,
   SaveFileRequest,
+  UpdateTreeRequest,
+  UpdateTreeResponse,
 } from "@shared/channels/file-system";
+import { treeChannels } from "@shared/channels/file-system/tree-channels";
 import { FileEvent } from "@shared/types";
 import path from "path";
 
@@ -26,16 +31,25 @@ const api = {
 };
 
 const fileSystem = {
+  createFile: (request: CreateFileRequest): Promise<void> =>
+    ipcRenderer.invoke(Channels.fileChannels.create, request),
+
   openFile: (): Promise<OpenFileResponse | null> => ipcRenderer.invoke(Channels.fileChannels.open),
 
   openFileByPath: (request: OpenFileRequest): Promise<OpenFileResponse | null> =>
     ipcRenderer.invoke(Channels.fileChannels.openByPath, request),
 
+  saveFile: (request: SaveFileRequest): Promise<void> =>
+    ipcRenderer.invoke(Channels.fileChannels.save, request),
+
+  createFolder: (request: CreateFolderRequest): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke(Channels.folderChannels.create, request),
+
   openFolder: (): Promise<OpenFolderResponse | null> =>
     ipcRenderer.invoke(Channels.folderChannels.open),
 
-  saveFile: (request: SaveFileRequest): Promise<void> =>
-    ipcRenderer.invoke(Channels.fileChannels.save, request),
+  updateTree: (request: UpdateTreeRequest): Promise<UpdateTreeResponse> =>
+    ipcRenderer.invoke(treeChannels.updateTree, request),
 
   resolvePath: (...rest: string[]): string => path.resolve(...rest),
 };

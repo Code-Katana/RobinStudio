@@ -1,6 +1,6 @@
 import { wrenLang } from "./wren-lang";
 import { browserWindowActions } from "./browser-window-actions";
-import { fileChannels, folderChannels } from "./file-system";
+import { fileChannels, folderChannels, treeChannels } from "./file-system";
 import { LSPChannels } from "./language-server";
 
 export const Channels = {
@@ -8,6 +8,7 @@ export const Channels = {
   browserWindowActions,
   fileChannels,
   folderChannels,
+  treeChannels,
   lsp: LSPChannels,
 } as const;
 

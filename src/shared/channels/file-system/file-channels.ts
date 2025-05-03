@@ -1,10 +1,13 @@
 import { ChannelNames, HnExpressionNode } from "@shared/types";
 
 export const fileChannels: ChannelNames = {
+  create: "file:create",
   open: "file:open",
   save: "file:save",
   openByPath: "file:open-by-path",
 };
+
+export type CreateFileRequest = { path: string; name: string };
 
 export type OpenFileRequest = { path: string | undefined };
 

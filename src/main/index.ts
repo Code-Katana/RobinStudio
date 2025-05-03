@@ -14,11 +14,17 @@ import {
 } from "@shared/channels";
 import { Token } from "@shared/types";
 import {
+  CreateFileRequest,
+  CreateFolderRequest,
+  CreateFolderResponse,
   OpenFileRequest,
   OpenFileResponse,
   OpenFolderResponse,
   SaveFileRequest,
+  UpdateTreeRequest,
+  UpdateTreeResponse,
 } from "@shared/channels/file-system";
+
 import { getFileTree } from "@main/lib/get-file-tree";
 import { lspConnection, lspProcess, startLSP } from "@main/language-server";
 import chokidar from "chokidar";
@@ -179,6 +185,21 @@ ipcMain.on(Channels.browserWindowActions.maximizeWindow, () => {
 });
 
 // File Feature Actions
+
+ipcMain.handle(Channels.fileChannels.create, async (_, request: CreateFileRequest) => {
+  const { path, name } = request;
+  const fullPath = join(path, name);
+
+  try {
+    // Create an empty file
+    fs.writeFileSync(fullPath, "");
+    return { success: true, path: fullPath };
+  } catch (error) {
+    console.error("Error creating file:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+});
+
 ipcMain.handle(Channels.fileChannels.open, async (): Promise<OpenFileResponse | null> => {
   const { filePaths } = await dialog.showOpenDialog(mainWindow!, {
     properties: ["openFile"],
@@ -209,6 +230,28 @@ ipcMain.handle(
 ipcMain.handle(Channels.fileChannels.save, async (_, request: SaveFileRequest) => {
   fs.writeFileSync(request.path, request.content, "utf-8");
 });
+
+// handle folder actions
+ipcMain.handle(
+  Channels.folderChannels.create,
+  async (_, request: CreateFolderRequest): Promise<CreateFolderResponse> => {
+    try {
+      if (!request.path || !request.name) {
+        return { success: false, error: "Path and name are required" };
+      }
+
+      const fullPath = join(request.path, request.name);
+      fs.mkdirSync(fullPath, { recursive: true });
+      return { success: true };
+    } catch (error) {
+      console.error("Error creating folder:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+      };
+    }
+  },
+);
 
 ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderResponse | null> => {
   const { filePaths } = await dialog.showOpenDialog(mainWindow!, {
@@ -259,3 +302,11 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
 
   return null;
 });
+
+ipcMain.handle(
+  Channels.treeChannels.updateTree,
+  async (_, request: UpdateTreeRequest): Promise<UpdateTreeResponse> => {
+    const tree = getFileTree(request.path);
+    return { tree };
+  },
+);
