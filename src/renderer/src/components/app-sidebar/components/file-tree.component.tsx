@@ -14,7 +14,7 @@ import { HnExpressionNode, HnNode } from "@shared/types";
 import { Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Arrow } from "@renderer/assets/icons";
 import { cn } from "@renderer/lib/utils";
 
@@ -22,28 +22,50 @@ interface FileTreeProps {
   item: HnExpressionNode;
   currentFolder?: string | null;
   onFolderClick?: (path: string) => void;
+  collapseAll?: "open" | "closed" | null;
+  setCollapseAll?: (collapseAll: "open" | "closed") => void;
 }
 
-export const FileTree = ({ item, currentFolder, onFolderClick }: FileTreeProps) => {
+export const FileTree = ({
+  item,
+  currentFolder,
+  onFolderClick,
+  collapseAll,
+  setCollapseAll,
+}: FileTreeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [node, children] = item;
   const { name, path } = node;
 
+  useEffect(() => {
+    if (collapseAll === "closed") {
+      setIsOpen(false);
+    }
+  }, [collapseAll]);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onFolderClick?.(path);
+    setIsOpen(!isOpen);
+  };
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
+    handleToggle(e);
     onFolderClick?.(path);
+    setCollapseAll?.("open");
+    console.log(collapseAll);
   };
 
   return (
     <SidebarMenuItem>
-      <Collapsible className="group/collapsible [&[data-state=closed]>button>div>div>svg:first-child]:-rotate-90 [&[data-state=open]>button>div>div>svg:first-child]:rotate-0">
+      <Collapsible open={isOpen} className="group/collapsible">
         <CollapsibleTrigger asChild>
           <SidebarMenuButton className="w-full" onClick={handleClick}>
             <div className="flex w-full items-center justify-between">
               <div className="flex cursor-pointer items-center gap-1">
                 <Arrow
-                  onClick={() => setIsOpen(!isOpen)}
+                  onClick={handleToggle}
                   className={cn(isOpen ? "rotate-0" : "-rotate-90", "h-5 w-5 transition-transform")}
                 />
                 <Folder
@@ -68,6 +90,7 @@ export const FileTree = ({ item, currentFolder, onFolderClick }: FileTreeProps) 
                   item={subItem}
                   currentFolder={currentFolder}
                   onFolderClick={onFolderClick}
+                  collapseAll={collapseAll}
                 />
               ) : (
                 <FileNode

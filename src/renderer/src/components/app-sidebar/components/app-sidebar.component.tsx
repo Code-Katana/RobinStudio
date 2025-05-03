@@ -12,7 +12,7 @@ import { FileTree } from "./file-tree.component";
 import { AppSidebarProps } from "../types/app-sidebar.props";
 import { Button } from "@renderer/components/ui/button";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
-import { CollapseAll, NewFile, NewFolder } from "@renderer/assets/icons";
+import { CollapseAll, NewFile, NewFolder, RefreshTree } from "@renderer/assets/icons";
 import { useCurrentProjectStore } from "@renderer/stores/current-project.store";
 import {
   Dialog,
@@ -26,12 +26,13 @@ import { useState } from "react";
 
 export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
   const { onOpenProject } = useCurrentProject();
-  const { currentFolder, onSetCurrentFolder, onCreateFile, onCreateFolder } =
+  const { currentFolder, onSetCurrentFolder, onCreateFile, onCreateFolder, rootPath } =
     useCurrentProjectStore();
   const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
+  const [collapseAll, setCollapseAll] = useState<"open" | "closed">("open");
 
   async function handleOpenProject() {
     const res = await window.fs.openFolder();
@@ -84,9 +85,28 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
     }
   }
 
+  async function handleRefreshTree() {
+    if (!rootPath) return;
+    try {
+      const { tree } = await window.fs.updateTree({ path: rootPath });
+      useCurrentProjectStore.setState({ fileTree: tree });
+      console.log("tree refreshed");
+    } catch (error) {
+      console.error("Failed to refresh tree:", error);
+      alert("Failed to refresh file tree. Please try again.");
+    }
+  }
+
   const handleFolderClick = (path: string) => {
     const name = path.split("/").pop() || "";
     onSetCurrentFolder(name, path);
+  };
+
+  const handleCollapseAll = () => {
+    setCollapseAll("closed");
+    // setTimeout(() => {
+    //   setCollapseAll("open");
+    // }, 300);
   };
 
   return (
@@ -116,7 +136,22 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
                   >
                     <NewFolder className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-6 w-6">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={handleRefreshTree}
+                    disabled={!rootPath}
+                  >
+                    <RefreshTree className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={handleCollapseAll}
+                    disabled={!rootPath}
+                  >
                     <CollapseAll className="h-4 w-4" />
                   </Button>
                 </div>
@@ -127,6 +162,8 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
                     item={fileTree}
                     currentFolder={currentFolder?.path}
                     onFolderClick={handleFolderClick}
+                    collapseAll={collapseAll}
+                    setCollapseAll={setCollapseAll}
                   />
                 </SidebarMenu>
               </SidebarGroupContent>

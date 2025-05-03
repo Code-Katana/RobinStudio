@@ -11,3 +11,4 @@ export { Phases } from "./phases.icon";
 export { NewFile } from "./newFile.icon";
 export { NewFolder } from "./newFolder.icon";
 export { CollapseAll } from "./collapseAll.icon";
+export { RefreshTree } from "./refresh.icon";
