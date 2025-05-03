@@ -14,6 +14,7 @@ import { TabsBar } from "./components/tabs-bar";
 import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 import { useCurrentProjectStore } from "./stores/current-project.store";
 import { useAppSettingsStore } from "./stores/app-settings.store";
+import { SettingsTab } from "@renderer/components/settings-tab";
 
 type CompilerPhase =
   | "tokenize"
@@ -24,8 +25,7 @@ type CompilerPhase =
   | "compile";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, openedFiles, onCloseFile, onCloseProject } =
-    useCurrentProjectStore();
+  const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject } = useCurrentProjectStore();
   const { direction, scannerOption } = useAppSettingsStore();
   const [isOutputVisible, setIsOutputVisible] = useState(true);
   const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
@@ -151,11 +151,15 @@ const App: React.FC = () => {
               <section className="absolute inset-0">
                 <ResizablePanelGroup direction={direction} className="h-svh font-mono">
                   <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
-                    {openedFiles.size > 0 && (
-                      <Tabs value={currentFile?.path} className="grid h-full">
+                    {currentFile && (
+                      <Tabs value={currentFile.path} className="grid h-full">
                         <TabsBar />
                         <ResizablePanelGroup direction="horizontal">
-                          {currentFile && <EditorPlayground />}
+                          {currentFile.path === "settings" ? (
+                            <SettingsTab className="w-full" value="settings" />
+                          ) : (
+                            <EditorPlayground />
+                          )}
                         </ResizablePanelGroup>
                       </Tabs>
                     )}

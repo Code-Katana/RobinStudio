@@ -51,6 +51,7 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange, on
   const [isSettingsClicked, setIsSettingsClicked] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
   const [isPhasesOpen, setIsPhasesOpen] = useState(false);
+  const { onOpenFile } = useCurrentProject();
 
   function handleCloseWindow(): void {
     window.electron.closeWindow();
@@ -73,6 +74,7 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange, on
 
   const handleSettingsClick = () => {
     setIsSettingsClicked(!isSettingsClicked);
+    onOpenFile("Settings", "settings", "");
   };
 
   const handlePhaseSelect = (phase: CompilerPhase) => {

@@ -46,12 +46,16 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
 
   onOpenProject: (projectName, path, tree) => {
     if (!path || !tree) return;
+    const state = get();
+    const wasSettingsOpen = state.currentFile?.path === "settings";
+    const settingsFile = { name: "Settings", path: "settings", content: "" };
+
     set({
       projectName: projectName,
       rootPath: path,
       fileTree: tree,
-      openedFiles: new Map(),
-      currentFile: undefined,
+      openedFiles: wasSettingsOpen ? new Map([["settings", settingsFile]]) : new Map(),
+      currentFile: wasSettingsOpen ? settingsFile : undefined,
       currentFolder: { name: path.split("/").pop() || "", path: path },
     });
   },
