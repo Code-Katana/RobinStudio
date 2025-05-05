@@ -29,6 +29,7 @@ import { FileFinder } from "@renderer/components/file-finder";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useSidebar } from "@renderer/components/ui/sidebar";
 import { FileOperations } from "@renderer/components/file-operation";
+import { Switch } from "@renderer/components/switch-themes";
 
 interface TitleBarProps {
   onOutputVisibilityChange: (visible: boolean) => void;
@@ -194,6 +195,8 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange, on
       <div>
         <div className="flex w-fit items-center justify-center rounded-bl-lg border-8 border-r-0 border-t-0 border-secondary/50 bg-secondary/50 pl-2">
           <div className="flex items-center gap-3">
+            <Switch />
+            <Separator className={cn("text-neutral-600", iconSize)} />
             <div onClick={toggleSidebar} className="cursor-pointer">
               {state === "expanded" ? <SidebarLeftOn /> : <SidebarLeftOff />}
             </div>
