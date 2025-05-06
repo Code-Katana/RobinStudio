@@ -187,12 +187,11 @@ ipcMain.on(Channels.browserWindowActions.maximizeWindow, () => {
 // File Feature Actions
 
 ipcMain.handle(Channels.fileChannels.create, async (_, request: CreateFileRequest) => {
-  const { path, name } = request;
+  const { path, name, content } = request;
   const fullPath = join(path, name);
 
   try {
-    // Create an empty file
-    fs.writeFileSync(fullPath, "");
+    fs.writeFileSync(fullPath, content);
     return { success: true, path: fullPath };
   } catch (error) {
     console.error("Error creating file:", error);
