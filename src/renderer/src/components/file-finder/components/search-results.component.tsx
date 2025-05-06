@@ -26,7 +26,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ files }) => {
 
   return (
     <div className="grid gap-1 p-2">
-      {files.map((file) => (
+      {files.slice(0, 5).map((file) => (
         <DialogClose asChild key={file.path}>
           <Button
             variant="ghost"
@@ -41,6 +41,11 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ files }) => {
           </Button>
         </DialogClose>
       ))}
+      {files.length > 5 && (
+        <div className="py-2 text-center text-sm text-muted-foreground">
+          Showing 5 of {files.length} results
+        </div>
+      )}
     </div>
   );
 };
