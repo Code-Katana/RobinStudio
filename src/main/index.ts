@@ -1,18 +1,9 @@
 import fs from "fs";
 import { join } from "path";
-import { app, protocol, shell, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, shell, BrowserWindow, ipcMain, dialog } from "electron";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
-import { AssetUrl } from "@shared/protocols/asset-url";
-import { AssetServer } from "@shared/protocols/asset-server";
-import {
-  Channels,
-  ParseRequest,
-  ParseResponse,
-  TokenizeRequest,
-  TokenizeResponse,
-} from "@shared/channels";
-import { Token } from "@shared/types";
+import { Channels, ParseResponse, TokenizeResponse } from "@shared/channels";
 import {
   OpenFileRequest,
   OpenFileResponse,
@@ -56,32 +47,10 @@ function createWindow(): void {
   }
 }
 
-protocol.registerSchemesAsPrivileged([
-  {
-    scheme: "app-asset",
-    privileges: {
-      standard: true,
-      supportFetchAPI: true,
-      bypassCSP: true,
-    },
-  },
-]);
-
-const server = new AssetServer();
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  protocol.handle("app-asset", (request) => {
-    const asset = new AssetUrl(request.url);
-
-    if (asset.isNodeModule) {
-      return server.fromNodeModules(asset.relativeUrl);
-    } else {
-      return server.fromPublic(asset.relativeUrl);
-    }
-  });
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
 
@@ -93,7 +62,6 @@ app.whenReady().then(() => {
   });
 
   // Example Usage
-  // startLSP();
   createWindow();
 
   app.on("activate", function () {
@@ -114,19 +82,13 @@ app.on("window-all-closed", () => {
 });
 
 // Wren Compiler Actions
-ipcMain.handle(
-  Channels.wrenLang.tokenize,
-  async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-    return { tokens: [] };
-  },
-);
+ipcMain.handle(Channels.wrenLang.tokenize, async (): Promise<TokenizeResponse> => {
+  return { tokens: [] };
+});
 
-ipcMain.handle(
-  Channels.wrenLang.parse,
-  async (_event, request: ParseRequest): Promise<ParseResponse> => {
-    return { ast: [] };
-  },
-);
+ipcMain.handle(Channels.wrenLang.parse, async (): Promise<ParseResponse> => {
+  return { ast: [] };
+});
 
 // Browser Window Actions
 ipcMain.on(Channels.browserWindowActions.closeWindow, () => {
