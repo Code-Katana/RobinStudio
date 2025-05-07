@@ -33,15 +33,18 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.6",
+    "@typefox/monaco-editor-react": "^6.7.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "electron-updater": "^6.1.7",
     "lucide-react": "^0.456.0",
-    "monaco-editor": "^0.52.0",
+    "monaco-editor": "^0.52.2",
+    "monaco-languageclient": "^9.5.0",
     "react-d3-tree": "^3.6.2",
     "react-resizable-panels": "^2.1.7",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vscode-ws-jsonrpc": "^3.4.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
