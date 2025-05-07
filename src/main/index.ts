@@ -1,5 +1,6 @@
 import fs from "fs";
 import { join } from "path";
+import { spawn } from "child_process";
 import { app, shell, BrowserWindow, ipcMain, dialog } from "electron";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
@@ -11,8 +12,10 @@ import {
   SaveFileRequest,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
+import { createLspMessage } from "./lib/create-lsp-message";
 
 let mainWindow: BrowserWindow | null;
+let lspProcess: ReturnType<typeof spawn>;
 
 function createWindow(): void {
   // Create the browser window.
@@ -69,6 +72,46 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+});
+
+ipcMain.on("lsp-start", () => {
+  console.log("starting lsp...");
+  // Launch the custom language server (rbn.exe) via child_process.spawn
+  const lspPath = join(app.getAppPath(), "resources", "bin", "namepiece.exe");
+  lspProcess = spawn(lspPath, ["--stdio"], { stdio: ["pipe", "pipe", "pipe"] });
+
+  if (!lspProcess || !lspProcess.stdout || !lspProcess.stderr) {
+    console.error("Failed to start language server");
+    return;
+  }
+
+  // Forward LSP stdout to renderer via IPC
+  lspProcess.stdout.on("data", (chunk: Buffer) => {
+    // Send raw JSON-RPC message bytes to renderer
+    const msg = chunk.toString();
+    BrowserWindow.getAllWindows().forEach((win) => win.webContents.send("lsp-from-main", msg));
+  });
+
+  // Capture LSP stderr if desired (for logs/errors)
+  lspProcess.stderr.on("data", (data) => {
+    console.error(`LSP stderr: ${data}`);
+  });
+
+  // Handle LSP process exit
+  lspProcess.on("exit", (code, signal) => {
+    BrowserWindow.getAllWindows().forEach((win) =>
+      win.webContents.send("lsp-exit", { code, signal }),
+    );
+  });
+});
+
+ipcMain.on("lsp-to-main", (_event, message: string) => {
+  console.log("testing...");
+  if (lspProcess && lspProcess.stdin?.writable) {
+    const lspMessage = createLspMessage(message);
+    console.log("from main:" + lspMessage);
+    lspProcess.stdin.write(lspMessage);
+  }
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const [output, setOutput] = useState<"tokens" | "tree" | undefined>(undefined);
 
   function clearOutput() {
-    setOutput(undefined);
+    window.testLsp.start();
   }
 
   async function handleTokenize(): Promise<void> {
@@ -45,18 +45,19 @@ const App: React.FC = () => {
   }
 
   async function handleParse(): Promise<void> {
-    if (!currentFile) {
-      return;
-    }
+    // if (!currentFile) {
+    //   return;
+    // }
 
-    await handleSaveFile();
-    setOutput("tree");
+    // await handleSaveFile();
+    // setOutput("tree");
 
-    const response = await window.api.parse({
-      source: currentFile.path,
-    });
+    // const response = await window.api.parse({
+    //   source: currentFile.path,
+    // });
 
-    setAst(response.ast);
+    // setAst(response.ast);
+    window.testLsp.initialize();
   }
 
   async function handleSaveFile(): Promise<void> {

@@ -27,11 +27,19 @@ declare global {
       openFolder: () => Promise<OpenFolderResponse | null>;
     };
 
-    languageServer: {
-      sendRequest: (method: string, params?: object | object[]) => Promise<void>;
-      onNotification: (
-        callback: (method: string, params: object | object[]) => void,
-      ) => () => Electron.IpcRenderer;
+    testLsp: {
+      start: () => void;
+      initialize: () => void;
+      send: (message: string) => void;
+      receive: (callback: (data: string) => void | null) => void;
+      dispose: () => void;
     };
+
+    // languageServer: {
+    //   sendRequest: (method: string, params?: object | object[]) => Promise<void>;
+    //   onNotification: (
+    //     callback: (method: string, params: object | object[]) => void,
+    //   ) => () => Electron.IpcRenderer;
+    // };
   }
 }
