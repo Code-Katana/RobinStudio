@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { HnExpressionNode } from "@shared/types";
+import { useRecentFilesStore } from "./recent-files.store";
+// import { getFileTree } from "@main/lib/get-file-tree";
 
 export type OpenFileType = {
   name: string;
@@ -7,41 +9,65 @@ export type OpenFileType = {
   content: string;
 };
 
+export type CurrentFolderType = {
+  name: string;
+  path: string;
+};
+
 export interface CurrentProjectState {
+  projectName: string | undefined;
   rootPath: string | undefined;
   fileTree: HnExpressionNode | undefined;
   openedFiles: Map<string, OpenFileType>;
   currentFile: OpenFileType | undefined;
-  onOpenProject: (path: string | undefined, tree: HnExpressionNode | undefined) => void;
+  currentFolder: CurrentFolderType | undefined;
+  onOpenProject: (
+    projectName: string | undefined,
+    path: string | undefined,
+    tree: HnExpressionNode | undefined,
+  ) => void;
   onCloseProject: () => void;
+  onCreateFile: (name: string) => Promise<void>;
+  onCreateFolder: (name: string) => Promise<void>;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
   onUpdateCurrentFile: (value?: string) => void;
+  onSetCurrentFolder: (name: string, path: string) => void;
   moveTab: (dragIndex: number, hoverIndex: number) => void;
 }
 
-export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
+export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => ({
+  projectName: undefined,
   rootPath: undefined,
   fileTree: undefined,
   openedFiles: new Map(),
   currentFile: undefined,
+  currentFolder: undefined,
 
-  onOpenProject: (path, tree) => {
+  onOpenProject: (projectName, path, tree) => {
     if (!path || !tree) return;
+    const state = get();
+    const wasSettingsOpen = state.currentFile?.path === "settings";
+    const settingsFile = { name: "Settings", path: "settings", content: "" };
+
     set({
+      projectName: projectName,
       rootPath: path,
       fileTree: tree,
-      openedFiles: new Map(),
-      currentFile: undefined,
+      openedFiles: wasSettingsOpen ? new Map([["settings", settingsFile]]) : new Map(),
+      currentFile: wasSettingsOpen ? settingsFile : undefined,
+      currentFolder: { name: path.split("/").pop() || "", path: path },
     });
   },
 
   onCloseProject: () => {
     set({
+      projectName: undefined,
       rootPath: undefined,
       fileTree: undefined,
       openedFiles: new Map(),
       currentFile: undefined,
+      currentFolder: undefined,
     });
   },
 
@@ -55,9 +81,16 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
       const updatedFiles = new Map(state.openedFiles);
       updatedFiles.set(path, newFile);
 
+      const { addRecentFile } = useRecentFilesStore.getState();
+      addRecentFile(name, path);
+
+      const parentPath = path.split("/").slice(0, -1).join("/");
+      const parentName = parentPath.split("/").pop() || "";
+
       return {
         openedFiles: updatedFiles,
         currentFile: newFile,
+        currentFolder: { name: parentName, path: parentPath },
       };
     });
   },
@@ -107,6 +140,10 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
     });
   },
 
+  onSetCurrentFolder: (name, path) => {
+    set({ currentFolder: { name, path } });
+  },
+
   moveTab: (dragIndex: number, hoverIndex: number) => {
     set((state) => {
       const filesArray = Array.from(state.openedFiles.values());
@@ -135,5 +172,60 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set) => ({
         openedFiles: newFilesMap,
       };
     });
+  },
+
+  onCreateFile: async (name: string) => {
+    const state = get();
+    if (!state.currentFolder?.path) {
+      throw new Error("No folder selected");
+    }
+
+    try {
+      await window.fs.createFile({
+        path: state.currentFolder.path,
+        name: name,
+      });
+
+      // Open the newly created file
+      const filePath = window.fs.resolvePath(state.currentFolder.path, name);
+      const content = "";
+      state.onOpenFile(name, filePath, content);
+
+      // Update the file tree
+      if (state.rootPath) {
+        const { tree } = await window.fs.updateTree({ path: state.rootPath });
+        set({ fileTree: tree });
+      }
+    } catch (error) {
+      console.error("Error creating file:", error);
+      throw error;
+    }
+  },
+
+  onCreateFolder: async (name: string) => {
+    const state = get();
+    if (!state.currentFolder?.path) {
+      throw new Error("No folder selected");
+    }
+
+    try {
+      const response = await window.fs.createFolder({
+        path: state.currentFolder.path,
+        name: name,
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || "Failed to create folder");
+      }
+
+      // Update the file tree
+      if (state.rootPath) {
+        const { tree } = await window.fs.updateTree({ path: state.rootPath });
+        set({ fileTree: tree });
+      }
+    } catch (error) {
+      console.error("Error creating folder:", error);
+      throw error;
+    }
   },
 }));

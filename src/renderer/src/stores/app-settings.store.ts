@@ -13,7 +13,7 @@ export interface AppSettingsState {
 }
 
 export const useAppSettingsStore = create<AppSettingsState>((set) => ({
-  direction: "vertical",
+  direction: "horizontal",
   scannerOption: ScannerOptions.FA,
   parserOption: ParserOptions.RecursiveDecent,
   setDirection: (dir) => set({ direction: dir }),
