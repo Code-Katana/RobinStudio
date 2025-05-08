@@ -15,6 +15,7 @@ import { AbstractSyntaxTree } from "./components/abstract-syntax-tree";
 import { useCurrentProjectStore } from "./stores/current-project.store";
 import { useAppSettingsStore } from "./stores/app-settings.store";
 import { SettingsTab } from "@renderer/components/settings-tab";
+import { WelcomeTab } from "./components/welcome-tab";
 
 type CompilerPhase =
   | "tokenize"
@@ -25,7 +26,8 @@ type CompilerPhase =
   | "compile";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject } = useCurrentProjectStore();
+  const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject, onOpenFile } =
+    useCurrentProjectStore();
   const { direction, scannerOption } = useAppSettingsStore();
   const [isOutputVisible, setIsOutputVisible] = useState(true);
   const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
@@ -36,6 +38,10 @@ const App: React.FC = () => {
   const [output, setOutput] = useState<"tokens" | "tree" | "file-events" | undefined>(undefined);
   const [events, setEvents] = useState<FileEvent[]>([]);
   const [, setKeySequence] = useState<string[]>([]);
+
+  useEffect(() => {
+    onOpenFile("Welcome", "welcome", "");
+  }, []);
 
   function clearOutput() {
     setOutput(undefined);
@@ -152,11 +158,13 @@ const App: React.FC = () => {
                 <ResizablePanelGroup direction={direction} className="h-svh font-mono">
                   <ResizablePanel className="rounded-lg bg-secondary" defaultSize={50}>
                     {currentFile && (
-                      <Tabs value={currentFile.path} className="grid h-full">
+                      <Tabs value={currentFile.path} className="h-full">
                         <TabsBar />
                         <ResizablePanelGroup direction="horizontal">
                           {currentFile.path === "settings" ? (
                             <SettingsTab className="w-full" value="settings" />
+                          ) : currentFile.path === "welcome" ? (
+                            <WelcomeTab className="w-full" value="welcome" />
                           ) : (
                             <EditorPlayground />
                           )}

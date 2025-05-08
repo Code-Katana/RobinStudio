@@ -9,6 +9,8 @@ export { Settings } from "./settings.icon";
 export { Run } from "./run.icon";
 export { Phases } from "./phases.icon";
 export { NewFile } from "./newFile.icon";
+export { OpenFile } from "./openFile.icon";
 export { NewFolder } from "./newFolder.icon";
+export { OpenFolder } from "./openFolder.icon";
 export { CollapseAll } from "./collapseAll.icon";
 export { RefreshTree } from "./refresh.icon";

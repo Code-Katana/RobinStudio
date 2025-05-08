@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { HnExpressionNode } from "@shared/types";
 import { useRecentFilesStore } from "./recent-files.store";
+import { useRecentFoldersStore } from "./recent-folder.strore";
 // import { getFileTree } from "@main/lib/get-file-tree";
 
 export type OpenFileType = {
@@ -45,18 +46,26 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
   currentFolder: undefined,
 
   onOpenProject: (projectName, path, tree) => {
+    const { addRecentFolder } = useRecentFoldersStore.getState();
     if (!path || !tree) return;
     const state = get();
     const wasSettingsOpen = state.currentFile?.path === "settings";
     const settingsFile = { name: "Settings", path: "settings", content: "" };
 
+    const wasWelcomeOpen = state.currentFile?.path === "welcome";
+    const welcomeFile = { name: "Welcome", path: "welcome", content: "" };
+
+    addRecentFolder(projectName!, path);
     set({
       projectName: projectName,
       rootPath: path,
       fileTree: tree,
-      openedFiles: wasSettingsOpen ? new Map([["settings", settingsFile]]) : new Map(),
-      currentFile: wasSettingsOpen ? settingsFile : undefined,
-      currentFolder: { name: path.split("/").pop() || "", path: path },
+      openedFiles: wasSettingsOpen
+        ? new Map([["settings", settingsFile]])
+        : wasWelcomeOpen
+          ? new Map([["welcome", welcomeFile]])
+          : new Map(),
+      currentFile: wasSettingsOpen ? settingsFile : wasWelcomeOpen ? welcomeFile : undefined,
     });
   },
 

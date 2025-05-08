@@ -104,9 +104,6 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
 
   const handleCollapseAll = () => {
     setCollapseAll("closed");
-    // setTimeout(() => {
-    //   setCollapseAll("open");
-    // }, 300);
   };
 
   return (
