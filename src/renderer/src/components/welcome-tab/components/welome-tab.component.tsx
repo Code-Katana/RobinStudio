@@ -30,6 +30,7 @@ export const WelcomeTab = ({ value, className }: WelcomeTabProps) => {
 
   async function handleNewFile() {
     if (!currentFolder) return;
+    console.log("currentFolder", currentFolder);
     setIsNewFileDialogOpen(true);
   }
 
@@ -37,7 +38,7 @@ export const WelcomeTab = ({ value, className }: WelcomeTabProps) => {
     if (!newFileName.trim()) return;
 
     try {
-      await onCreateFile(newFileName);
+      await onCreateFile(newFileName, "");
       setNewFileName("");
       setIsNewFileDialogOpen(false);
       onSetCurrentFolder(newFileName, currentFolder!.path);
@@ -81,6 +82,7 @@ export const WelcomeTab = ({ value, className }: WelcomeTabProps) => {
               size="icon"
               className="w-full justify-start"
               onClick={handleNewFile}
+              disabled={currentFolder?.name === ""}
             >
               <NewFile className="h-4 w-4" /> New File
             </Button>

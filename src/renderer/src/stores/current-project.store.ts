@@ -28,7 +28,7 @@ export interface CurrentProjectState {
     tree: HnExpressionNode | undefined,
   ) => void;
   onCloseProject: () => void;
-  onCreateFile: (name: string) => Promise<void>;
+  onCreateFile: (name: string, content: string) => Promise<void>;
   onCreateFolder: (name: string) => Promise<void>;
   onOpenFile: (name: string, path: string, content: string) => void;
   onCloseFile: (filePath: string) => void;
@@ -183,7 +183,7 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
     });
   },
 
-  onCreateFile: async (name: string) => {
+  onCreateFile: async (name: string, content: string) => {
     const state = get();
     if (!state.currentFolder?.path) {
       throw new Error("No folder selected");
@@ -193,11 +193,11 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
       await window.fs.createFile({
         path: state.currentFolder.path,
         name: name,
+        content: content,
       });
 
       // Open the newly created file
       const filePath = window.fs.resolvePath(state.currentFolder.path, name);
-      const content = "";
       state.onOpenFile(name, filePath, content);
 
       // Update the file tree

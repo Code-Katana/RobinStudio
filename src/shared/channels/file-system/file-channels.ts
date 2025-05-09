@@ -7,7 +7,7 @@ export const fileChannels: ChannelNames = {
   openByPath: "file:open-by-path",
 };
 
-export type CreateFileRequest = { path: string; name: string };
+export type CreateFileRequest = { path: string; name: string; content: string };
 
 export type OpenFileRequest = { path: string | undefined };
 
