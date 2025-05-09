@@ -1,23 +1,13 @@
-import "./index.css";
-import { useState } from "react";
+import "./switch.styles.css";
+import { useAppTheme } from "@renderer/hooks/use-app-theme";
 
 export const Switch = () => {
-  const [isDark, setIsDark] = useState(document.documentElement.classList.contains("dark"));
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    if (newTheme) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
+  const [theme, toggleTheme] = useAppTheme();
 
   return (
     <>
       <label className="switch">
-        <input id="input" type="checkbox" checked={isDark} onChange={toggleTheme} />
+        <input id="input" type="checkbox" checked={theme === "dark"} onChange={toggleTheme} />
         <div className="slider round">
           <div className="sun-moon">
             <svg id="moon-dot-1" className="moon-dot" viewBox="0 0 100 100">

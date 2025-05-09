@@ -1,35 +1,13 @@
-import { Cross2Icon, BoxIcon, MinusIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "@renderer/components/ui/button";
 import { cn } from "@renderer/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@renderer/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
-import { useAppSettings } from "@renderer/hooks/use-app-settings";
-import { ScannerOptions } from "@shared/types";
 import RobinLogo from "@renderer/assets/images/rbnLogo.jpg";
-import {
-  OutputRightOn,
-  OutputRightOff,
-  Separator,
-  SidebarLeftOn,
-  SidebarLeftOff,
-  Settings,
-  Run,
-  Phases,
-} from "@renderer/assets/icons";
+import { Separator, Run, Phases } from "@renderer/assets/icons";
 import { useState } from "react";
 import { FileFinder } from "@renderer/components/file-finder";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
-import { useSidebar } from "@renderer/components/ui/sidebar";
 import { FileOperations } from "@renderer/components/file-operation";
-import { Switch } from "@renderer/components/switch-themes";
+import { TitleBarAction } from "./title-bar-action.component";
 
 interface TitleBarProps {
   onOutputVisibilityChange: (visible: boolean) => void;
@@ -44,39 +22,12 @@ type CompilerPhase =
   | "ir-optimization"
   | "compile";
 
-export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange, onPhaseChange }) => {
+export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisibilityChange }) => {
   const { projectName } = useCurrentProject();
-  const { direction, scannerOption, setDirection, setScannerOption } = useAppSettings();
-  const { state, toggleSidebar } = useSidebar();
-  const [isOutputVisible, setIsOutputVisible] = useState(true);
-  const [isSettingsClicked, setIsSettingsClicked] = useState(false);
   const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
   const [isPhasesOpen, setIsPhasesOpen] = useState(false);
-  const { onOpenFile } = useCurrentProject();
-
-  function handleCloseWindow(): void {
-    window.electron.closeWindow();
-  }
-
-  function handleMinimizeWindow(): void {
-    window.electron.minimizeWindow();
-  }
-  function handleMaximizeWindow(): void {
-    window.electron.maximizeWindow();
-  }
 
   const iconSize = "w-5 h-5";
-
-  const toggleOutput = () => {
-    const newVisibility = !isOutputVisible;
-    setIsOutputVisible(newVisibility);
-    onOutputVisibilityChange(newVisibility);
-  };
-
-  const handleSettingsClick = () => {
-    setIsSettingsClicked(!isSettingsClicked);
-    onOpenFile("Settings", "settings", "");
-  };
 
   const handlePhaseSelect = (phase: CompilerPhase) => {
     setSelectedPhase(phase);
@@ -121,6 +72,7 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange, on
           </div>
         </div>
       </div>
+
       <div
         className={cn(
           "m-2 flex gap-[2px] overflow-hidden rounded-lg border",
@@ -192,88 +144,8 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOutputVisibilityChange, on
           </PopoverContent>
         </Popover>
       </div>
-      <div>
-        <div className="flex w-fit items-center justify-center rounded-bl-lg border-8 border-r-0 border-t-0 border-secondary/50 bg-secondary/50 pl-2">
-          <div className="flex items-center gap-3">
-            <Switch />
-            <Separator className={cn("text-neutral-600", iconSize)} />
-            <div onClick={toggleSidebar} className="cursor-pointer">
-              {state === "expanded" ? <SidebarLeftOn /> : <SidebarLeftOff />}
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div>
-                  <HamburgerMenuIcon />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 translate-x-4">
-                <DropdownMenuLabel>Editor Layout</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={direction}>
-                  <DropdownMenuRadioItem value="vertical" onClick={() => setDirection("vertical")}>
-                    Vertical
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    value="horizontal"
-                    onClick={() => setDirection("horizontal")}
-                  >
-                    Horizontal
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
 
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel>Scanner Options</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={scannerOption}>
-                  <DropdownMenuRadioItem
-                    value="FA"
-                    onClick={() => setScannerOption(ScannerOptions.FA)}
-                  >
-                    Finite Automaton
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    value="handCoded"
-                    onClick={() => setScannerOption(ScannerOptions.HandCoded)}
-                  >
-                    Hand Coded
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <div onClick={toggleOutput} className="cursor-pointer">
-              {isOutputVisible ? <OutputRightOn /> : <OutputRightOff />}
-            </div>
-
-            <Settings
-              className={cn(
-                "h-5 w-5 cursor-pointer transition-transform duration-300",
-                isSettingsClicked ? "-rotate-45" : "",
-              )}
-              onClick={handleSettingsClick}
-            />
-          </div>
-          <Separator className={cn("mx-1 text-neutral-600", iconSize)} />
-          <Button
-            className="rounded-none p-3 hover:bg-primary"
-            variant="ghost"
-            onClick={handleMinimizeWindow}
-          >
-            <MinusIcon />
-          </Button>
-          <Button
-            className="rounded-none p-3 hover:bg-primary"
-            variant="ghost"
-            onClick={handleMaximizeWindow}
-          >
-            <BoxIcon />
-          </Button>
-          <Button
-            className="rounded-none p-3 hover:bg-red-600"
-            variant="ghost"
-            onClick={handleCloseWindow}
-          >
-            <Cross2Icon />
-          </Button>
-        </div>
-      </div>
+      <TitleBarAction onOutputVisibilityChange={onOutputVisibilityChange} />
     </nav>
   );
 };
