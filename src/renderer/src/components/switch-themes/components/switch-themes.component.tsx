@@ -2,7 +2,7 @@ import "./switch.styles.css";
 import { useAppTheme } from "@renderer/hooks/use-app-theme";
 
 export const Switch = () => {
-  const [theme, toggleTheme] = useAppTheme();
+  const { theme, toggleTheme } = useAppTheme();
 
   return (
     <>
