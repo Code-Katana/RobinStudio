@@ -5,14 +5,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import {
-  Channels,
-  ParseRequest,
-  ParseResponse,
-  TokenizeRequest,
-  TokenizeResponse,
-} from "@shared/channels";
-import { Token } from "@shared/types";
+import { Channels, ParseResponse, TokenizeResponse } from "@shared/channels";
 import {
   CreateFileRequest,
   CreateFolderRequest,
@@ -24,9 +17,7 @@ import {
   UpdateTreeRequest,
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
-
 import { getFileTree } from "@main/lib/get-file-tree";
-import { lspConnection, lspProcess, startLSP } from "@main/language-server";
 import chokidar from "chokidar";
 
 let mainWindow: BrowserWindow | null;
@@ -101,7 +92,6 @@ app.whenReady().then(() => {
   });
 
   // Example Usage
-  startLSP();
   createWindow();
 
   app.on("activate", function () {
@@ -116,55 +106,18 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    lspProcess?.kill();
     app.quit();
   }
 });
 
 // Wren Compiler Actions
-ipcMain.handle(
-  Channels.wrenLang.tokenize,
-  async (_event, request: TokenizeRequest): Promise<TokenizeResponse> => {
-    try {
-      if (!lspConnection) {
-        throw new Error("Language server is down...");
-      }
+ipcMain.handle(Channels.wrenLang.tokenize, async (): Promise<TokenizeResponse> => {
+  return { tokens: [] };
+});
 
-      const { source, scanner } = request;
-      const tokens: Token[] = await lspConnection.sendRequest("rbn/tokenize", {
-        source,
-        scannerOption: scanner,
-      });
-
-      console.log(` my tokens from main :${tokens}`);
-
-      return { tokens };
-    } catch (error) {
-      console.error(error);
-      return { tokens: [] };
-    }
-  },
-);
-
-ipcMain.handle(
-  Channels.wrenLang.parse,
-  async (_event, request: ParseRequest): Promise<ParseResponse> => {
-    try {
-      if (!lspConnection) {
-        throw new Error("Language server is down...");
-      }
-
-      const { source } = request;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const ast: any = await lspConnection.sendRequest("rbn/parse", { source });
-
-      return { ast };
-    } catch (error) {
-      console.error(error);
-      return { ast: [] };
-    }
-  },
-);
+ipcMain.handle(Channels.wrenLang.parse, async (): Promise<ParseResponse> => {
+  return { ast: [] };
+});
 
 // Browser Window Actions
 ipcMain.on(Channels.browserWindowActions.closeWindow, () => {
