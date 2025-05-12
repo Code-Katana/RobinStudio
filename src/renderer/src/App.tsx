@@ -16,14 +16,7 @@ import { useCurrentProjectStore } from "./stores/current-project.store";
 import { useAppSettingsStore } from "./stores/app-settings.store";
 import { SettingsTab } from "@renderer/components/settings-tab";
 import { WelcomeTab } from "./components/welcome-tab";
-
-type CompilerPhase =
-  | "tokenize"
-  | "parse"
-  | "typecheck"
-  | "ir-generation"
-  | "ir-optimization"
-  | "compile";
+import { CompilerPhase } from "./types";
 
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject, onOpenFile } =
