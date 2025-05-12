@@ -3,10 +3,11 @@ import { useAppTheme } from "@renderer/hooks/use-app-theme";
 import { useToggleIconState } from "@renderer/hooks/use-toggle-icon-state";
 
 export const ThemeToggle = () => {
-  const [theme, toggleTheme] = useAppTheme();
+  const { theme, toggleTheme } = useAppTheme();
   const { icon, toggle } = useToggleIconState({
     activeIcon: <DarkThemeIcon />,
     inactiveIcon: <LightThemeIcon />,
+    initialState: theme === "dark",
   });
 
   function handleClick() {

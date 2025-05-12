@@ -12,7 +12,6 @@ export const OutputToggle = ({
   const { isActive, icon, toggle } = useToggleIconState({
     activeIcon: <OutputOnIcon />,
     inactiveIcon: <OutputOffIcon />,
-    initialState: true,
   });
 
   function handleClick() {
