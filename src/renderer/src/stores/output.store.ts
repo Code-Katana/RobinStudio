@@ -1,5 +1,5 @@
 import { Comparison, CompilerPhase, Measurement } from "@renderer/types";
-import { createStore } from "zustand";
+import { create } from "zustand";
 
 type OutputPanelType = "phase" | "comparison" | "measure";
 
@@ -15,7 +15,7 @@ type OutputStoreType =
   | OutputType<"comparison", Comparison>
   | OutputType<"measure", Measurement>;
 
-interface OutputStore {
+export interface OutputStore {
   output: OutputStoreType;
   setPhase: (phase: CompilerPhase) => void;
   setComparison: (comparison: Comparison) => void;
@@ -24,7 +24,7 @@ interface OutputStore {
   getData: () => OutputDataType;
 }
 
-const outputStore = createStore<OutputStore>((set, get) => ({
+export const useOutputStore = create<OutputStore>((set, get) => ({
   output: {
     panelType: "phase",
     data: CompilerPhase.Tokenize,
@@ -45,5 +45,3 @@ const outputStore = createStore<OutputStore>((set, get) => ({
     return get().output.data;
   },
 }));
-
-export default outputStore;
