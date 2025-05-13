@@ -10,12 +10,7 @@ import { FileOperations } from "@renderer/components/file-operation";
 import { TitleBarAction } from "./title-bar-action.component";
 import { CompilerPhase } from "@renderer/types";
 
-interface TitleBarProps {
-  onOutputVisibilityChange: (visible: boolean) => void;
-  onPhaseChange: (phase: CompilerPhase | null) => void;
-}
-
-export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisibilityChange }) => {
+export const TitleBar: React.FC = () => {
   const { projectName } = useCurrentProject();
   const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
   const [isPhasesOpen, setIsPhasesOpen] = useState(false);
@@ -24,7 +19,6 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisib
 
   const handlePhaseSelect = (phase: CompilerPhase) => {
     setSelectedPhase(phase);
-    onPhaseChange(phase);
     setIsPhasesOpen(false);
   };
 
@@ -138,7 +132,7 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisib
         </Popover>
       </div>
 
-      <TitleBarAction onOutputVisibilityChange={onOutputVisibilityChange} />
+      <TitleBarAction />
     </nav>
   );
 };
