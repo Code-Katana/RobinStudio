@@ -7,6 +7,7 @@ export const ThemeToggle = () => {
   const { icon, toggle } = useToggleIconState({
     activeIcon: <DarkThemeIcon />,
     inactiveIcon: <LightThemeIcon />,
+    initialState: theme === "dark",
   });
 
   function handleClick() {
