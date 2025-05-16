@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElectronAPI } from "@electron-toolkit/preload";
 import { ParseRequest, ParseResponse, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 import {
@@ -20,6 +21,11 @@ declare global {
     api: {
       tokenize: (request: TokenizeRequest) => Promise<TokenizeResponse>;
       parse: (request: ParseRequest) => Promise<ParseResponse>;
+    };
+
+    lsp: {
+      request: (method: string, params: any) => Promise<void>;
+      onResponse: (callback: (value: string) => void) => any;
     };
 
     fs: {

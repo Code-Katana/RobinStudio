@@ -25,6 +25,32 @@ type CompilerPhase =
   | "ir-optimization"
   | "compile";
 
+const LspClient: React.FC = () => {
+  useEffect(() => {
+    window.lsp.onResponse((value) => {
+      console.log(value);
+    });
+  }, []);
+
+  return (
+    <div>
+      <button
+        className="mx-4 rounded-lg bg-sky-500 px-4 py-2 text-sky-50"
+        onClick={() =>
+          window.lsp.request("initialize", {
+            clientInfo: {
+              name: "RobinStudio",
+              version: "0.0.1",
+            },
+          })
+        }
+      >
+        لحظة الحق
+      </button>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject, onOpenFile } =
     useCurrentProjectStore();
@@ -210,6 +236,7 @@ const App: React.FC = () => {
                                 <TokensTable tokens={tokens} scannerOption={scannerOption} />
                               )}
                               {output === "tree" && <AbstractSyntaxTree ast={ast} />}
+                              {output === undefined && <LspClient />}
                             </>
                           ) : (
                             <div className="flex h-[calc(100vh-64px)] items-center justify-center">

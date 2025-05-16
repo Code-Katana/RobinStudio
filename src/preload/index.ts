@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI as electronToolkit } from "@electron-toolkit/preload";
 import {
@@ -28,6 +29,14 @@ const api = {
 
   parse: (request: ParseRequest): Promise<ParseResponse> =>
     ipcRenderer.invoke(Channels.wrenLang.parse, request),
+};
+
+const lsp = {
+  request: (method: string, params: any): Promise<void> =>
+    ipcRenderer.invoke("lsp-request", { method, params }),
+
+  onResponse: (callback: (value: string) => void): any =>
+    ipcRenderer.on("lsp-response", (_, value) => callback(value)),
 };
 
 const fileSystem = {
@@ -74,6 +83,7 @@ if (process.contextIsolated) {
   try {
     // contextBridge.exposeInMainWorld("electronToolkit", electronToolkit);
     contextBridge.exposeInMainWorld("api", api);
+    contextBridge.exposeInMainWorld("lsp", lsp);
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("fs", fileSystem);
     contextBridge.exposeInMainWorld("electronWatcher", electronWatcher);

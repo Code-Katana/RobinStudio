@@ -19,6 +19,7 @@ import {
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
 import chokidar from "chokidar";
+import { startServer } from "./lsp/server";
 
 let mainWindow: BrowserWindow | null;
 
@@ -45,6 +46,8 @@ function createWindow(): void {
     shell.openExternal(details.url);
     return { action: "deny" };
   });
+
+  startServer(mainWindow);
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
