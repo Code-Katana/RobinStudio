@@ -75,4 +75,5 @@ function readMessage(
 
   const method = responses[response.id!];
   mainWindow.webContents.send(Channels.lsp.methods[method], response);
+  delete responses[response.id!];
 }
