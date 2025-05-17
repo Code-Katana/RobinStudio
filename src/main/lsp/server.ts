@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-constant-condition */
+import { Channels } from "@shared/channels";
 import { spawn } from "child_process";
 import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
@@ -8,17 +9,15 @@ let lspServer: ReturnType<typeof spawn> | null = null;
 
 export function startServer(mainWindow: BrowserWindow): void {
   let id = 0;
+
   lspServer = spawn(join(app.getAppPath(), "resources", "bin", "rbn.exe"), ["--lsp"], {
     stdio: ["pipe", "pipe", "inherit"],
   });
-  // lspServer = spawn(join(app.getAppPath(), "resources", "bin", "rbn.exe"), ["--lsp"], {
-  //   stdio: ["pipe", "pipe", "inherit"],
-  // });
 
   lspServer.stdout?.on("data", (data: Buffer) => {
     const message = data.toString().trim();
     console.log("lsp-response", message);
-    mainWindow.webContents.send("lsp-response", message);
+    mainWindow.webContents.send(Channels.lsp.response, message);
   });
 
   lspServer.on("error", (err) => {
@@ -29,7 +28,7 @@ export function startServer(mainWindow: BrowserWindow): void {
     console.log(`LSP process exited with code ${code}`);
   });
 
-  ipcMain.handle("lsp-request", async (_, req: any) => {
+  ipcMain.handle(Channels.lsp.request, async (_, req: any) => {
     return writeMessage(id++, req.method, req.params);
   });
 }

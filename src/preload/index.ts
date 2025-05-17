@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI as electronToolkit } from "@electron-toolkit/preload";
-import {
-  Channels,
-  ParseRequest,
-  ParseResponse,
-  TokenizeRequest,
-  TokenizeResponse,
-} from "@shared/channels";
+import { Channels } from "@shared/channels";
 import {
   CreateFileRequest,
   CreateFolderRequest,
@@ -23,14 +17,6 @@ import { FileEvent } from "@shared/types";
 import path from "path";
 
 // Custom APIs for renderer
-const api = {
-  tokenize: (request: TokenizeRequest): Promise<TokenizeResponse> =>
-    ipcRenderer.invoke(Channels.wrenLang.tokenize, request),
-
-  parse: (request: ParseRequest): Promise<ParseResponse> =>
-    ipcRenderer.invoke(Channels.wrenLang.parse, request),
-};
-
 const lsp = {
   request: (method: string, params: any): Promise<void> =>
     ipcRenderer.invoke("lsp-request", { method, params }),
@@ -82,7 +68,7 @@ const electronWatcher = {
 if (process.contextIsolated) {
   try {
     // contextBridge.exposeInMainWorld("electronToolkit", electronToolkit);
-    contextBridge.exposeInMainWorld("api", api);
+    // contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("lsp", lsp);
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("fs", fileSystem);

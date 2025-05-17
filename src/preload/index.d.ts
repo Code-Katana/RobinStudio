@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElectronAPI } from "@electron-toolkit/preload";
-import { ParseRequest, ParseResponse, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 import {
   SaveFileRequest,
   OpenFileRequest,
@@ -16,11 +15,6 @@ declare global {
       closeWindow: () => void;
       minimizeWindow: () => void;
       maximizeWindow: () => void;
-    };
-
-    api: {
-      tokenize: (request: TokenizeRequest) => Promise<TokenizeResponse>;
-      parse: (request: ParseRequest) => Promise<ParseResponse>;
     };
 
     lsp: {
