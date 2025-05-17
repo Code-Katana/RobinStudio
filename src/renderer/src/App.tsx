@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
-import { TokenizeResponse } from "@shared/channels";
 import { FileEvent, Token } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { AppSidebar } from "./components/app-sidebar";
