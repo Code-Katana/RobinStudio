@@ -5,7 +5,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import { Channels, ParseResponse, TokenizeResponse } from "@shared/channels";
+import { Channels } from "@shared/channels";
 import {
   CreateFileRequest,
   CreateFolderRequest,
@@ -111,15 +111,6 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
-});
-
-// Wren Compiler Actions
-ipcMain.handle(Channels.wrenLang.tokenize, async (): Promise<TokenizeResponse> => {
-  return { tokens: [] };
-});
-
-ipcMain.handle(Channels.wrenLang.parse, async (): Promise<ParseResponse> => {
-  return { ast: [] };
 });
 
 // Browser Window Actions
