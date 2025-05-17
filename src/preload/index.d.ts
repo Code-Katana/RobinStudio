@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElectronAPI } from "@electron-toolkit/preload";
 import { ParseRequest, ParseResponse, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 import {
@@ -22,6 +23,11 @@ declare global {
       parse: (request: ParseRequest) => Promise<ParseResponse>;
     };
 
+    lsp: {
+      request: (method: string, params: any) => Promise<void>;
+      onResponse: (callback: (value: string) => void) => any;
+    };
+
     fs: {
       createFile: (req: CreateFileRequest) => Promise<void>;
       openFile: () => Promise<OpenFileResponse | null>;
@@ -35,13 +41,6 @@ declare global {
 
     electronWatcher: {
       onFileEvent: (callback: (data: { type: string; path: string }) => void) => void;
-    };
-
-    languageServer: {
-      sendRequest: (method: string, params?: object | object[]) => Promise<void>;
-      onNotification: (
-        callback: (method: string, params: object | object[]) => void,
-      ) => () => Electron.IpcRenderer;
     };
   }
 }

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
-import { TokenizeResponse } from "@shared/channels";
 import { FileEvent, Token } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
@@ -24,6 +23,32 @@ type CompilerPhase =
   | "ir-generation"
   | "ir-optimization"
   | "compile";
+
+const LspClient: React.FC = () => {
+  useEffect(() => {
+    window.lsp.onResponse((value) => {
+      console.log(value);
+    });
+  }, []);
+
+  return (
+    <div>
+      <button
+        className="mx-4 rounded-lg bg-sky-500 px-4 py-2 text-sky-50"
+        onClick={() =>
+          window.lsp.request("initialize", {
+            clientInfo: {
+              name: "RobinStudio",
+              version: "0.0.1",
+            },
+          })
+        }
+      >
+        لحظة الحق
+      </button>
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject, onOpenFile } =
@@ -55,12 +80,10 @@ const App: React.FC = () => {
     await handleSaveFile();
     setOutput("tokens");
 
-    const response: TokenizeResponse = await window.api.tokenize({
-      scanner: scannerOption,
-      source: currentFile.path,
+    window.lsp.request("tokenize", {
+      scannerOption: scannerOption,
+      textDocument: currentFile.path,
     });
-
-    setTokens(response.tokens);
   }
 
   async function handleParse(): Promise<void> {
@@ -210,6 +233,7 @@ const App: React.FC = () => {
                                 <TokensTable tokens={tokens} scannerOption={scannerOption} />
                               )}
                               {output === "tree" && <AbstractSyntaxTree ast={ast} />}
+                              {output === undefined && <LspClient />}
                             </>
                           ) : (
                             <div className="flex h-[calc(100vh-64px)] items-center justify-center">
