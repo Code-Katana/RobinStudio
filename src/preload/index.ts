@@ -13,7 +13,7 @@ import {
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
 import { treeChannels } from "@shared/channels/file-system/tree-channels";
-import { FileEvent, Method } from "@shared/types";
+import { FileEvent, Method, ResponseMessage } from "@shared/types";
 import path from "path";
 
 // Custom APIs for renderer
@@ -24,7 +24,7 @@ const lsp = {
   onResponse: (callback: (value: string) => void): any =>
     ipcRenderer.on(Channels.lsp.response, (_, value) => callback(value)),
 
-  onMethod: (method: Method, callback: (value: string) => void): any =>
+  onMethod: (method: Method, callback: (value: ResponseMessage) => void): any =>
     ipcRenderer.on(Channels.lsp.methods[method], (_, value) => callback(value)),
 };
 

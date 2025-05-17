@@ -14,15 +14,10 @@ import { WelcomeTab } from "./components/welcome-tab";
 import { OutputPanel } from "./components/output-panel";
 
 const App: React.FC = () => {
-  const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject, onOpenFile } =
-    useCurrentProjectStore();
+  const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject } = useCurrentProjectStore();
   const { direction, outputOpen } = useAppSettingsStore();
   const [events, setEvents] = useState<FileEvent[]>([]);
   const [, setKeySequence] = useState<string[]>([]);
-
-  useEffect(() => {
-    onOpenFile("Welcome", "welcome", "");
-  }, []);
 
   async function handleSaveFile(): Promise<void> {
     if (!currentFile) {

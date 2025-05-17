@@ -8,6 +8,7 @@ import {
   UpdateTreeRequest,
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
+import { ResponseMessage } from "@shared/types";
 
 declare global {
   interface Window {
@@ -20,7 +21,7 @@ declare global {
     lsp: {
       request: (method: string, params: any) => Promise<void>;
       onResponse: (callback: (value: string) => void) => any;
-      onMethod: (method: Method, callback: (value: string) => void) => any;
+      onMethod: (method: Method, callback: (value: ResponseMessage) => void) => any;
     };
 
     fs: {
