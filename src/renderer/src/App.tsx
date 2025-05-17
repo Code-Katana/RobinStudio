@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
-import { FileEvent, Token } from "@shared/types";
+import { FileEvent } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { AppSidebar } from "./components/app-sidebar";
 import { SidebarInset } from "./components/ui/sidebar";
@@ -11,8 +11,8 @@ import { useCurrentProjectStore } from "./stores/current-project.store";
 import { useAppSettingsStore } from "./stores/app-settings.store";
 import { SettingsTab } from "@renderer/components/settings-tab";
 import { WelcomeTab } from "./components/welcome-tab";
-import { CompilerPhase } from "./types";
 import { OutputPanel } from "./components/output-panel";
+
 const App: React.FC = () => {
   const { rootPath, fileTree, currentFile, onCloseFile, onCloseProject, onOpenFile } =
     useCurrentProjectStore();

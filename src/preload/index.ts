@@ -13,16 +13,19 @@ import {
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
 import { treeChannels } from "@shared/channels/file-system/tree-channels";
-import { FileEvent } from "@shared/types";
+import { FileEvent, Method } from "@shared/types";
 import path from "path";
 
 // Custom APIs for renderer
 const lsp = {
   request: (method: string, params: any): Promise<void> =>
-    ipcRenderer.invoke("lsp-request", { method, params }),
+    ipcRenderer.invoke(Channels.lsp.request, { method, params }),
 
   onResponse: (callback: (value: string) => void): any =>
-    ipcRenderer.on("lsp-response", (_, value) => callback(value)),
+    ipcRenderer.on(Channels.lsp.response, (_, value) => callback(value)),
+
+  onMethod: (method: Method, callback: (value: string) => void): any =>
+    ipcRenderer.on(Channels.lsp.methods[method], (_, value) => callback(value)),
 };
 
 const fileSystem = {

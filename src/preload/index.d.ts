@@ -20,6 +20,7 @@ declare global {
     lsp: {
       request: (method: string, params: any) => Promise<void>;
       onResponse: (callback: (value: string) => void) => any;
+      onMethod: (method: Method, callback: (value: string) => void) => any;
     };
 
     fs: {
