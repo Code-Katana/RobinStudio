@@ -11,6 +11,9 @@ export function startServer(mainWindow: BrowserWindow): void {
   lspServer = spawn(join(app.getAppPath(), "resources", "bin", "rbn.exe"), ["--lsp"], {
     stdio: ["pipe", "pipe", "inherit"],
   });
+  // lspServer = spawn(join(app.getAppPath(), "resources", "bin", "rbn.exe"), ["--lsp"], {
+  //   stdio: ["pipe", "pipe", "inherit"],
+  // });
 
   lspServer.stdout?.on("data", (data: Buffer) => {
     const message = data.toString().trim();

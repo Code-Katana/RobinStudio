@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { EditorPlayground } from "@renderer/components/editor-playground";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
-import { TokenizeResponse } from "@shared/channels";
 import { FileEvent, Token } from "@shared/types";
 import { TitleBar } from "./components/title-bar";
 import { ScrollArea } from "./components/ui/scroll-area";
@@ -81,12 +80,10 @@ const App: React.FC = () => {
     await handleSaveFile();
     setOutput("tokens");
 
-    const response: TokenizeResponse = await window.api.tokenize({
-      scanner: scannerOption,
-      source: currentFile.path,
+    window.lsp.request("tokenize", {
+      scannerOption: scannerOption,
+      textDocument: currentFile.path,
     });
-
-    setTokens(response.tokens);
   }
 
   async function handleParse(): Promise<void> {

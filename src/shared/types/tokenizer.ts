@@ -1,6 +1,6 @@
 export enum ScannerOptions {
-  HandCoded = "HandCoded",
-  FA = "FA",
+  HandCoded,
+  FA,
 }
 
 export type Token = {
