@@ -2,9 +2,10 @@ import { Arrow } from "@renderer/assets/icons";
 import { Button } from "@renderer/components/ui/button";
 import { Checkbox } from "@renderer/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@renderer/components/ui/popover";
+import { useAutoSave } from "@renderer/hooks/use-auto-save";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useRecentFilesStore } from "@renderer/stores/recent-files.store";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 // import { format } from "date-fns";
 
 export const FileOperations = () => {
@@ -12,43 +13,8 @@ export const FileOperations = () => {
     useCurrentProject();
   const { recentFiles } = useRecentFilesStore();
   const [open, setOpen] = useState(false);
+  const { autoSave, setAutoSave, setLastSavedContent } = useAutoSave();
   const [recentOpen, setRecentOpen] = useState(false);
-  const [autoSave, setAutoSave] = useState(false);
-  const [lastSavedContent, setLastSavedContent] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!autoSave || !currentFile) return;
-
-    if (currentFile.content !== lastSavedContent) {
-      const saveFile = async () => {
-        try {
-          await window.fs.saveFile({
-            path: currentFile.path,
-            content: currentFile.content,
-          });
-          setLastSavedContent(currentFile.content);
-          console.log(`Auto-saved: ${currentFile.name}`);
-          return true;
-        } catch (error) {
-          console.error("Auto-save failed:", error);
-          return false;
-        }
-      };
-
-      handleAutoSaveDebounced(saveFile);
-    }
-  }, [currentFile?.content, autoSave, lastSavedContent]);
-
-  function handleAutoSaveDebounced(saveFile: () => Promise<boolean>) {
-    const timeoutId = setTimeout(saveFile, 1000);
-    return () => clearTimeout(timeoutId);
-  }
-
-  useEffect(() => {
-    if (currentFile) {
-      setLastSavedContent(currentFile.content);
-    }
-  }, [currentFile?.path]);
 
   async function handleOpenProject() {
     const res = await window.fs.openFolder();
