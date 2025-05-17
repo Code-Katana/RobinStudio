@@ -16,7 +16,6 @@ interface FileOperationsMenuProps {
   onCloseAllWindows: () => void;
   autoSave: boolean;
   onAutoSaveChange: (checked: boolean) => void;
-  recentFiles: Array<{ path: string; lastOpened: Date }>;
   isRecentOpen: boolean;
   onRecentOpenChange: (open: boolean) => void;
 }
