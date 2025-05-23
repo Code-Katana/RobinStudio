@@ -8,40 +8,37 @@ import { FileFinder } from "@renderer/components/file-finder";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { FileOperations } from "@renderer/components/file-operation";
 import { TitleBarAction } from "./title-bar-action.component";
+import { CompilerPhase } from "@renderer/types";
+import { useOutput } from "@renderer/hooks/use-output";
 
-interface TitleBarProps {
-  onOutputVisibilityChange: (visible: boolean) => void;
-  onPhaseChange: (phase: CompilerPhase | null) => void;
-}
-
-type CompilerPhase =
-  | "tokenize"
-  | "parse"
-  | "typecheck"
-  | "ir-generation"
-  | "ir-optimization"
-  | "compile";
-
-export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisibilityChange }) => {
-  const { projectName } = useCurrentProject();
-  const [selectedPhase, setSelectedPhase] = useState<CompilerPhase | null>(null);
+export const TitleBar: React.FC = () => {
+  const { projectName, currentFile } = useCurrentProject();
   const [isPhasesOpen, setIsPhasesOpen] = useState(false);
+  const { output, setPhase } = useOutput();
 
   const iconSize = "w-5 h-5";
 
   const handlePhaseSelect = (phase: CompilerPhase) => {
-    setSelectedPhase(phase);
-    onPhaseChange(phase);
+    setPhase(phase);
     setIsPhasesOpen(false);
   };
 
   const handleRun = () => {
-    if (!selectedPhase) {
+    if (!output.data) {
       alert("Please select a phase first");
       return;
     }
-    // TODO: Implement phase execution logic
-    console.log("Running phase:", selectedPhase);
+    if (output.panelType === "phase" && output.data === CompilerPhase.Tokenize) {
+      if (!currentFile) {
+        alert("Please select a file first");
+        return;
+      }
+
+      window.lsp.request("tokenize", {
+        scannerOption: 1,
+        textDocument: currentFile.path,
+      });
+    }
   };
 
   return (
@@ -87,55 +84,55 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisib
           <PopoverTrigger asChild>
             <Button className="rounded-none border-none bg-secondary/50">
               <Phases />
-              <span>Phases</span>
+              <span>{output.data}</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-2">
             <div className="space-y-1">
               <Button
-                variant={selectedPhase === "tokenize" ? "default" : "ghost"}
+                variant={output.data === CompilerPhase.Tokenize ? "default" : "ghost"}
                 className="w-full justify-between"
-                onClick={() => handlePhaseSelect("tokenize")}
+                onClick={() => handlePhaseSelect(CompilerPhase.Tokenize)}
               >
                 <span>Tokenize</span>
                 <span className="text-xs text-muted-foreground">Lexical Analysis</span>
               </Button>
               <Button
-                variant={selectedPhase === "parse" ? "default" : "ghost"}
+                variant={output.data === CompilerPhase.Parse ? "default" : "ghost"}
                 className="w-full justify-between"
-                onClick={() => handlePhaseSelect("parse")}
+                onClick={() => handlePhaseSelect(CompilerPhase.Parse)}
               >
                 <span>Parse</span>
                 <span className="text-xs text-muted-foreground">Syntax Analysis</span>
               </Button>
               <Button
-                variant={selectedPhase === "typecheck" ? "default" : "ghost"}
+                variant={output.data === CompilerPhase.Typecheck ? "default" : "ghost"}
                 className="w-full justify-between"
-                onClick={() => handlePhaseSelect("typecheck")}
+                onClick={() => handlePhaseSelect(CompilerPhase.Typecheck)}
               >
                 <span>Typecheck</span>
                 <span className="text-xs text-muted-foreground">Semantic Analysis</span>
               </Button>
               <Button
-                variant={selectedPhase === "ir-generation" ? "default" : "ghost"}
+                variant={output.data === CompilerPhase.IrGeneration ? "default" : "ghost"}
                 className="w-full justify-between"
-                onClick={() => handlePhaseSelect("ir-generation")}
+                onClick={() => handlePhaseSelect(CompilerPhase.IrGeneration)}
               >
                 <span>IR Generation</span>
                 <span className="text-xs text-muted-foreground">intermediate represenation</span>
               </Button>
               <Button
-                variant={selectedPhase === "ir-optimization" ? "default" : "ghost"}
+                variant={output.data === CompilerPhase.IrOptimization ? "default" : "ghost"}
                 className="w-full justify-between"
-                onClick={() => handlePhaseSelect("ir-optimization")}
+                onClick={() => handlePhaseSelect(CompilerPhase.IrOptimization)}
               >
                 <span>IR Optimization</span>
                 <span className="text-xs text-muted-foreground">Optimize the IR Code</span>
               </Button>
               <Button
-                variant={selectedPhase === "compile" ? "default" : "ghost"}
+                variant={output.data === CompilerPhase.Compile ? "default" : "ghost"}
                 className="w-full justify-between"
-                onClick={() => handlePhaseSelect("compile")}
+                onClick={() => handlePhaseSelect(CompilerPhase.Compile)}
               >
                 <span>Compile</span>
                 <span className="text-xs text-muted-foreground">Get Executable</span>
@@ -145,7 +142,7 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onPhaseChange, onOutputVisib
         </Popover>
       </div>
 
-      <TitleBarAction onOutputVisibilityChange={onOutputVisibilityChange} />
+      <TitleBarAction />
     </nav>
   );
 };
