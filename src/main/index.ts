@@ -5,7 +5,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import { Channels, ParseResponse, TokenizeResponse } from "@shared/channels";
+import { Channels } from "@shared/channels";
 import {
   CreateFileRequest,
   CreateFolderRequest,
@@ -16,6 +16,8 @@ import {
   SaveFileRequest,
   UpdateTreeRequest,
   UpdateTreeResponse,
+  DeleteFolderRequest,
+  DeleteFolderResponse,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
 import chokidar from "chokidar";
@@ -111,15 +113,6 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
-});
-
-// Wren Compiler Actions
-ipcMain.handle(Channels.wrenLang.tokenize, async (): Promise<TokenizeResponse> => {
-  return { tokens: [] };
-});
-
-ipcMain.handle(Channels.wrenLang.parse, async (): Promise<ParseResponse> => {
-  return { ast: [] };
 });
 
 // Browser Window Actions
@@ -257,6 +250,28 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
 
   return null;
 });
+
+ipcMain.handle(
+  Channels.folderChannels.delete,
+  async (_, request: DeleteFolderRequest): Promise<DeleteFolderResponse> => {
+    try {
+      if (!request.path) {
+        return { success: false, error: "Path is required" };
+      }
+
+      fs.rmSync(request.path, { recursive: true, force: true });
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting folder:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+      };
+    }
+  },
+);
+
+// Tree Feature Actions
 
 ipcMain.handle(
   Channels.treeChannels.updateTree,

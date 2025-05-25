@@ -18,3 +18,4 @@ export { SidebarOnIcon } from "./sidebar-on.icon";
 export { SidebarOffIcon } from "./sidebar-off.icon";
 export { OutputOnIcon } from "./output-on.icon";
 export { OutputOffIcon } from "./output-off.icon";
+export { Delete } from "./delete.icon";
