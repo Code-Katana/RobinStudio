@@ -25,6 +25,8 @@ import {
   ContextMenuTrigger,
   ContextMenuSeparator,
 } from "@renderer/components/ui/context-menu";
+import { CreateFileDialog } from "@renderer/components/create-file";
+import { useCurrentProjectStore } from "@renderer/stores/current-project.store";
 
 interface FileTreeProps {
   item: HnExpressionNode;
@@ -44,6 +46,8 @@ export const FileTree = ({
   const [isOpen, setIsOpen] = useState(false);
   const [node, children] = item;
   const { name, path } = node;
+  const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
+  const { onCreateFile, onSetCurrentFolder } = useCurrentProjectStore();
 
   useEffect(() => {
     if (collapseAll === "closed") {
@@ -64,9 +68,18 @@ export const FileTree = ({
     setCollapseAll?.("open");
   };
 
-  const handleNewFile = async () => {
-    // TODO: Implement new file creation
-    console.log("Create new file in:", path);
+  const handleNewFile = () => {
+    setIsNewFileDialogOpen(true);
+  };
+
+  const handleCreateFile = async (fileName: string, content: string) => {
+    try {
+      await onCreateFile(fileName, content);
+      onSetCurrentFolder(fileName, path);
+    } catch (error) {
+      console.error("Failed to create file:", error);
+      alert("Failed to create file. Please try again.");
+    }
   };
 
   const handleNewFolder = async () => {
@@ -148,6 +161,13 @@ export const FileTree = ({
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
+
+      <CreateFileDialog
+        isOpen={isNewFileDialogOpen}
+        onOpenChange={setIsNewFileDialogOpen}
+        onCreateFile={handleCreateFile}
+        currentPath={path}
+      />
     </SidebarMenuItem>
   );
 };

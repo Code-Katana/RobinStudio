@@ -23,8 +23,7 @@ import {
 } from "@renderer/components/ui/dialog";
 import { Input } from "@renderer/components/ui/input";
 import { useState } from "react";
-import { FileTextIcon } from "lucide-react";
-import { cn } from "@renderer/lib/utils";
+import { CreateFileDialog } from "@renderer/components/create-file";
 
 export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
   const { onOpenProject } = useCurrentProject();
@@ -32,37 +31,8 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
     useCurrentProjectStore();
   const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
-  const [newFileName, setNewFileName] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
   const [collapseAll, setCollapseAll] = useState<"open" | "closed">("open");
-  const [selectedFileType, setSelectedFileType] = useState<"empty" | "binary-search">("empty");
-
-  const getFileContent = (type: "empty" | "binary-search") => {
-    switch (type) {
-      case "binary-search":
-        return `func integer binary_search has
-  var arr: [integer];
-  var target: integer;
-begin
-  var x : integer = -1;
-  for i=0;i<#arr; ++i do
-    if arr[i] == target then
-      x =i;
-    end if
-  end for
-  return x;
-end func
-
-program binarySearch is
-begin
-  var arr: [integer] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  write binary_search(arr, 7);
-end`;
-      case "empty":
-      default:
-        return "";
-    }
-  };
 
   async function handleOpenProject() {
     const res = await window.fs.openFolder();
@@ -77,26 +47,6 @@ end`;
   async function handleNewFile() {
     if (!currentFolder) return;
     setIsNewFileDialogOpen(true);
-  }
-
-  async function handleCreateNewFile() {
-    if (!newFileName.trim()) return;
-
-    try {
-      if (!newFileName.endsWith(".rbn")) {
-        alert("File must end with .rbn extension.");
-        setIsNewFileDialogOpen(false);
-        return;
-      }
-      const content = getFileContent(selectedFileType);
-      await onCreateFile(newFileName, content);
-      setNewFileName("");
-      setIsNewFileDialogOpen(false);
-      onSetCurrentFolder(newFileName, currentFolder!.path);
-    } catch (error) {
-      console.error("Failed to create file:", error);
-      alert("Failed to create file. Please try again.");
-    }
   }
 
   async function handleNewFolder() {
@@ -136,6 +86,16 @@ end`;
   const handleFolderClick = (path: string) => {
     const name = path.split("/").pop() || "";
     onSetCurrentFolder(name, path);
+  };
+
+  const handleCreateFile = async (fileName: string, content: string) => {
+    try {
+      await onCreateFile(fileName, content);
+      onSetCurrentFolder(fileName, currentFolder!.path);
+    } catch (error) {
+      console.error("Failed to create file:", error);
+      alert("Failed to create file. Please try again.");
+    }
   };
 
   return (
@@ -213,61 +173,12 @@ end`;
         <SidebarRail />
       </Sidebar>
 
-      <Dialog open={isNewFileDialogOpen} onOpenChange={setIsNewFileDialogOpen}>
-        <DialogContent className="min-w-fit">
-          <DialogHeader>
-            <DialogTitle className="border-b border-border pb-4">Create New File</DialogTitle>
-          </DialogHeader>
-
-          <div className="my-3 flex flex-col items-start gap-1">
-            <Button
-              variant={"ghost"}
-              className={cn(
-                "flex w-full items-center justify-start gap-1.5",
-                selectedFileType === "empty" && "bg-accent text-accent-foreground",
-              )}
-              onClick={() => setSelectedFileType("empty")}
-            >
-              <FileTextIcon className="text-primary" /> Empty File
-              <span className="text-sm text-muted-foreground">
-                - Create a new file with no content.
-              </span>
-            </Button>
-            <Button
-              variant={"ghost"}
-              className={cn(
-                "flex w-full items-center justify-start gap-1.5",
-                selectedFileType === "binary-search" && "bg-accent text-accent-foreground",
-              )}
-              onClick={() => setSelectedFileType("binary-search")}
-            >
-              <FileTextIcon className="text-primary" /> Binary Search
-              <span className="text-sm text-muted-foreground">
-                - Create a new file with a binary search algorithm.
-              </span>
-            </Button>
-          </div>
-          <DialogFooter className="flex items-center justify-between gap-2">
-            <Input
-              placeholder="Enter file name"
-              className="px-2"
-              value={newFileName}
-              onChange={(e) => setNewFileName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleCreateNewFile();
-                }
-              }}
-            />
-            <Button variant="outline" onClick={() => setIsNewFileDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreateNewFile} disabled={!newFileName.trim()}>
-              Create
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <CreateFileDialog
+        isOpen={isNewFileDialogOpen}
+        onOpenChange={setIsNewFileDialogOpen}
+        onCreateFile={handleCreateFile}
+        currentPath={currentFolder?.path}
+      />
 
       <Dialog open={isNewFolderDialogOpen} onOpenChange={setIsNewFolderDialogOpen}>
         <DialogContent>
