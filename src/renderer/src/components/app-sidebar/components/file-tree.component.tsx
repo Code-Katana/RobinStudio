@@ -11,12 +11,19 @@ import {
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useFileWatcher } from "@renderer/hooks/use-file-watcher";
 import { HnExpressionNode, HnNode } from "@shared/types";
-import { Folder } from "lucide-react";
+import { Folder, Plus, Trash2, FileText } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
 import { useState, useEffect } from "react";
 import { Arrow } from "@renderer/assets/icons";
 import { cn } from "@renderer/lib/utils";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSeparator,
+} from "@renderer/components/ui/context-menu";
 
 interface FileTreeProps {
   item: HnExpressionNode;
@@ -54,56 +61,92 @@ export const FileTree = ({
     handleToggle(e);
     onFolderClick?.(path);
     setCollapseAll?.("open");
-    console.log(collapseAll);
+  };
+
+  const handleNewFile = async () => {
+    // TODO: Implement new file creation
+    console.log("Create new file in:", path);
+  };
+
+  const handleNewFolder = async () => {
+    // TODO: Implement new folder creation
+    console.log("Create new folder in:", path);
+  };
+
+  const handleDelete = async () => {
+    // TODO: Implement folder deletion
+    console.log("Delete folder:", path);
   };
 
   return (
     <SidebarMenuItem>
-      <Collapsible open={isOpen} className="group/collapsible">
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton className="w-full" onClick={handleClick}>
-            <div className="flex w-full items-center justify-between">
-              <div className="flex cursor-pointer items-center gap-1">
-                <Arrow
-                  onClick={handleToggle}
-                  className={cn(isOpen ? "rotate-0" : "-rotate-90", "h-5 w-5 transition-transform")}
-                />
-                <Folder
-                  className={cn(
-                    "h-5 w-5",
-                    currentFolder === path ? "text-primary" : "text-amber-400",
-                  )}
-                />
-                <span className={cn("truncate", currentFolder === path && "text-primary")}>
-                  {name}
-                </span>
-              </div>
-            </div>
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
-        <CollapsibleContent asChild>
-          <SidebarMenuSub>
-            {children?.map((subItem, index) =>
-              Array.isArray(subItem) ? (
-                <FileTree
-                  key={index}
-                  item={subItem}
-                  currentFolder={currentFolder}
-                  onFolderClick={onFolderClick}
-                  collapseAll={collapseAll}
-                />
-              ) : (
-                <FileNode
-                  key={index}
-                  file={subItem as HnNode}
-                  parentPath={path}
-                  onFileClick={onFolderClick}
-                />
-              ),
-            )}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </Collapsible>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <Collapsible open={isOpen} className="group/collapsible">
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton className="w-full" onClick={handleClick}>
+                <div className="flex w-full items-center justify-between">
+                  <div className="flex cursor-pointer items-center gap-1">
+                    <Arrow
+                      onClick={handleToggle}
+                      className={cn(
+                        isOpen ? "rotate-0" : "-rotate-90",
+                        "h-5 w-5 transition-transform",
+                      )}
+                    />
+                    <Folder
+                      className={cn(
+                        "h-5 w-5",
+                        currentFolder === path ? "text-primary" : "text-amber-400",
+                      )}
+                    />
+                    <span className={cn("truncate", currentFolder === path && "text-primary")}>
+                      {name}
+                    </span>
+                  </div>
+                </div>
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent asChild>
+              <SidebarMenuSub>
+                {children?.map((subItem, index) =>
+                  Array.isArray(subItem) ? (
+                    <FileTree
+                      key={index}
+                      item={subItem}
+                      currentFolder={currentFolder}
+                      onFolderClick={onFolderClick}
+                      collapseAll={collapseAll}
+                    />
+                  ) : (
+                    <FileNode
+                      key={index}
+                      file={subItem as HnNode}
+                      parentPath={path}
+                      onFileClick={onFolderClick}
+                    />
+                  ),
+                )}
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </Collapsible>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-64">
+          <ContextMenuItem onClick={handleNewFile}>
+            <FileText className="mr-2 h-4 w-4" />
+            New File
+          </ContextMenuItem>
+          <ContextMenuItem onClick={handleNewFolder}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Folder
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={handleDelete} className="text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     </SidebarMenuItem>
   );
 };
