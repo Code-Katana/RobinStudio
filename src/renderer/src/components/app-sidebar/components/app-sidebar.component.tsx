@@ -27,8 +27,7 @@ import { CreateFileDialog } from "@renderer/components/create-file";
 
 export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
   const { onOpenProject } = useCurrentProject();
-  const { currentFolder, onSetCurrentFolder, onCreateFile, onCreateFolder, rootPath } =
-    useCurrentProjectStore();
+  const { currentFolder, onSetCurrentFolder, onCreateFolder, rootPath } = useCurrentProjectStore();
   const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -88,15 +87,15 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
     onSetCurrentFolder(name, path);
   };
 
-  const handleCreateFile = async (fileName: string, content: string) => {
-    try {
-      await onCreateFile(fileName, content);
-      onSetCurrentFolder(fileName, currentFolder!.path);
-    } catch (error) {
-      console.error("Failed to create file:", error);
-      alert("Failed to create file. Please try again.");
-    }
-  };
+  // const handleCreateFile = async (fileName: string, content: string) => {
+  //   try {
+  //     await onCreateFile(fileName, content);
+  //     onSetCurrentFolder(fileName, currentFolder!.path);
+  //   } catch (error) {
+  //     console.error("Failed to create file:", error);
+  //     alert("Failed to create file. Please try again.");
+  //   }
+  // };
 
   return (
     <>
@@ -173,12 +172,7 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
         <SidebarRail />
       </Sidebar>
 
-      <CreateFileDialog
-        isOpen={isNewFileDialogOpen}
-        onOpenChange={setIsNewFileDialogOpen}
-        onCreateFile={handleCreateFile}
-        currentPath={currentFolder?.path}
-      />
+      <CreateFileDialog isOpen={isNewFileDialogOpen} onOpenChange={setIsNewFileDialogOpen} />
 
       <Dialog open={isNewFolderDialogOpen} onOpenChange={setIsNewFolderDialogOpen}>
         <DialogContent>

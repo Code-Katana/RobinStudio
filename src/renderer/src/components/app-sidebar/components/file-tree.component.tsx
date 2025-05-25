@@ -8,10 +8,10 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
 } from "@renderer/components/ui/sidebar";
-import { useCurrentProject } from "@renderer/hooks/use-current-project";
+
 import { useFileWatcher } from "@renderer/hooks/use-file-watcher";
 import { HnExpressionNode, HnNode } from "@shared/types";
-import { Folder, Plus, Trash2, FileText } from "lucide-react";
+import { Folder } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
 import { useState, useEffect } from "react";
@@ -26,6 +26,8 @@ import {
   ContextMenuSeparator,
 } from "@renderer/components/ui/context-menu";
 import { CreateFileDialog } from "@renderer/components/create-file";
+import { useCurrentProject } from "@renderer/hooks/use-current-project";
+import { Button } from "@renderer/components/ui/button";
 import { useCurrentProjectStore } from "@renderer/stores/current-project.store";
 
 interface FileTreeProps {
@@ -38,16 +40,16 @@ interface FileTreeProps {
 
 export const FileTree = ({
   item,
-  currentFolder,
+
   onFolderClick,
   collapseAll,
   setCollapseAll,
 }: FileTreeProps) => {
+  const { currentFolder } = useCurrentProjectStore();
   const [isOpen, setIsOpen] = useState(false);
   const [node, children] = item;
   const { name, path } = node;
   const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
-  const { onCreateFile, onSetCurrentFolder } = useCurrentProjectStore();
 
   useEffect(() => {
     if (collapseAll === "closed") {
@@ -68,22 +70,22 @@ export const FileTree = ({
     setCollapseAll?.("open");
   };
 
-  const handleNewFile = () => {
+  async function handleNewFile2() {
+    if (!currentFolder) return;
     setIsNewFileDialogOpen(true);
-  };
+  }
 
-  const handleCreateFile = async (fileName: string, content: string) => {
-    try {
-      await onCreateFile(fileName, content);
-      onSetCurrentFolder(fileName, path);
-    } catch (error) {
-      console.error("Failed to create file:", error);
-      alert("Failed to create file. Please try again.");
-    }
+  const handleNewFile = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Create new file in:", path);
+    console.log("Current folder:", currentFolder);
+    setIsNewFileDialogOpen(true);
   };
 
   const handleNewFolder = async () => {
     // TODO: Implement new folder creation
+
     console.log("Create new folder in:", path);
   };
 
@@ -93,82 +95,86 @@ export const FileTree = ({
   };
 
   return (
-    <SidebarMenuItem>
-      <ContextMenu>
-        <ContextMenuTrigger>
-          <Collapsible open={isOpen} className="group/collapsible">
-            <CollapsibleTrigger asChild>
-              <SidebarMenuButton className="w-full" onClick={handleClick}>
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex cursor-pointer items-center gap-1">
-                    <Arrow
-                      onClick={handleToggle}
-                      className={cn(
-                        isOpen ? "rotate-0" : "-rotate-90",
-                        "h-5 w-5 transition-transform",
-                      )}
-                    />
-                    <Folder
-                      className={cn(
-                        "h-5 w-5",
-                        currentFolder === path ? "text-primary" : "text-amber-400",
-                      )}
-                    />
-                    <span className={cn("truncate", currentFolder === path && "text-primary")}>
-                      {name}
-                    </span>
+    <>
+      <SidebarMenuItem>
+        <ContextMenu>
+          <ContextMenuTrigger>
+            <Collapsible open={isOpen} className="group/collapsible">
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton className="w-full" onClick={handleClick}>
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex cursor-pointer items-center gap-1">
+                      <Arrow
+                        onClick={handleToggle}
+                        className={cn(
+                          isOpen ? "rotate-0" : "-rotate-90",
+                          "h-5 w-5 transition-transform",
+                        )}
+                      />
+                      <Folder
+                        className={cn(
+                          "h-5 w-5",
+                          currentFolder?.path === path ? "text-primary" : "text-amber-400",
+                        )}
+                      />
+                      <span
+                        className={cn("truncate", currentFolder?.path === path && "text-primary")}
+                      >
+                        {name}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </SidebarMenuButton>
-            </CollapsibleTrigger>
-            <CollapsibleContent asChild>
-              <SidebarMenuSub>
-                {children?.map((subItem, index) =>
-                  Array.isArray(subItem) ? (
-                    <FileTree
-                      key={index}
-                      item={subItem}
-                      currentFolder={currentFolder}
-                      onFolderClick={onFolderClick}
-                      collapseAll={collapseAll}
-                    />
-                  ) : (
-                    <FileNode
-                      key={index}
-                      file={subItem as HnNode}
-                      parentPath={path}
-                      onFileClick={onFolderClick}
-                    />
-                  ),
-                )}
-              </SidebarMenuSub>
-            </CollapsibleContent>
-          </Collapsible>
-        </ContextMenuTrigger>
-        <ContextMenuContent className="w-64">
-          <ContextMenuItem onClick={handleNewFile}>
-            <NewFile className="mr-2 h-4 w-4" />
-            New File
-          </ContextMenuItem>
-          <ContextMenuItem onClick={handleNewFolder}>
-            <NewFolder className="mr-2 h-4 w-4" />
-            New Folder
-          </ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={handleDelete} className="text-destructive">
-            <Delete className="mr-2 h-4 w-4" />
-            Delete
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent asChild>
+                <SidebarMenuSub>
+                  {children?.map((subItem, index) =>
+                    Array.isArray(subItem) ? (
+                      <FileTree
+                        key={index}
+                        item={subItem}
+                        onFolderClick={onFolderClick}
+                        collapseAll={collapseAll}
+                      />
+                    ) : (
+                      <FileNode
+                        key={index}
+                        file={subItem as HnNode}
+                        parentPath={path}
+                        onFileClick={onFolderClick}
+                      />
+                    ),
+                  )}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+          </ContextMenuTrigger>
+          <ContextMenuContent className="w-64">
+            <ContextMenuItem onClick={handleNewFile}>
+              <NewFile className="mr-2 h-4 w-4" />
+              New File
+            </ContextMenuItem>
+            <Button variant="ghost" onClick={handleNewFile2} disabled={!currentFolder}>
+              <ContextMenuItem onClick={handleNewFile}>
+                <NewFile className="mr-2 h-4 w-4" />
+                New File
+              </ContextMenuItem>
+            </Button>
 
-      <CreateFileDialog
-        isOpen={isNewFileDialogOpen}
-        onOpenChange={setIsNewFileDialogOpen}
-        onCreateFile={handleCreateFile}
-        currentPath={path}
-      />
-    </SidebarMenuItem>
+            <ContextMenuItem onClick={handleNewFolder}>
+              <NewFolder className="mr-2 h-4 w-4" />
+              New Folder
+            </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem onClick={handleDelete} className="text-destructive">
+              <Delete className="mr-2 h-4 w-4" />
+              Delete
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      </SidebarMenuItem>
+      <CreateFileDialog isOpen={isNewFileDialogOpen} onOpenChange={setIsNewFileDialogOpen} />
+    </>
   );
 };
 

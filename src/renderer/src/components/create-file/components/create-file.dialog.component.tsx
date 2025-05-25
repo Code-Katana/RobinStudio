@@ -8,22 +8,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@renderer/components/ui/dialog";
 import { cn } from "@renderer/lib/utils";
+import { useCurrentProjectStore } from "@renderer/stores/current-project.store";
 
 interface CreateFileDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreateFile: (fileName: string, content: string) => Promise<void>;
-  currentPath?: string;
 }
 
-export const CreateFileDialog = ({
-  isOpen,
-  onOpenChange,
-  onCreateFile,
-  currentPath,
-}: CreateFileDialogProps) => {
+export const CreateFileDialog = ({ isOpen, onOpenChange }: CreateFileDialogProps) => {
+  const { onCreateFile } = useCurrentProjectStore();
+
   const [newFileName, setNewFileName] = useState("");
   const [selectedFileType, setSelectedFileType] = useState<"empty" | "binary-search">("empty");
 
@@ -78,6 +75,10 @@ end`;
       <DialogContent className="min-w-fit">
         <DialogHeader>
           <DialogTitle className="border-b border-border pb-4">Create New File</DialogTitle>
+          <DialogDescription>
+            Choose a file type and enter a name for your new file. The file must end with .rbn
+            extension.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="my-3 flex flex-col items-start gap-1">
