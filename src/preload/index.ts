@@ -11,6 +11,7 @@ import {
   SaveFileRequest,
   UpdateTreeRequest,
   UpdateTreeResponse,
+  DeleteFolderRequest,
 } from "@shared/channels/file-system";
 import { treeChannels } from "@shared/channels/file-system/tree-channels";
 import { FileEvent, Method, ResponseMessage } from "@shared/types";
@@ -45,6 +46,9 @@ const fileSystem = {
 
   openFolder: (): Promise<OpenFolderResponse | null> =>
     ipcRenderer.invoke(Channels.folderChannels.open),
+
+  deleteFolder: (request: DeleteFolderRequest): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke(Channels.folderChannels.delete, request),
 
   updateTree: (request: UpdateTreeRequest): Promise<UpdateTreeResponse> =>
     ipcRenderer.invoke(treeChannels.updateTree, request),
