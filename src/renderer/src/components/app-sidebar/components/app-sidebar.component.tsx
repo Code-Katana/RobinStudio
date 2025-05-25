@@ -14,23 +14,17 @@ import { Button } from "@renderer/components/ui/button";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { CollapseAll, NewFile, NewFolder, RefreshTree } from "@renderer/assets/icons";
 import { useCurrentProjectStore } from "@renderer/stores/current-project.store";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@renderer/components/ui/dialog";
-import { Input } from "@renderer/components/ui/input";
+
 import { useState } from "react";
 import { CreateFileDialog } from "@renderer/components/create-file";
+import { CreateFolderDialog } from "@renderer/components/create-folder-dialog";
 
 export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
   const { onOpenProject } = useCurrentProject();
-  const { currentFolder, onSetCurrentFolder, onCreateFolder, rootPath } = useCurrentProjectStore();
+  const { currentFolder, onSetCurrentFolder, rootPath } = useCurrentProjectStore();
   const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
   const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
-  const [newFolderName, setNewFolderName] = useState("");
+
   const [collapseAll, setCollapseAll] = useState<"open" | "closed">("open");
 
   async function handleOpenProject() {
@@ -51,23 +45,6 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
   async function handleNewFolder() {
     if (!currentFolder) return;
     setIsNewFolderDialogOpen(true);
-  }
-
-  async function handleCreateNewFolder() {
-    if (!newFolderName.trim()) return;
-    console.log("newFolderName", newFolderName);
-    console.log("currentFolder", currentFolder);
-    const newFolderPath = window.fs.resolvePath(currentFolder!.path, newFolderName);
-
-    try {
-      await onCreateFolder(newFolderName);
-      setNewFolderName("");
-      setIsNewFolderDialogOpen(false);
-      onSetCurrentFolder(newFolderName, newFolderPath);
-    } catch (error) {
-      console.error("Failed to create folder:", error);
-      alert("Failed to create folder. Please try again.");
-    }
   }
 
   async function handleRefreshTree() {
@@ -173,34 +150,7 @@ export const AppSidebar = ({ fileTree, ...props }: AppSidebarProps) => {
       </Sidebar>
 
       <CreateFileDialog isOpen={isNewFileDialogOpen} onOpenChange={setIsNewFileDialogOpen} />
-
-      <Dialog open={isNewFolderDialogOpen} onOpenChange={setIsNewFolderDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create New Folder</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <Input
-              placeholder="Enter folder name"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleCreateNewFolder();
-                }
-              }}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsNewFolderDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreateNewFolder} disabled={!newFolderName.trim()}>
-              Create
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <CreateFolderDialog isOpen={isNewFolderDialogOpen} onOpenChange={setIsNewFolderDialogOpen} />
     </>
   );
 };
