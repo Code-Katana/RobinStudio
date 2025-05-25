@@ -27,8 +27,8 @@ import {
 } from "@renderer/components/ui/context-menu";
 import { CreateFileDialog } from "@renderer/components/create-file";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
-import { Button } from "@renderer/components/ui/button";
 import { useCurrentProjectStore } from "@renderer/stores/current-project.store";
+import { CreateFolderDialog } from "@renderer/components/create-folder-dialog";
 
 interface FileTreeProps {
   item: HnExpressionNode;
@@ -45,11 +45,12 @@ export const FileTree = ({
   collapseAll,
   setCollapseAll,
 }: FileTreeProps) => {
-  const { currentFolder } = useCurrentProjectStore();
+  const { currentFolder, onSetCurrentFolder } = useCurrentProjectStore();
   const [isOpen, setIsOpen] = useState(false);
   const [node, children] = item;
   const { name, path } = node;
   const [isNewFileDialogOpen, setIsNewFileDialogOpen] = useState(false);
+  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
 
   useEffect(() => {
     if (collapseAll === "closed") {
@@ -70,23 +71,22 @@ export const FileTree = ({
     setCollapseAll?.("open");
   };
 
-  async function handleNewFile2() {
-    if (!currentFolder) return;
-    setIsNewFileDialogOpen(true);
-  }
-
   const handleNewFile = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     console.log("Create new file in:", path);
     console.log("Current folder:", currentFolder);
+    onSetCurrentFolder(name, path);
     setIsNewFileDialogOpen(true);
   };
 
-  const handleNewFolder = async () => {
-    // TODO: Implement new folder creation
-
+  const handleNewFolder = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("Create new folder in:", path);
+    console.log("Current folder:", currentFolder);
+    onSetCurrentFolder(name, path);
+    setIsNewFolderDialogOpen(true);
   };
 
   const handleDelete = async () => {
@@ -154,13 +154,6 @@ export const FileTree = ({
               <NewFile className="mr-2 h-4 w-4" />
               New File
             </ContextMenuItem>
-            <Button variant="ghost" onClick={handleNewFile2} disabled={!currentFolder}>
-              <ContextMenuItem onClick={handleNewFile}>
-                <NewFile className="mr-2 h-4 w-4" />
-                New File
-              </ContextMenuItem>
-            </Button>
-
             <ContextMenuItem onClick={handleNewFolder}>
               <NewFolder className="mr-2 h-4 w-4" />
               New Folder
@@ -174,6 +167,7 @@ export const FileTree = ({
         </ContextMenu>
       </SidebarMenuItem>
       <CreateFileDialog isOpen={isNewFileDialogOpen} onOpenChange={setIsNewFileDialogOpen} />
+      <CreateFolderDialog isOpen={isNewFolderDialogOpen} onOpenChange={setIsNewFolderDialogOpen} />
     </>
   );
 };
