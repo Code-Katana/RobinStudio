@@ -15,7 +15,8 @@ import { Folder, Plus, Trash2, FileText } from "lucide-react";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { OpenFileResponse } from "@shared/channels/file-system";
 import { useState, useEffect } from "react";
-import { Arrow } from "@renderer/assets/icons";
+import { Arrow, Delete, NewFile, NewFolder } from "@renderer/assets/icons";
+
 import { cn } from "@renderer/lib/utils";
 import {
   ContextMenu,
@@ -133,16 +134,16 @@ export const FileTree = ({
         </ContextMenuTrigger>
         <ContextMenuContent className="w-64">
           <ContextMenuItem onClick={handleNewFile}>
-            <FileText className="mr-2 h-4 w-4" />
+            <NewFile className="mr-2 h-4 w-4" />
             New File
           </ContextMenuItem>
           <ContextMenuItem onClick={handleNewFolder}>
-            <Plus className="mr-2 h-4 w-4" />
+            <NewFolder className="mr-2 h-4 w-4" />
             New Folder
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem onClick={handleDelete} className="text-destructive">
-            <Trash2 className="mr-2 h-4 w-4" />
+            <Delete className="mr-2 h-4 w-4" />
             Delete
           </ContextMenuItem>
         </ContextMenuContent>
