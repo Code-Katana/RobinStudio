@@ -1,3 +1,4 @@
 export enum ParserOptions {
-  RecursiveDecent = "RecursiveDecent",
+  RecursiveDecent,
+  LL1,
 }

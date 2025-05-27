@@ -35,6 +35,7 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
+      // devTools: process.env.NODE_ENV === "development",
     },
   });
 
@@ -132,7 +133,6 @@ ipcMain.on(Channels.browserWindowActions.maximizeWindow, () => {
 });
 
 // File Feature Actions
-
 ipcMain.handle(Channels.fileChannels.create, async (_, request: CreateFileRequest) => {
   const { path, name, content } = request;
   const fullPath = join(path, name);

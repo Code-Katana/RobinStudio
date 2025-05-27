@@ -8,11 +8,7 @@ export const OutputPanel = () => {
 
   return (
     <ScrollArea className="h-full">
-      {output.panelType === "phase" && output.data === CompilerPhase.Tokenize ? (
-        <TokensPanel />
-      ) : (
-        <ComingSoon />
-      )}
+      {output.data === CompilerPhase.Tokenize ? <TokensPanel /> : <ComingSoon />}
     </ScrollArea>
   );
 };

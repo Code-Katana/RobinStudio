@@ -12,13 +12,29 @@ export const TokensPanel: React.FC = () => {
   const response = useLanguageClient("tokenize");
 
   if (!response) {
-    return null;
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="text-sm text-muted-foreground">
+          No tokens to display yet. Run the tokenizer first.
+        </div>
+      </div>
+    );
   }
 
-  const { tokens } = response.result as TokenizeResponse;
-  console.log(tokens);
+  const result = response.result as TokenizeResponse;
 
-  // return <TokensTable tokens={tokens} />;
+  if (!result || !result.tokens) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <div className="text-sm text-muted-foreground">
+          Failed to load tokens. Please try again.
+        </div>
+      </div>
+    );
+  }
+
+  console.log("Tokens received:", result.tokens);
+
   return (
     <Tabs defaultValue="hand-coded" className="w-full">
       <TabsList className="grid w-full grid-cols-2 bg-secondary">
@@ -26,10 +42,10 @@ export const TokensPanel: React.FC = () => {
         <TabsTrigger value="finite-automata">Finite Automata</TabsTrigger>
       </TabsList>
       <TabsContent value="hand-coded">
-        <TokensTable tokens={tokens} scannerOption={ScannerOptions.HandCoded} />
+        <TokensTable tokens={result.tokens} scannerOption={ScannerOptions.HandCoded} />
       </TabsContent>
       <TabsContent value="finite-automata">
-        <TokensTable tokens={tokens} scannerOption={ScannerOptions.FA} />
+        <TokensTable tokens={result.tokens} scannerOption={ScannerOptions.FA} />
       </TabsContent>
     </Tabs>
   );

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElectronAPI } from "@electron-toolkit/preload";
 import {
   SaveFileRequest,
@@ -8,7 +7,7 @@ import {
   UpdateTreeRequest,
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
-import { ResponseMessage } from "@shared/types";
+import { ResponseMessage, RequestMessage, NotificationMessage, RequestMethod } from "@shared/types";
 
 declare global {
   interface Window {
@@ -19,9 +18,9 @@ declare global {
     };
 
     lsp: {
-      request: (method: string, params: any) => Promise<void>;
-      onResponse: (callback: (value: string) => void) => any;
-      onMethod: (method: Method, callback: (value: ResponseMessage) => void) => any;
+      send: (message: RequestMessage | NotificationMessage) => Promise<void>;
+      onResponse: (callback: (value: string) => void) => void;
+      onMethod: (method: RequestMethod, callback: (value: ResponseMessage) => void) => void;
     };
 
     fs: {

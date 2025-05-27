@@ -10,8 +10,10 @@ import { FileOperations } from "@renderer/components/file-operation";
 import { TitleBarAction } from "./title-bar-action.component";
 import { CompilerPhase } from "@renderer/types";
 import { useOutput } from "@renderer/hooks/use-output";
+import { useLanguageServer } from "@renderer/hooks/use-langaugeserver";
 
 export const TitleBar: React.FC = () => {
+  const handleLsp = useLanguageServer();
   const { projectName, currentFile } = useCurrentProject();
   const [isPhasesOpen, setIsPhasesOpen] = useState(false);
   const { output, setPhase } = useOutput();
@@ -34,9 +36,13 @@ export const TitleBar: React.FC = () => {
         return;
       }
 
-      window.lsp.request("tokenize", {
-        scannerOption: 1,
-        textDocument: currentFile.path,
+      handleLsp({
+        messageType: "request",
+        method: "tokenize",
+        params: {
+          scannerOption: 1,
+          textDocument: currentFile.path,
+        },
       });
     }
   };

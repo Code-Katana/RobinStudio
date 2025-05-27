@@ -1,10 +1,29 @@
-export type Method = "initialize" | "tokenize";
+import { ParserOptions } from "./parse";
+import { ScannerOptions } from "./tokenizer";
 
 export type LSPArray = LSPAny[];
 
 export type LSPObject = { [key: string]: LSPAny };
 
 export type LSPAny = LSPObject | LSPArray | string | number | boolean | null;
+
+export type RequestMethod = "initialize" | "tokenize" | "parseAst";
+
+export type NotificationMethod =
+  | "textDocument/didOpen"
+  | "textDocument/didClose"
+  | "textDocument/didChange";
+
+export type Method = RequestMethod | NotificationMethod;
+
+export type MessageParams = {
+  initialize: InitializeParams;
+  tokenize: TokenizeCompilerActionParams;
+  parseAst: ParseCompilerActionParams;
+  "textDocument/didOpen": DidOpenTextDocumentParams;
+  "textDocument/didClose": DidCloseTextDocumentParams;
+  "textDocument/didChange": DidChangeTextDocumentParams;
+};
 
 export interface Message {
   jsonrpc: string;
@@ -13,7 +32,7 @@ export interface Message {
 export interface RequestMessage extends Message {
   id: number;
   method: Method;
-  params?: LSPArray | LSPObject;
+  params?: MessageParams[Method];
 }
 
 export interface ResponseMessage extends Message {
@@ -32,3 +51,49 @@ export interface NotificationMessage extends Message {
   method: string;
   params?: LSPArray | LSPObject;
 }
+
+// Initialize Params
+export type InitializeParams = {
+  processId?: number;
+  clientInfo: {
+    name: string;
+    version: string;
+  };
+};
+
+// Text Document Params
+export type DidOpenTextDocumentParams = {
+  textDocument: {
+    uri: string;
+    languageId: string;
+    version: number;
+    text: string;
+  };
+};
+
+export type DidCloseTextDocumentParams = {
+  textDocument: {
+    uri: string;
+  };
+};
+
+export type DidChangeTextDocumentParams = {
+  textDocument: {
+    uri: string;
+    version: number;
+  };
+  contentChanges: {
+    text: string;
+  }[];
+};
+
+// Compiler Actions
+export type TokenizeCompilerActionParams = {
+  scannerOption: ScannerOptions;
+  textDocument: string;
+};
+
+export type ParseCompilerActionParams = {
+  parseOption: ParserOptions;
+  textDocument: string;
+};

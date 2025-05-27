@@ -13,19 +13,28 @@ import {
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
 import { treeChannels } from "@shared/channels/file-system/tree-channels";
-import { FileEvent, Method, ResponseMessage } from "@shared/types";
+import {
+  FileEvent,
+  RequestMethod,
+  NotificationMessage,
+  RequestMessage,
+  ResponseMessage,
+} from "@shared/types";
 import path from "path";
 
 // Custom APIs for renderer
 const lsp = {
-  request: (method: string, params: any): Promise<void> =>
-    ipcRenderer.invoke(Channels.lsp.request, { method, params }),
+  send: (message: RequestMessage | NotificationMessage): Promise<void> =>
+    ipcRenderer.invoke(Channels.lsp.request, message),
 
   onResponse: (callback: (value: string) => void): any =>
     ipcRenderer.on(Channels.lsp.response, (_, value) => callback(value)),
 
-  onMethod: (method: Method, callback: (value: ResponseMessage) => void): any =>
-    ipcRenderer.on(Channels.lsp.methods[method], (_, value) => callback(value)),
+  onNotification: (callback: (value: NotificationMessage) => void): any =>
+    ipcRenderer.on(Channels.lsp.notification, (_, value) => callback(value)),
+
+  onMethod: (method: RequestMethod, callback: (value: ResponseMessage) => void): any =>
+    ipcRenderer.on(Channels.lsp.methods[method], (_, value: ResponseMessage) => callback(value)),
 };
 
 const fileSystem = {
