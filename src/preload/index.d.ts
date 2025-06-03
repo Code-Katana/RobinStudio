@@ -8,6 +8,7 @@ import {
   OpenFolderResponse,
   UpdateTreeRequest,
   UpdateTreeResponse,
+  DeleteFileRequest,
 } from "@shared/channels/file-system";
 
 declare global {
@@ -33,6 +34,7 @@ declare global {
       openFile: () => Promise<OpenFileResponse | null>;
       openFileByPath: (req: OpenFileRequest) => Promise<OpenFileResponse | null>;
       saveFile: (req: SaveFileRequest) => Promise<void>;
+      deleteFile: (req: DeleteFileRequest | null) => Promise<{ success: boolean; error?: string }>;
       createFolder: (req: CreateFolderRequest) => Promise<{ success: boolean; error?: string }>;
       openFolder: () => Promise<OpenFolderResponse | null>;
       updateTree: (req: UpdateTreeRequest) => Promise<UpdateTreeResponse>;

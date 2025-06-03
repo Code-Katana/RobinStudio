@@ -5,6 +5,7 @@ export const fileChannels: ChannelNames = {
   open: "file:open",
   save: "file:save",
   openByPath: "file:open-by-path",
+  delete: "file:delete",
 };
 
 export type CreateFileRequest = { path: string; name: string; content: string };
@@ -14,6 +15,8 @@ export type OpenFileRequest = { path: string | undefined };
 export type OpenFileResponse = { path: string; content?: string };
 
 export type SaveFileRequest = { path: string; content: string };
+
+export type DeleteFileRequest = { path: string | undefined };
 
 export type OpenFolderResponse = {
   folderName: string;
