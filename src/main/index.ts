@@ -16,6 +16,7 @@ import {
   SaveFileRequest,
   UpdateTreeRequest,
   UpdateTreeResponse,
+  DeleteFileRequest,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
 import chokidar from "chokidar";
@@ -184,6 +185,19 @@ ipcMain.handle(
 
 ipcMain.handle(Channels.fileChannels.save, async (_, request: SaveFileRequest) => {
   fs.writeFileSync(request.path, request.content, "utf-8");
+});
+
+ipcMain.handle(Channels.fileChannels.delete, async (_, request: DeleteFileRequest) => {
+  try {
+    if (!request.path) {
+      return null;
+    }
+    fs.unlinkSync(request.path);
+    return { success: true };
+  } catch (error) {
+    console.error(`Failed to delete file: ${error}`);
+    return { success: false, error: String(error) };
+  }
 });
 
 // handle folder actions

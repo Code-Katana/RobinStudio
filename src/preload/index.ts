@@ -11,6 +11,7 @@ import {
 import {
   CreateFileRequest,
   CreateFolderRequest,
+  DeleteFileRequest,
   OpenFileRequest,
   OpenFileResponse,
   OpenFolderResponse,
@@ -50,6 +51,9 @@ const fileSystem = {
 
   saveFile: (request: SaveFileRequest): Promise<void> =>
     ipcRenderer.invoke(Channels.fileChannels.save, request),
+
+  deleteFile: (request: DeleteFileRequest): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke(Channels.fileChannels.delete, request),
 
   createFolder: (request: CreateFolderRequest): Promise<{ success: boolean; error?: string }> =>
     ipcRenderer.invoke(Channels.folderChannels.create, request),

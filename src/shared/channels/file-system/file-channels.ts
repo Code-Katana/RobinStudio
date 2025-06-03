@@ -16,7 +16,7 @@ export type OpenFileResponse = { path: string; content?: string };
 
 export type SaveFileRequest = { path: string; content: string };
 
-export type DeleteFileRequest = { path: string; success: boolean };
+export type DeleteFileRequest = { path: string | undefined };
 
 export type OpenFolderResponse = {
   folderName: string;
