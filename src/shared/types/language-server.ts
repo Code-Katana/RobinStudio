@@ -7,7 +7,13 @@ export type LSPObject = { [key: string]: LSPAny };
 
 export type LSPAny = LSPObject | LSPArray | string | number | boolean | null;
 
-export type RequestMethod = "initialize" | "tokenize" | "parseAst";
+export type RequestMethod =
+  | "initialize"
+  | "compilerAction/tokenize"
+  | "compilerAction/parseAst"
+  | "compilerAction/ir"
+  | "compilerAction/optimization"
+  | "compilerAction/compile";
 
 export type NotificationMethod =
   | "textDocument/didOpen"
@@ -18,8 +24,11 @@ export type Method = RequestMethod | NotificationMethod;
 
 export type MessageParams = {
   initialize: InitializeParams;
-  tokenize: TokenizeCompilerActionParams;
-  parseAst: ParseCompilerActionParams;
+  "compilerAction/tokenize": TokenizeCompilerActionParams;
+  "compilerAction/parseAst": ParseCompilerActionParams;
+  "compilerAction/ir": IrCompilerActionParams;
+  "compilerAction/optimization": OptimizationCompilerActionParams;
+  "compilerAction/compile": CompileCompilerActionParams;
   "textDocument/didOpen": DidOpenTextDocumentParams;
   "textDocument/didClose": DidCloseTextDocumentParams;
   "textDocument/didChange": DidChangeTextDocumentParams;
@@ -94,6 +103,21 @@ export type TokenizeCompilerActionParams = {
 };
 
 export type ParseCompilerActionParams = {
-  parseOption: ParserOptions;
+  parserOption: ParserOptions;
   textDocument: string;
+};
+
+export type IrCompilerActionParams = {
+  textDocument: string;
+  outputDocument: string;
+};
+
+export type OptimizationCompilerActionParams = {
+  textDocument: string;
+  outputDocument: string;
+};
+
+export type CompileCompilerActionParams = {
+  textDocument: string;
+  outputDocument: string;
 };

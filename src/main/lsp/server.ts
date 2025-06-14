@@ -2,20 +2,14 @@
 import { Channels } from "@shared/channels";
 import { NotificationMessage, RequestMessage, RequestMethod, ResponseMessage } from "@shared/types";
 import { spawn } from "child_process";
-import { app, BrowserWindow, ipcMain } from "electron";
-import { join } from "path";
+import { BrowserWindow, ipcMain } from "electron";
 
 let lspServer: ReturnType<typeof spawn> | null = null;
 
 export function startServer(mainWindow: BrowserWindow): void {
   const methodByRequestId: Record<number, RequestMethod> = {};
 
-  const exePath =
-    process.env.NODE_ENV === "development"
-      ? join(app.getAppPath(), "resources", "bin", "rbn.exe")
-      : join(process.resourcesPath, "resources", "bin", "rbn.exe");
-
-  lspServer = spawn(exePath, ["--lsp"], {
+  lspServer = spawn("rbn", ["--lsp"], {
     stdio: ["pipe", "pipe", "inherit"],
   });
 

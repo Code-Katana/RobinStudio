@@ -2,15 +2,23 @@ import { useOutput } from "@renderer/hooks/use-output";
 import { TokensPanel } from "./tokens-panel.component";
 import { CompilerPhase } from "@renderer/types";
 import { ScrollArea } from "@renderer/components/ui/scroll-area";
+import { AstPanel } from "./ast-panel.component";
 
 export const OutputPanel = () => {
   const { output } = useOutput();
 
-  return (
-    <ScrollArea className="h-full">
-      {output.data === CompilerPhase.Tokenize ? <TokensPanel /> : <ComingSoon />}
-    </ScrollArea>
-  );
+  const renderPanel = () => {
+    switch (output.data) {
+      case CompilerPhase.Tokenize:
+        return <TokensPanel />;
+      case CompilerPhase.Parse:
+        return <AstPanel />;
+      default:
+        return <ComingSoon />;
+    }
+  };
+
+  return <ScrollArea className="h-full">{renderPanel()}</ScrollArea>;
 };
 
 const ComingSoon = () => {
