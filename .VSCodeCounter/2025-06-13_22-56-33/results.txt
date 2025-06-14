@@ -1,0 +1,247 @@
+Date : 2025-06-13 22:56:33
+Directory : g:\graduation-project\RobinStudio
+Total : 146 files,  17483 codes, 1380 comments, 861 blanks, all 19724 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          5 |     12,057 |          0 |          5 |     12,062 |
+| TypeScript JSX     |         77 |      3,740 |      1,323 |        551 |      5,614 |
+| TypeScript         |         53 |      1,336 |         53 |        263 |      1,652 |
+| JavaScript         |          3 |        129 |          1 |          5 |        135 |
+| PostCSS            |          1 |        109 |          2 |         15 |        126 |
+| YAML               |          3 |         54 |          0 |          5 |         59 |
+| Markdown           |          1 |         22 |          0 |         13 |         35 |
+| JSON with Comments |          1 |         15 |          0 |          1 |         16 |
+| HTML               |          1 |         15 |          1 |          2 |         18 |
+| Ignore             |          1 |          6 |          0 |          1 |          7 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                             | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                |        146 |     17,483 |      1,380 |        861 |     19,724 |
+| . (Files)                                                                                                                        |         15 |     12,328 |          1 |         32 |     12,361 |
+| src                                                                                                                              |        131 |      5,155 |      1,379 |        829 |      7,363 |
+| src\main                                                                                                                         |          3 |        322 |         25 |         64 |        411 |
+| src\main (Files)                                                                                                                 |          1 |        203 |         20 |         36 |        259 |
+| src\main\lib                                                                                                                     |          1 |         38 |          0 |         11 |         49 |
+| src\main\lsp                                                                                                                     |          1 |         81 |          5 |         17 |        103 |
+| src\preload                                                                                                                      |          2 |        109 |          9 |         21 |        139 |
+| src\renderer                                                                                                                     |        109 |      4,515 |      1,342 |        685 |      6,542 |
+| src\renderer (Files)                                                                                                             |          1 |         15 |          1 |          2 |         18 |
+| src\renderer\src                                                                                                                 |        108 |      4,500 |      1,341 |        683 |      6,524 |
+| src\renderer\src (Files)                                                                                                         |          4 |        242 |          3 |         34 |        279 |
+| src\renderer\src\assets                                                                                                          |         21 |        226 |         21 |         22 |        269 |
+| src\renderer\src\assets\icons                                                                                                    |         21 |        226 |         21 |         22 |        269 |
+| src\renderer\src\components                                                                                                      |         56 |      3,164 |      1,298 |        455 |      4,917 |
+| src\renderer\src\components\abstract-syntax-tree                                                                                 |          2 |         26 |          0 |          4 |         30 |
+| src\renderer\src\components\abstract-syntax-tree (Files)                                                                         |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\abstract-syntax-tree\components                                                                      |          1 |         25 |          0 |          3 |         28 |
+| src\renderer\src\components\app-sidebar                                                                                          |          4 |        438 |          0 |         37 |        475 |
+| src\renderer\src\components\app-sidebar (Files)                                                                                  |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\app-sidebar\components                                                                               |          2 |        430 |          0 |         34 |        464 |
+| src\renderer\src\components\app-sidebar\types                                                                                    |          1 |          7 |          0 |          2 |          9 |
+| src\renderer\src\components\draggable-tabs                                                                                       |          2 |         77 |          0 |         11 |         88 |
+| src\renderer\src\components\draggable-tabs (Files)                                                                               |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\draggable-tabs\components                                                                            |          1 |         76 |          0 |         10 |         86 |
+| src\renderer\src\components\editor-playground                                                                                    |          2 |         34 |          0 |          6 |         40 |
+| src\renderer\src\components\editor-playground (Files)                                                                            |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\editor-playground\components                                                                         |          1 |         33 |          0 |          5 |         38 |
+| src\renderer\src\components\file-finder                                                                                          |          5 |        127 |          0 |         21 |        148 |
+| src\renderer\src\components\file-finder (Files)                                                                                  |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\file-finder\components                                                                               |          4 |        126 |          0 |         20 |        146 |
+| src\renderer\src\components\file-operation                                                                                       |          2 |        214 |          4 |         23 |        241 |
+| src\renderer\src\components\file-operation (Files)                                                                               |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\file-operation\components                                                                            |          1 |        213 |          4 |         22 |        239 |
+| src\renderer\src\components\output-panel                                                                                         |          4 |        214 |         12 |         22 |        248 |
+| src\renderer\src\components\output-panel (Files)                                                                                 |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\output-panel\components                                                                              |          3 |        213 |         12 |         21 |        246 |
+| src\renderer\src\components\settings-tab                                                                                         |          2 |         61 |          0 |          5 |         66 |
+| src\renderer\src\components\settings-tab (Files)                                                                                 |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\settings-tab\components                                                                              |          1 |         60 |          0 |          4 |         64 |
+| src\renderer\src\components\tabs-bar                                                                                             |          2 |         42 |          0 |          7 |         49 |
+| src\renderer\src\components\tabs-bar (Files)                                                                                     |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\tabs-bar\components                                                                                  |          1 |         41 |          0 |          6 |         47 |
+| src\renderer\src\components\title-bar                                                                                            |         10 |        310 |         14 |         41 |        365 |
+| src\renderer\src\components\title-bar (Files)                                                                                    |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\title-bar\components                                                                                 |          9 |        309 |         14 |         40 |        363 |
+| src\renderer\src\components\title-bar\components (Files)                                                                         |          3 |        198 |         14 |         18 |        230 |
+| src\renderer\src\components\title-bar\components\toggles                                                                         |          6 |        111 |          0 |         22 |        133 |
+| src\renderer\src\components\tokens-table                                                                                         |          3 |         49 |          0 |          5 |         54 |
+| src\renderer\src\components\tokens-table (Files)                                                                                 |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\tokens-table\components                                                                              |          1 |         43 |          0 |          2 |         45 |
+| src\renderer\src\components\tokens-table\interfaces                                                                              |          1 |          5 |          0 |          2 |          7 |
+| src\renderer\src\components\ui                                                                                                   |         16 |      1,430 |      1,268 |        256 |      2,954 |
+| src\renderer\src\components\welcome-tab                                                                                          |          2 |        142 |          0 |         17 |        159 |
+| src\renderer\src\components\welcome-tab (Files)                                                                                  |          1 |          1 |          0 |          1 |          2 |
+| src\renderer\src\components\welcome-tab\components                                                                               |          1 |        141 |          0 |         16 |        157 |
+| src\renderer\src\editor                                                                                                          |          1 |          0 |          0 |          1 |          1 |
+| src\renderer\src\hooks                                                                                                           |         13 |        253 |          4 |         71 |        328 |
+| src\renderer\src\languages                                                                                                       |          1 |        161 |          2 |         17 |        180 |
+| src\renderer\src\lib                                                                                                             |          1 |         32 |          0 |         10 |         42 |
+| src\renderer\src\provider                                                                                                        |          1 |         13 |          0 |          3 |         16 |
+| src\renderer\src\stores                                                                                                          |          5 |        381 |         13 |         65 |        459 |
+| src\renderer\src\types                                                                                                           |          5 |         28 |          0 |          5 |         33 |
+| src\shared                                                                                                                       |         17 |        209 |          3 |         59 |        271 |
+| src\shared\channels                                                                                                              |          8 |         67 |          0 |         25 |         92 |
+| src\shared\channels (Files)                                                                                                      |          4 |         35 |          0 |          9 |         44 |
+| src\shared\channels\file-system                                                                                                  |          4 |         32 |          0 |         16 |         48 |
+| src\shared\protocols                                                                                                             |          2 |         31 |          0 |          7 |         38 |
+| src\shared\types                                                                                                                 |          7 |        111 |          3 |         27 |        141 |
++----------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                                                         | language           | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| g:\graduation-project\RobinStudio\.eslintrc.cjs                                                                                  | JavaScript         |         14 |          0 |          1 |         15 |
+| g:\graduation-project\RobinStudio\.prettierignore                                                                                | Ignore             |          6 |          0 |          1 |          7 |
+| g:\graduation-project\RobinStudio\.prettierrc.yaml                                                                               | YAML               |          6 |          0 |          3 |          9 |
+| g:\graduation-project\RobinStudio\README.md                                                                                      | Markdown           |         22 |          0 |         13 |         35 |
+| g:\graduation-project\RobinStudio\components.json                                                                                | JSON               |         20 |          0 |          1 |         21 |
+| g:\graduation-project\RobinStudio\dev-app-update.yml                                                                             | YAML               |          3 |          0 |          1 |          4 |
+| g:\graduation-project\RobinStudio\electron-builder.yml                                                                           | YAML               |         45 |          0 |          1 |         46 |
+| g:\graduation-project\RobinStudio\electron.vite.config.ts                                                                        | TypeScript         |         45 |          0 |          2 |         47 |
+| g:\graduation-project\RobinStudio\package-lock.json                                                                              | JSON               |     11,915 |          0 |          1 |     11,916 |
+| g:\graduation-project\RobinStudio\package.json                                                                                   | JSON               |         78 |          0 |          1 |         79 |
+| g:\graduation-project\RobinStudio\postcss.config.js                                                                              | JavaScript         |          6 |          0 |          1 |          7 |
+| g:\graduation-project\RobinStudio\src\main\index.ts                                                                              | TypeScript         |        203 |         20 |         36 |        259 |
+| g:\graduation-project\RobinStudio\src\main\lib\get-file-tree.ts                                                                  | TypeScript         |         38 |          0 |         11 |         49 |
+| g:\graduation-project\RobinStudio\src\main\lsp\server.ts                                                                         | TypeScript         |         81 |          5 |         17 |        103 |
+| g:\graduation-project\RobinStudio\src\preload\index.d.ts                                                                         | TypeScript         |         37 |          0 |          5 |         42 |
+| g:\graduation-project\RobinStudio\src\preload\index.ts                                                                           | TypeScript         |         72 |          9 |         16 |         97 |
+| g:\graduation-project\RobinStudio\src\renderer\index.html                                                                        | HTML               |         15 |          1 |          2 |         18 |
+| g:\graduation-project\RobinStudio\src\renderer\src\App.tsx                                                                       | TypeScript JSX     |        115 |          0 |         14 |        129 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\arrow.icon.tsx                                                   | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\collapseAll.icon.tsx                                             | TypeScript JSX     |         14 |          1 |          1 |         16 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\dark-theme.icon.tsx                                              | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\direction-horizontal.icon.tsx                                    | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\direction-vertical.icon.tsx                                      | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\index.ts                                                         | TypeScript         |         20 |          0 |          1 |         21 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\light-theme.icon.tsx                                             | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\newFile.icon.tsx                                                 | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\newFolder.icon.tsx                                               | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\openFile.icon.tsx                                                | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\openFolder.icon.tsx                                              | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\output-off.icon.tsx                                              | TypeScript JSX     |          7 |          1 |          1 |          9 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\output-on.icon.tsx                                               | TypeScript JSX     |         12 |          1 |          1 |         14 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\phases.icon.tsx                                                  | TypeScript JSX     |         10 |          2 |          2 |         14 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\refresh.icon.tsx                                                 | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\run.icon.tsx                                                     | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\search.icon.tsx                                                  | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\separator.icon.tsx                                               | TypeScript JSX     |         14 |          1 |          1 |         16 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\settings.icon.tsx                                                | TypeScript JSX     |         10 |          1 |          1 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\sidebar-off.icon.tsx                                             | TypeScript JSX     |          7 |          1 |          1 |          9 |
+| g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\sidebar-on.icon.tsx                                              | TypeScript JSX     |         12 |          1 |          1 |         14 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\abstract-syntax-tree\components\abstract-syntax-tree.component.tsx | TypeScript JSX     |         25 |          0 |          3 |         28 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\abstract-syntax-tree\index.ts                                      | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\components\app-sidebar.component.tsx                   | TypeScript JSX     |        283 |          0 |         19 |        302 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\components\file-tree.component.tsx                     | TypeScript JSX     |        147 |          0 |         15 |        162 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\index.ts                                               | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\types\app-sidebar.props.ts                             | TypeScript         |          7 |          0 |          2 |          9 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\draggable-tabs\components\draggable-tabs.component.tsx             | TypeScript JSX     |         76 |          0 |         10 |         86 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\draggable-tabs\index.ts                                            | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\editor-playground\components\editor-playground.component.tsx       | TypeScript JSX     |         33 |          0 |          5 |         38 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\editor-playground\index.ts                                         | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\file-finder.component.tsx                   | TypeScript JSX     |         42 |          0 |          6 |         48 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\search-button.component.tsx                 | TypeScript JSX     |         10 |          0 |          2 |         12 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\search-input.component.tsx                  | TypeScript JSX     |         29 |          0 |          5 |         34 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\search-results.component.tsx                | TypeScript JSX     |         45 |          0 |          7 |         52 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\index.ts                                               | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-operation\components\file-operations.component.tsx            | TypeScript JSX     |        213 |          4 |         22 |        239 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\file-operation\index.ts                                            | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\components\ast-panel.component.tsx                    | TypeScript JSX     |        139 |         12 |          8 |        159 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\components\output-panel.component.tsx                 | TypeScript JSX     |         29 |          0 |          5 |         34 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\components\tokens-panel.component.tsx                 | TypeScript JSX     |         45 |          0 |          8 |         53 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\index.ts                                              | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\settings-tab\components\settings-tab.component.tsx                 | TypeScript JSX     |         60 |          0 |          4 |         64 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\settings-tab\index.ts                                              | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\tabs-bar\components\tabs-bar.component.tsx                         | TypeScript JSX     |         41 |          0 |          6 |         47 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\tabs-bar\index.ts                                                  | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\title-bar-action.component.tsx                | TypeScript JSX     |         24 |          0 |          3 |         27 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\title-bar.component.tsx                       | TypeScript JSX     |        145 |         14 |         13 |        172 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\direction-toggle.component.tsx        | TypeScript JSX     |         21 |          0 |          5 |         26 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\index.ts                              | TypeScript         |          5 |          0 |          1 |          6 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\output-toggle.component.tsx           | TypeScript JSX     |         30 |          0 |          4 |         34 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\settings-toggle.component.tsx         | TypeScript JSX     |         13 |          0 |          3 |         16 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\sidebar-toggle.component.tsx          | TypeScript JSX     |         21 |          0 |          5 |         26 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\theme-toggle.component.tsx            | TypeScript JSX     |         21 |          0 |          4 |         25 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\window-actions.components.tsx                 | TypeScript JSX     |         29 |          0 |          2 |         31 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\index.ts                                                 | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\tokens-table\components\tokens-table.component.tsx                 | TypeScript JSX     |         43 |          0 |          2 |         45 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\tokens-table\index.ts                                              | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\tokens-table\interfaces\tokens-table.props.ts                      | TypeScript         |          5 |          0 |          2 |          7 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\button.tsx                                                      | TypeScript JSX     |         45 |          0 |          6 |         51 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\checkbox.tsx                                                    | TypeScript JSX     |         23 |          0 |          4 |         27 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\collapsible.tsx                                                 | TypeScript JSX     |          5 |          0 |          5 |         10 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\dialog.tsx                                                      | TypeScript JSX     |        108 |          0 |         12 |        120 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\dropdown-menu.tsx                                               | TypeScript JSX     |        169 |          0 |         17 |        186 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\input.tsx                                                       | TypeScript JSX     |         19 |          0 |          4 |         23 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\popover.tsx                                                     | TypeScript JSX     |         25 |          0 |          7 |         32 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\resizable.tsx                                                   | TypeScript JSX     |         35 |          0 |          6 |         41 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\scroll-area.tsx                                                 | TypeScript JSX     |         40 |          0 |          5 |         45 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\separator.tsx                                                   | TypeScript JSX     |         21 |          0 |          4 |         25 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\sheet.tsx                                                       | TypeScript JSX     |        106 |          0 |         15 |        121 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\sidebar.tsx                                                     | TypeScript JSX     |        674 |      1,268 |        143 |      2,085 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\skeleton.tsx                                                    | TypeScript JSX     |          5 |          0 |          3 |          8 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\table.tsx                                                       | TypeScript JSX     |         84 |          0 |         11 |         95 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\tabs.tsx                                                        | TypeScript JSX     |         47 |          0 |          7 |         54 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\ui\tooltip.tsx                                                     | TypeScript JSX     |         24 |          0 |          7 |         31 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\welcome-tab\components\welome-tab.component.tsx                    | TypeScript JSX     |        141 |          0 |         16 |        157 |
+| g:\graduation-project\RobinStudio\src\renderer\src\components\welcome-tab\index.ts                                               | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\editor\index.ts                                                               | TypeScript         |          0 |          0 |          1 |          1 |
+| g:\graduation-project\RobinStudio\src\renderer\src\env.d.ts                                                                      | TypeScript         |          0 |          1 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-app-settings.tsx                                                    | TypeScript JSX     |          2 |          0 |          2 |          4 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-app-theme.tsx                                                       | TypeScript JSX     |         23 |          0 |          8 |         31 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-current-project.tsx                                                 | TypeScript JSX     |          2 |          0 |          2 |          4 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-custom-context.tsx                                                  | TypeScript JSX     |         12 |          0 |          4 |         16 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-debounce-value.tsx                                                  | TypeScript JSX     |         13 |          0 |          5 |         18 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-editor-did-mount.tsx                                                | TypeScript JSX     |         27 |          2 |          9 |         38 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-file-watcher.tsx                                                    | TypeScript JSX     |         14 |          0 |          4 |         18 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-langaugeserver.tsx                                                  | TypeScript JSX     |         26 |          0 |          8 |         34 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-languageclient.tsx                                                  | TypeScript JSX     |         12 |          0 |          5 |         17 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-mobile.tsx                                                          | TypeScript JSX     |         18 |          1 |          9 |         28 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-output.tsx                                                          | TypeScript JSX     |          2 |          0 |          2 |          4 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-toggle-icon-state.tsx                                               | TypeScript JSX     |         17 |          0 |          7 |         24 |
+| g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-transform-tree.tsx                                                  | TypeScript JSX     |         85 |          1 |          6 |         92 |
+| g:\graduation-project\RobinStudio\src\renderer\src\index.css                                                                     | PostCSS            |        109 |          2 |         15 |        126 |
+| g:\graduation-project\RobinStudio\src\renderer\src\languages\wren.ts                                                             | TypeScript         |        161 |          2 |         17 |        180 |
+| g:\graduation-project\RobinStudio\src\renderer\src\lib\utils.ts                                                                  | TypeScript         |         32 |          0 |         10 |         42 |
+| g:\graduation-project\RobinStudio\src\renderer\src\main.tsx                                                                      | TypeScript JSX     |         18 |          0 |          4 |         22 |
+| g:\graduation-project\RobinStudio\src\renderer\src\provider\app-providers.tsx                                                    | TypeScript JSX     |         13 |          0 |          3 |         16 |
+| g:\graduation-project\RobinStudio\src\renderer\src\stores\app-settings.store.ts                                                  | TypeScript         |         27 |          0 |          4 |         31 |
+| g:\graduation-project\RobinStudio\src\renderer\src\stores\current-project.store.ts                                               | TypeScript         |        231 |          7 |         39 |        277 |
+| g:\graduation-project\RobinStudio\src\renderer\src\stores\output.store.ts                                                        | TypeScript         |         41 |          0 |          7 |         48 |
+| g:\graduation-project\RobinStudio\src\renderer\src\stores\recent-files.store.ts                                                  | TypeScript         |         35 |          3 |          7 |         45 |
+| g:\graduation-project\RobinStudio\src\renderer\src\stores\recent-folder.strore.ts                                                | TypeScript         |         47 |          3 |          8 |         58 |
+| g:\graduation-project\RobinStudio\src\renderer\src\types\comparison.ts                                                           | TypeScript         |          5 |          0 |          1 |          6 |
+| g:\graduation-project\RobinStudio\src\renderer\src\types\compiler-phases.ts                                                      | TypeScript         |          8 |          0 |          1 |          9 |
+| g:\graduation-project\RobinStudio\src\renderer\src\types\index.ts                                                                | TypeScript         |          4 |          0 |          1 |          5 |
+| g:\graduation-project\RobinStudio\src\renderer\src\types\measurement.ts                                                          | TypeScript         |          5 |          0 |          1 |          6 |
+| g:\graduation-project\RobinStudio\src\renderer\src\types\tree-node.ts                                                            | TypeScript         |          6 |          0 |          1 |          7 |
+| g:\graduation-project\RobinStudio\src\shared\channels\browser-window-actions.ts                                                  | TypeScript         |          6 |          0 |          2 |          8 |
+| g:\graduation-project\RobinStudio\src\shared\channels\channel-type.ts                                                            | TypeScript         |         11 |          0 |          3 |         14 |
+| g:\graduation-project\RobinStudio\src\shared\channels\file-system\file-channels.ts                                               | TypeScript         |         16 |          0 |          7 |         23 |
+| g:\graduation-project\RobinStudio\src\shared\channels\file-system\folder-channels.ts                                             | TypeScript         |          7 |          0 |          4 |         11 |
+| g:\graduation-project\RobinStudio\src\shared\channels\file-system\index.ts                                                       | TypeScript         |          3 |          0 |          1 |          4 |
+| g:\graduation-project\RobinStudio\src\shared\channels\file-system\tree-channels.ts                                               | TypeScript         |          6 |          0 |          4 |         10 |
+| g:\graduation-project\RobinStudio\src\shared\channels\index.ts                                                                   | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\shared\channels\language-server.ts                                                         | TypeScript         |         17 |          0 |          3 |         20 |
+| g:\graduation-project\RobinStudio\src\shared\protocols\asset-server.ts                                                           | TypeScript         |         15 |          0 |          3 |         18 |
+| g:\graduation-project\RobinStudio\src\shared\protocols\asset-url.ts                                                              | TypeScript         |         16 |          0 |          4 |         20 |
+| g:\graduation-project\RobinStudio\src\shared\types\channel-names.ts                                                              | TypeScript         |          1 |          0 |          1 |          2 |
+| g:\graduation-project\RobinStudio\src\shared\types\event-type.ts                                                                 | TypeScript         |          4 |          0 |          1 |          5 |
+| g:\graduation-project\RobinStudio\src\shared\types\hn-expression.ts                                                              | TypeScript         |          7 |          0 |          2 |          9 |
+| g:\graduation-project\RobinStudio\src\shared\types\index.ts                                                                      | TypeScript         |          6 |          0 |          1 |          7 |
+| g:\graduation-project\RobinStudio\src\shared\types\language-server.ts                                                            | TypeScript         |         78 |          3 |         19 |        100 |
+| g:\graduation-project\RobinStudio\src\shared\types\parse.ts                                                                      | TypeScript         |          4 |          0 |          1 |          5 |
+| g:\graduation-project\RobinStudio\src\shared\types\tokenizer.ts                                                                  | TypeScript         |         11 |          0 |          2 |         13 |
+| g:\graduation-project\RobinStudio\tailwind.config.js                                                                             | JavaScript         |        109 |          1 |          3 |        113 |
+| g:\graduation-project\RobinStudio\tsconfig.json                                                                                  | JSON with Comments |         15 |          0 |          1 |         16 |
+| g:\graduation-project\RobinStudio\tsconfig.node.json                                                                             | JSON               |         21 |          0 |          1 |         22 |
+| g:\graduation-project\RobinStudio\tsconfig.web.json                                                                              | JSON               |         23 |          0 |          1 |         24 |
+| Total                                                                                                                            |                    |     17,483 |      1,380 |        861 |     19,724 |
++----------------------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

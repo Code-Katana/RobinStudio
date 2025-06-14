@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useTransformTree } from "@renderer/hooks/use-transform-tree";
+import { TreeNode } from "@renderer/types";
 import Tree from "react-d3-tree";
 
-interface props {
-  ast: any;
+interface AbstractSyntaxTreeProps {
+  tree: TreeNode;
 }
 
-export const AbstractSyntaxTree: React.FC<props> = ({ ast }) => {
-  const tree = useTransformTree(ast);
-
+export const AbstractSyntaxTree: React.FC<AbstractSyntaxTreeProps> = ({ tree }) => {
   return (
     <section id="treeWrapper" className="h-svh bg-secondary">
       <Tree

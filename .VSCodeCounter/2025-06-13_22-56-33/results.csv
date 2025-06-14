@@ -1,0 +1,148 @@
+"filename", "language", "JavaScript", "JSON", "JSON with Comments", "TypeScript", "TypeScript JSX", "PostCSS", "HTML", "Markdown", "YAML", "Ignore", "comment", "blank", "total"
+"g:\graduation-project\RobinStudio\.eslintrc.cjs", "JavaScript", 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 15
+"g:\graduation-project\RobinStudio\.prettierignore", "Ignore", 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 1, 7
+"g:\graduation-project\RobinStudio\.prettierrc.yaml", "YAML", 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 3, 9
+"g:\graduation-project\RobinStudio\README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 13, 35
+"g:\graduation-project\RobinStudio\components.json", "JSON", 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 21
+"g:\graduation-project\RobinStudio\dev-app-update.yml", "YAML", 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 4
+"g:\graduation-project\RobinStudio\electron-builder.yml", "YAML", 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 1, 46
+"g:\graduation-project\RobinStudio\electron.vite.config.ts", "TypeScript", 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 2, 47
+"g:\graduation-project\RobinStudio\package-lock.json", "JSON", 0, 11915, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11916
+"g:\graduation-project\RobinStudio\package.json", "JSON", 0, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 79
+"g:\graduation-project\RobinStudio\postcss.config.js", "JavaScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"g:\graduation-project\RobinStudio\src\main\index.ts", "TypeScript", 0, 0, 0, 203, 0, 0, 0, 0, 0, 0, 20, 36, 259
+"g:\graduation-project\RobinStudio\src\main\lib\get-file-tree.ts", "TypeScript", 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 11, 49
+"g:\graduation-project\RobinStudio\src\main\lsp\server.ts", "TypeScript", 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 5, 17, 103
+"g:\graduation-project\RobinStudio\src\preload\index.d.ts", "TypeScript", 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 5, 42
+"g:\graduation-project\RobinStudio\src\preload\index.ts", "TypeScript", 0, 0, 0, 72, 0, 0, 0, 0, 0, 0, 9, 16, 97
+"g:\graduation-project\RobinStudio\src\renderer\index.html", "HTML", 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 1, 2, 18
+"g:\graduation-project\RobinStudio\src\renderer\src\App.tsx", "TypeScript JSX", 0, 0, 0, 0, 115, 0, 0, 0, 0, 0, 0, 14, 129
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\arrow.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\collapseAll.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 1, 1, 16
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\dark-theme.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\direction-horizontal.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\direction-vertical.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\index.ts", "TypeScript", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 1, 21
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\light-theme.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\newFile.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\newFolder.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\openFile.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\openFolder.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\output-off.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 1, 9
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\output-on.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 1, 1, 14
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\phases.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 2, 2, 14
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\refresh.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\run.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\search.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\separator.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 1, 1, 16
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\settings.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 1, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\sidebar-off.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 1, 9
+"g:\graduation-project\RobinStudio\src\renderer\src\assets\icons\sidebar-on.icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 1, 1, 14
+"g:\graduation-project\RobinStudio\src\renderer\src\components\abstract-syntax-tree\components\abstract-syntax-tree.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 3, 28
+"g:\graduation-project\RobinStudio\src\renderer\src\components\abstract-syntax-tree\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\components\app-sidebar.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 283, 0, 0, 0, 0, 0, 0, 19, 302
+"g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\components\file-tree.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 147, 0, 0, 0, 0, 0, 0, 15, 162
+"g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\app-sidebar\types\app-sidebar.props.ts", "TypeScript", 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"g:\graduation-project\RobinStudio\src\renderer\src\components\draggable-tabs\components\draggable-tabs.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 10, 86
+"g:\graduation-project\RobinStudio\src\renderer\src\components\draggable-tabs\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\editor-playground\components\editor-playground.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 5, 38
+"g:\graduation-project\RobinStudio\src\renderer\src\components\editor-playground\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\file-finder.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 6, 48
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\search-button.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 2, 12
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\search-input.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 5, 34
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\components\search-results.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 7, 52
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-finder\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-operation\components\file-operations.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 213, 0, 0, 0, 0, 0, 4, 22, 239
+"g:\graduation-project\RobinStudio\src\renderer\src\components\file-operation\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\components\ast-panel.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 139, 0, 0, 0, 0, 0, 12, 8, 159
+"g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\components\output-panel.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 5, 34
+"g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\components\tokens-panel.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 8, 53
+"g:\graduation-project\RobinStudio\src\renderer\src\components\output-panel\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\settings-tab\components\settings-tab.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 4, 64
+"g:\graduation-project\RobinStudio\src\renderer\src\components\settings-tab\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\tabs-bar\components\tabs-bar.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 6, 47
+"g:\graduation-project\RobinStudio\src\renderer\src\components\tabs-bar\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\title-bar-action.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 3, 27
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\title-bar.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 145, 0, 0, 0, 0, 0, 14, 13, 172
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\direction-toggle.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 5, 26
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\index.ts", "TypeScript", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\output-toggle.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 4, 34
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\settings-toggle.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 3, 16
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\sidebar-toggle.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 5, 26
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\toggles\theme-toggle.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 4, 25
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\components\window-actions.components.tsx", "TypeScript JSX", 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 2, 31
+"g:\graduation-project\RobinStudio\src\renderer\src\components\title-bar\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\tokens-table\components\tokens-table.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 2, 45
+"g:\graduation-project\RobinStudio\src\renderer\src\components\tokens-table\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\components\tokens-table\interfaces\tokens-table.props.ts", "TypeScript", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 2, 7
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\button.tsx", "TypeScript JSX", 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 6, 51
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\checkbox.tsx", "TypeScript JSX", 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 4, 27
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\collapsible.tsx", "TypeScript JSX", 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 5, 10
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 108, 0, 0, 0, 0, 0, 0, 12, 120
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\dropdown-menu.tsx", "TypeScript JSX", 0, 0, 0, 0, 169, 0, 0, 0, 0, 0, 0, 17, 186
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\input.tsx", "TypeScript JSX", 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 4, 23
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\popover.tsx", "TypeScript JSX", 0, 0, 0, 0, 25, 0, 0, 0, 0, 0, 0, 7, 32
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\resizable.tsx", "TypeScript JSX", 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 6, 41
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\scroll-area.tsx", "TypeScript JSX", 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 5, 45
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\separator.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 4, 25
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\sheet.tsx", "TypeScript JSX", 0, 0, 0, 0, 106, 0, 0, 0, 0, 0, 0, 15, 121
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\sidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 674, 0, 0, 0, 0, 0, 1268, 143, 2085
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\skeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 3, 8
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\table.tsx", "TypeScript JSX", 0, 0, 0, 0, 84, 0, 0, 0, 0, 0, 0, 11, 95
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\tabs.tsx", "TypeScript JSX", 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 7, 54
+"g:\graduation-project\RobinStudio\src\renderer\src\components\ui\tooltip.tsx", "TypeScript JSX", 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 7, 31
+"g:\graduation-project\RobinStudio\src\renderer\src\components\welcome-tab\components\welome-tab.component.tsx", "TypeScript JSX", 0, 0, 0, 0, 141, 0, 0, 0, 0, 0, 0, 16, 157
+"g:\graduation-project\RobinStudio\src\renderer\src\components\welcome-tab\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\editor\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"g:\graduation-project\RobinStudio\src\renderer\src\env.d.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-app-settings.tsx", "TypeScript JSX", 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 4
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-app-theme.tsx", "TypeScript JSX", 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 8, 31
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-current-project.tsx", "TypeScript JSX", 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 4
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-custom-context.tsx", "TypeScript JSX", 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 4, 16
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-debounce-value.tsx", "TypeScript JSX", 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 5, 18
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-editor-did-mount.tsx", "TypeScript JSX", 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 2, 9, 38
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-file-watcher.tsx", "TypeScript JSX", 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 4, 18
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-langaugeserver.tsx", "TypeScript JSX", 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 8, 34
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-languageclient.tsx", "TypeScript JSX", 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 5, 17
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-mobile.tsx", "TypeScript JSX", 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 1, 9, 28
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-output.tsx", "TypeScript JSX", 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 4
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-toggle-icon-state.tsx", "TypeScript JSX", 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 7, 24
+"g:\graduation-project\RobinStudio\src\renderer\src\hooks\use-transform-tree.tsx", "TypeScript JSX", 0, 0, 0, 0, 85, 0, 0, 0, 0, 0, 1, 6, 92
+"g:\graduation-project\RobinStudio\src\renderer\src\index.css", "PostCSS", 0, 0, 0, 0, 0, 109, 0, 0, 0, 0, 2, 15, 126
+"g:\graduation-project\RobinStudio\src\renderer\src\languages\wren.ts", "TypeScript", 0, 0, 0, 161, 0, 0, 0, 0, 0, 0, 2, 17, 180
+"g:\graduation-project\RobinStudio\src\renderer\src\lib\utils.ts", "TypeScript", 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 10, 42
+"g:\graduation-project\RobinStudio\src\renderer\src\main.tsx", "TypeScript JSX", 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 4, 22
+"g:\graduation-project\RobinStudio\src\renderer\src\provider\app-providers.tsx", "TypeScript JSX", 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 3, 16
+"g:\graduation-project\RobinStudio\src\renderer\src\stores\app-settings.store.ts", "TypeScript", 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 4, 31
+"g:\graduation-project\RobinStudio\src\renderer\src\stores\current-project.store.ts", "TypeScript", 0, 0, 0, 231, 0, 0, 0, 0, 0, 0, 7, 39, 277
+"g:\graduation-project\RobinStudio\src\renderer\src\stores\output.store.ts", "TypeScript", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 7, 48
+"g:\graduation-project\RobinStudio\src\renderer\src\stores\recent-files.store.ts", "TypeScript", 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 3, 7, 45
+"g:\graduation-project\RobinStudio\src\renderer\src\stores\recent-folder.strore.ts", "TypeScript", 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 3, 8, 58
+"g:\graduation-project\RobinStudio\src\renderer\src\types\comparison.ts", "TypeScript", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"g:\graduation-project\RobinStudio\src\renderer\src\types\compiler-phases.ts", "TypeScript", 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"g:\graduation-project\RobinStudio\src\renderer\src\types\index.ts", "TypeScript", 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 5
+"g:\graduation-project\RobinStudio\src\renderer\src\types\measurement.ts", "TypeScript", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"g:\graduation-project\RobinStudio\src\renderer\src\types\tree-node.ts", "TypeScript", 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"g:\graduation-project\RobinStudio\src\shared\channels\browser-window-actions.ts", "TypeScript", 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 2, 8
+"g:\graduation-project\RobinStudio\src\shared\channels\channel-type.ts", "TypeScript", 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"g:\graduation-project\RobinStudio\src\shared\channels\file-system\file-channels.ts", "TypeScript", 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 7, 23
+"g:\graduation-project\RobinStudio\src\shared\channels\file-system\folder-channels.ts", "TypeScript", 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 4, 11
+"g:\graduation-project\RobinStudio\src\shared\channels\file-system\index.ts", "TypeScript", 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1, 4
+"g:\graduation-project\RobinStudio\src\shared\channels\file-system\tree-channels.ts", "TypeScript", 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 4, 10
+"g:\graduation-project\RobinStudio\src\shared\channels\index.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\shared\channels\language-server.ts", "TypeScript", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 3, 20
+"g:\graduation-project\RobinStudio\src\shared\protocols\asset-server.ts", "TypeScript", 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 3, 18
+"g:\graduation-project\RobinStudio\src\shared\protocols\asset-url.ts", "TypeScript", 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"g:\graduation-project\RobinStudio\src\shared\types\channel-names.ts", "TypeScript", 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"g:\graduation-project\RobinStudio\src\shared\types\event-type.ts", "TypeScript", 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 5
+"g:\graduation-project\RobinStudio\src\shared\types\hn-expression.ts", "TypeScript", 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"g:\graduation-project\RobinStudio\src\shared\types\index.ts", "TypeScript", 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"g:\graduation-project\RobinStudio\src\shared\types\language-server.ts", "TypeScript", 0, 0, 0, 78, 0, 0, 0, 0, 0, 0, 3, 19, 100
+"g:\graduation-project\RobinStudio\src\shared\types\parse.ts", "TypeScript", 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 5
+"g:\graduation-project\RobinStudio\src\shared\types\tokenizer.ts", "TypeScript", 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 2, 13
+"g:\graduation-project\RobinStudio\tailwind.config.js", "JavaScript", 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 113
+"g:\graduation-project\RobinStudio\tsconfig.json", "JSON with Comments", 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16
+"g:\graduation-project\RobinStudio\tsconfig.node.json", "JSON", 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 22
+"g:\graduation-project\RobinStudio\tsconfig.web.json", "JSON", 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 24
+"Total", "-", 129, 12057, 15, 1336, 3740, 109, 15, 22, 54, 6, 1380, 861, 19724

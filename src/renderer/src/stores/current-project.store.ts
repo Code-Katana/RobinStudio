@@ -2,12 +2,14 @@ import { create } from "zustand";
 import { HnExpressionNode } from "@shared/types";
 import { useRecentFilesStore } from "./recent-files.store";
 import { useRecentFoldersStore } from "./recent-folder.strore";
+import { useLanguageServer } from "@renderer/hooks/use-langaugeserver";
 // import { getFileTree } from "@main/lib/get-file-tree";
 
 export type OpenFileType = {
   name: string;
   path: string;
   content: string;
+  version: number;
 };
 
 export type CurrentFolderType = {
@@ -50,10 +52,10 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
     if (!path || !tree) return;
     const state = get();
     const wasSettingsOpen = state.currentFile?.path === "settings";
-    const settingsFile = { name: "Settings", path: "settings", content: "" };
+    const settingsFile = { name: "Settings", path: "settings", content: "", version: 1 };
 
     const wasWelcomeOpen = state.currentFile?.path === "welcome";
-    const welcomeFile = { name: "Welcome", path: "welcome", content: "" };
+    const welcomeFile = { name: "Welcome", path: "welcome", content: "", version: 1 };
 
     addRecentFolder(projectName!, path);
     set({
@@ -86,7 +88,7 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
         return { currentFile: state.openedFiles.get(path) };
       }
 
-      const newFile: OpenFileType = { name, path, content };
+      const newFile: OpenFileType = { name, path, content, version: 1 };
       const updatedFiles = new Map(state.openedFiles);
       updatedFiles.set(path, newFile);
 
@@ -95,6 +97,19 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
 
       const parentPath = path.split("/").slice(0, -1).join("/");
       const parentName = parentPath.split("/").pop() || "";
+
+      window.lsp.send({
+        jsonrpc: "2.0",
+        method: "textDocument/didOpen",
+        params: {
+          textDocument: {
+            uri: newFile.path,
+            languageId: "rbn",
+            version: newFile.version,
+            text: newFile.content,
+          },
+        },
+      });
 
       return {
         openedFiles: updatedFiles,
@@ -123,6 +138,14 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
         }
       }
 
+      window.lsp.send({
+        jsonrpc: "2.0",
+        method: "textDocument/didClose",
+        params: {
+          textDocument: { uri: filePath },
+        },
+      });
+
       return {
         openedFiles: updatedFiles,
         currentFile: nextCurrentFile,
@@ -137,10 +160,23 @@ export const useCurrentProjectStore = create<CurrentProjectState>((set, get) => 
       const updatedFile: OpenFileType = {
         ...state.currentFile,
         content: value || "",
+        version: state.currentFile.version + 1,
       };
 
       const updatedFiles = new Map(state.openedFiles);
       updatedFiles.set(updatedFile.path, updatedFile);
+
+      window.lsp.send({
+        jsonrpc: "2.0",
+        method: "textDocument/didChange",
+        params: {
+          textDocument: {
+            uri: updatedFile.path,
+            version: updatedFile.version,
+          },
+          contentChanges: [{ text: value || "" }],
+        },
+      });
 
       return {
         openedFiles: updatedFiles,
