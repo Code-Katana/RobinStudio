@@ -9,8 +9,8 @@ type TokenizeResponse = {
 };
 
 export const TokensPanel: React.FC = () => {
-  const response = useLanguageClient("tokenize");
-
+  const response = useLanguageClient("compilerAction/tokenize");
+  // console.log("response", response);
   if (!response) {
     return (
       <div className="flex h-full w-full items-center justify-center">

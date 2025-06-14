@@ -31,7 +31,7 @@ export function startServer(mainWindow: BrowserWindow): void {
   });
 
   ipcMain.handle(Channels.lsp.request, async (_, message: RequestMessage | NotificationMessage) => {
-    console.log("message", message);
+    // console.log("message", message);
     if ("id" in message && message.id) {
       methodByRequestId[message.id] = message.method as RequestMethod;
       console.log("methodByRequestId", methodByRequestId);
@@ -46,7 +46,7 @@ function writeMessage(message: RequestMessage | NotificationMessage): Promise<vo
       return reject(new Error("lspServer stdin not writable"));
 
     const stringifiedMessage = JSON.stringify(message);
-    console.log("lsp-request", stringifiedMessage);
+    // console.log("lsp-request", stringifiedMessage);
 
     const flushed = lspServer.stdin.write(
       `Content-Length: ${stringifiedMessage.length}\r\n\r\n${stringifiedMessage}`,
@@ -73,7 +73,7 @@ function readMessage(
   const messageEnd = messageStart + Number(contentLength);
   const response: ResponseMessage = JSON.parse(message.slice(messageStart, messageEnd));
 
-  console.log("Received response:", response);
+  // console.log("Received response:", response);
 
   // Handle notifications (messages without an id)
   if (response.id === null || response.id === undefined) {

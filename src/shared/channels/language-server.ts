@@ -1,10 +1,10 @@
-import { Method } from "@shared/types";
+import { RequestMethod } from "@shared/types";
 
 type LspChannel = {
   request: "lsp:send";
   response: "lsp:receive";
   notification: "lsp:notification";
-  methods: Record<string, Method>;
+  methods: Record<RequestMethod, RequestMethod>;
 };
 
 export const lsp: LspChannel = {
@@ -13,7 +13,10 @@ export const lsp: LspChannel = {
   notification: "lsp:notification",
   methods: {
     initialize: "initialize",
-    tokenize: "tokenize",
-    parseAst: "parseAst",
+    "compilerAction/tokenize": "compilerAction/tokenize",
+    "compilerAction/parseAst": "compilerAction/parseAst",
+    "compilerAction/ir": "compilerAction/ir",
+    "compilerAction/optimization": "compilerAction/optimization",
+    "compilerAction/compile": "compilerAction/compile",
   },
 };

@@ -6,6 +6,7 @@ export const useLanguageClient = (method: RequestMethod) => {
 
   useEffect(() => {
     window.lsp.onMethod(method, (value: ResponseMessage) => {
+      console.log(value);
       setState(value);
     });
 
