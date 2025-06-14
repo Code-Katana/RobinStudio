@@ -73,7 +73,7 @@ function readMessage(
   const messageEnd = messageStart + Number(contentLength);
   const response: ResponseMessage = JSON.parse(message.slice(messageStart, messageEnd));
 
-  // console.log("Received response:", response);
+  console.log("Received response:", response);
 
   // Handle notifications (messages without an id)
   if (response.id === null || response.id === undefined) {

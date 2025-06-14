@@ -10,7 +10,7 @@ type TokenizeResponse = {
 
 export const TokensPanel: React.FC = () => {
   const response = useLanguageClient("compilerAction/tokenize");
-  // console.log("response", response);
+
   if (!response) {
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -32,8 +32,6 @@ export const TokensPanel: React.FC = () => {
       </div>
     );
   }
-
-  console.log("Tokens received:", result.tokens);
 
   return (
     <Tabs defaultValue="hand-coded" className="w-full">
