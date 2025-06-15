@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ElectronAPI } from "@electron-toolkit/preload";
-import { ParseRequest, ParseResponse, TokenizeRequest, TokenizeResponse } from "@shared/channels";
 import {
   SaveFileRequest,
   OpenFileRequest,
@@ -9,6 +7,7 @@ import {
   UpdateTreeRequest,
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
+import { ResponseMessage, RequestMessage, NotificationMessage, RequestMethod } from "@shared/types";
 
 declare global {
   interface Window {
@@ -18,14 +17,10 @@ declare global {
       maximizeWindow: () => void;
     };
 
-    api: {
-      tokenize: (request: TokenizeRequest) => Promise<TokenizeResponse>;
-      parse: (request: ParseRequest) => Promise<ParseResponse>;
-    };
-
     lsp: {
-      request: (method: string, params: any) => Promise<void>;
-      onResponse: (callback: (value: string) => void) => any;
+      send: (message: RequestMessage | NotificationMessage) => Promise<void>;
+      onResponse: (callback: (value: string) => void) => void;
+      onMethod: (method: RequestMethod, callback: (value: ResponseMessage) => void) => void;
     };
 
     fs: {
@@ -37,6 +32,7 @@ declare global {
       openFolder: () => Promise<OpenFolderResponse | null>;
       updateTree: (req: UpdateTreeRequest) => Promise<UpdateTreeResponse>;
       resolvePath: (...rest: string[]) => string;
+      launch: (exePath: string, args: string[] = []) => Promise<number | null>;
     };
 
     electronWatcher: {

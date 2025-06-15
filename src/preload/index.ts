@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI as electronToolkit } from "@electron-toolkit/preload";
-import {
-  Channels,
-  ParseRequest,
-  ParseResponse,
-  TokenizeRequest,
-  TokenizeResponse,
-} from "@shared/channels";
+import { Channels } from "@shared/channels";
 import {
   CreateFileRequest,
   CreateFolderRequest,
@@ -19,24 +13,28 @@ import {
   UpdateTreeResponse,
 } from "@shared/channels/file-system";
 import { treeChannels } from "@shared/channels/file-system/tree-channels";
-import { FileEvent } from "@shared/types";
+import {
+  FileEvent,
+  RequestMethod,
+  NotificationMessage,
+  RequestMessage,
+  ResponseMessage,
+} from "@shared/types";
 import path from "path";
 
 // Custom APIs for renderer
-const api = {
-  tokenize: (request: TokenizeRequest): Promise<TokenizeResponse> =>
-    ipcRenderer.invoke(Channels.wrenLang.tokenize, request),
-
-  parse: (request: ParseRequest): Promise<ParseResponse> =>
-    ipcRenderer.invoke(Channels.wrenLang.parse, request),
-};
-
 const lsp = {
-  request: (method: string, params: any): Promise<void> =>
-    ipcRenderer.invoke("lsp-request", { method, params }),
+  send: (message: RequestMessage | NotificationMessage): Promise<void> =>
+    ipcRenderer.invoke(Channels.lsp.request, message),
 
   onResponse: (callback: (value: string) => void): any =>
-    ipcRenderer.on("lsp-response", (_, value) => callback(value)),
+    ipcRenderer.on(Channels.lsp.response, (_, value) => callback(value)),
+
+  onNotification: (callback: (value: NotificationMessage) => void): any =>
+    ipcRenderer.on(Channels.lsp.notification, (_, value) => callback(value)),
+
+  onMethod: (method: RequestMethod, callback: (value: ResponseMessage) => void): any =>
+    ipcRenderer.on(Channels.lsp.methods[method], (_, value: ResponseMessage) => callback(value)),
 };
 
 const fileSystem = {
@@ -61,6 +59,9 @@ const fileSystem = {
     ipcRenderer.invoke(treeChannels.updateTree, request),
 
   resolvePath: (...rest: string[]): string => path.resolve(...rest),
+
+  launch: (exePath: string, args: string[] = []): Promise<number | null> =>
+    ipcRenderer.invoke(Channels.fileChannels.launchExecutable, { exePath, args }),
 };
 
 const electronAPI = {
@@ -82,7 +83,7 @@ const electronWatcher = {
 if (process.contextIsolated) {
   try {
     // contextBridge.exposeInMainWorld("electronToolkit", electronToolkit);
-    contextBridge.exposeInMainWorld("api", api);
+    // contextBridge.exposeInMainWorld("api", api);
     contextBridge.exposeInMainWorld("lsp", lsp);
     contextBridge.exposeInMainWorld("electron", electronAPI);
     contextBridge.exposeInMainWorld("fs", fileSystem);

@@ -5,7 +5,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "@resources/icon.png?asset";
 import { AssetUrl } from "@shared/protocols/asset-url";
 import { AssetServer } from "@shared/protocols/asset-server";
-import { Channels, ParseResponse, TokenizeResponse } from "@shared/channels";
+import { Channels } from "@shared/channels";
 import {
   CreateFileRequest,
   CreateFolderRequest,
@@ -20,6 +20,7 @@ import {
 import { getFileTree } from "@main/lib/get-file-tree";
 import chokidar from "chokidar";
 import { startServer } from "./lsp/server";
+import { launchExecutable } from "./lib/launch-executable";
 
 let mainWindow: BrowserWindow | null;
 
@@ -35,6 +36,7 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
+      // devTools: process.env.NODE_ENV === "development",
     },
   });
 
@@ -113,15 +115,6 @@ app.on("window-all-closed", () => {
   }
 });
 
-// Wren Compiler Actions
-ipcMain.handle(Channels.wrenLang.tokenize, async (): Promise<TokenizeResponse> => {
-  return { tokens: [] };
-});
-
-ipcMain.handle(Channels.wrenLang.parse, async (): Promise<ParseResponse> => {
-  return { ast: [] };
-});
-
 // Browser Window Actions
 ipcMain.on(Channels.browserWindowActions.closeWindow, () => {
   mainWindow?.close();
@@ -141,7 +134,6 @@ ipcMain.on(Channels.browserWindowActions.maximizeWindow, () => {
 });
 
 // File Feature Actions
-
 ipcMain.handle(Channels.fileChannels.create, async (_, request: CreateFileRequest) => {
   const { path, name, content } = request;
   const fullPath = join(path, name);
@@ -185,6 +177,13 @@ ipcMain.handle(
 ipcMain.handle(Channels.fileChannels.save, async (_, request: SaveFileRequest) => {
   fs.writeFileSync(request.path, request.content, "utf-8");
 });
+
+ipcMain.handle(
+  Channels.fileChannels.launchExecutable,
+  async (_, request: { exePath: string; args: string[] }): Promise<number | null> => {
+    return launchExecutable(request.exePath, request.args);
+  },
+);
 
 // handle folder actions
 ipcMain.handle(

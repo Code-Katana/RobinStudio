@@ -8,12 +8,14 @@ import {
   TableRow,
 } from "@renderer/components/ui/table";
 import { ITokensTableProps } from "../interfaces/tokens-table.props";
+import { ScannerOptions } from "@shared/types";
 
 export const TokensTable = ({ tokens, scannerOption }: ITokensTableProps): JSX.Element => {
   return (
     <Table className="mb-[80svh]">
       <TableCaption>
-        Using {scannerOption} scanner (Total {tokens.length} tokens).
+        Using {scannerOption === ScannerOptions.HandCoded ? "Hand-coded" : "Finite Automata"}{" "}
+        scanner (Total {tokens.length} tokens).
       </TableCaption>
       <TableHeader>
         <TableRow>

@@ -2,6 +2,7 @@ import {
   wrenLanguageConfig,
   WrenStudioTheme,
   WrenStudioLightTheme,
+  wrenTokensProvider,
 } from "@renderer/languages/wren";
 import { editor } from "monaco-editor";
 import { Monaco } from "@monaco-editor/react";
@@ -21,6 +22,7 @@ export const useEditorDidMount = (params: useEditorDidMountParams): useEditorDid
   const handler = (ref: editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
     monacoInstance.languages.register({ id: "wren" });
     monacoInstance.languages.setLanguageConfiguration("wren", wrenLanguageConfig);
+    monacoInstance.languages.setMonarchTokensProvider("wren", wrenTokensProvider);
 
     // Register both themes
     monacoInstance.editor.defineTheme("wren-studio", WrenStudioTheme);
