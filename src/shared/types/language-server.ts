@@ -114,7 +114,8 @@ export type IrCompilerActionParams = {
 
 export type OptimizationCompilerActionParams = {
   textDocument: string;
-  outputDocument: string;
+  beforeDocument: string;
+  afterDocument: string;
 };
 
 export type CompileCompilerActionParams = {

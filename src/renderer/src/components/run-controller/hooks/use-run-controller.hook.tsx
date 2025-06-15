@@ -48,7 +48,8 @@ export const useRunController = () => {
         method: "compilerAction/optimization",
         params: {
           textDocument: path,
-          outputDocument: path.slice(0, path.lastIndexOf(".rbn")) + ".optimized.ll",
+          beforeDocument: path.slice(0, path.lastIndexOf(".rbn")) + ".ir.ll",
+          afterDocument: path.slice(0, path.lastIndexOf(".rbn")) + ".optimized.ll",
         },
       });
     } else if (current === CompilerPhase.Compile) {

@@ -116,7 +116,7 @@ export const llvmIrTokensProvider: monaco.languages.IMonarchLanguage = {
 
   operators: ["=", "->", "*", "&"],
 
-  symbols: /[=><!~?:&|+\-*\\/^%]+/,
+  symbols: /[=><!~?,:&|+\-*\\/^%]+/,
 
   tokenizer: {
     root: [
