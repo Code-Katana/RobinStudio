@@ -59,6 +59,9 @@ const fileSystem = {
     ipcRenderer.invoke(treeChannels.updateTree, request),
 
   resolvePath: (...rest: string[]): string => path.resolve(...rest),
+
+  launch: (exePath: string, args: string[] = []): Promise<number | null> =>
+    ipcRenderer.invoke(Channels.fileChannels.launchExecutable, { exePath, args }),
 };
 
 const electronAPI = {

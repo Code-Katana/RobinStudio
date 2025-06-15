@@ -32,6 +32,7 @@ declare global {
       openFolder: () => Promise<OpenFolderResponse | null>;
       updateTree: (req: UpdateTreeRequest) => Promise<UpdateTreeResponse>;
       resolvePath: (...rest: string[]) => string;
+      launch: (exePath: string, args: string[] = []) => Promise<number | null>;
     };
 
     electronWatcher: {

@@ -5,6 +5,7 @@ export const fileChannels: ChannelNames = {
   open: "file:open",
   save: "file:save",
   openByPath: "file:open-by-path",
+  launchExecutable: "file:launch-executable",
 };
 
 export type CreateFileRequest = { path: string; name: string; content: string };

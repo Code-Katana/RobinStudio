@@ -20,6 +20,7 @@ import {
 import { getFileTree } from "@main/lib/get-file-tree";
 import chokidar from "chokidar";
 import { startServer } from "./lsp/server";
+import { launchExecutable } from "./lib/launch-executable";
 
 let mainWindow: BrowserWindow | null;
 
@@ -176,6 +177,13 @@ ipcMain.handle(
 ipcMain.handle(Channels.fileChannels.save, async (_, request: SaveFileRequest) => {
   fs.writeFileSync(request.path, request.content, "utf-8");
 });
+
+ipcMain.handle(
+  Channels.fileChannels.launchExecutable,
+  async (_, request: { exePath: string; args: string[] }): Promise<number | null> => {
+    return launchExecutable(request.exePath, request.args);
+  },
+);
 
 // handle folder actions
 ipcMain.handle(
