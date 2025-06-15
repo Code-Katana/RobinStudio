@@ -16,6 +16,8 @@ import {
   SaveFileRequest,
   UpdateTreeRequest,
   UpdateTreeResponse,
+  DeleteFolderRequest,
+  DeleteFolderResponse,
 } from "@shared/channels/file-system";
 import { getFileTree } from "@main/lib/get-file-tree";
 import chokidar from "chokidar";
@@ -256,6 +258,28 @@ ipcMain.handle(Channels.folderChannels.open, async (): Promise<OpenFolderRespons
 
   return null;
 });
+
+ipcMain.handle(
+  Channels.folderChannels.delete,
+  async (_, request: DeleteFolderRequest): Promise<DeleteFolderResponse> => {
+    try {
+      if (!request.path) {
+        return { success: false, error: "Path is required" };
+      }
+
+      fs.rmSync(request.path, { recursive: true, force: true });
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting folder:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+      };
+    }
+  },
+);
+
+// Tree Feature Actions
 
 ipcMain.handle(
   Channels.treeChannels.updateTree,

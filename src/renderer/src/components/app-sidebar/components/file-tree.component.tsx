@@ -45,7 +45,7 @@ export const FileTree = ({
   collapseAll,
   setCollapseAll,
 }: FileTreeProps) => {
-  const { currentFolder, onSetCurrentFolder } = useCurrentProjectStore();
+  const { currentFolder, onSetCurrentFolder, rootPath } = useCurrentProjectStore();
   const [isOpen, setIsOpen] = useState(false);
   const [node, children] = item;
   const { name, path } = node;
@@ -89,9 +89,34 @@ export const FileTree = ({
     setIsNewFolderDialogOpen(true);
   };
 
-  const handleDelete = async () => {
-    // TODO: Implement folder deletion
-    console.log("Delete folder:", path);
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!window.confirm(`Are you sure you want to delete the folder "${name}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await window.fs.deleteFolder({ path });
+      if (!response.success) {
+        throw new Error(response.error || "Failed to delete folder");
+      }
+
+      const parentPath = path.split("/").slice(0, -1).join("/");
+      const parentName = parentPath.split("/").pop() || "";
+
+      onSetCurrentFolder(parentName, parentPath);
+      console.log("Folder deleted:", response);
+
+      if (rootPath) {
+        const { tree } = await window.fs.updateTree({ path: rootPath });
+        useCurrentProjectStore.setState({ fileTree: tree });
+      }
+    } catch (error) {
+      console.error("Failed to delete folder:", error);
+      alert("Failed to delete folder. Please try again.");
+    }
   };
 
   return (

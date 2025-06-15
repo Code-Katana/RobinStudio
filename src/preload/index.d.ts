@@ -6,6 +6,7 @@ import {
   OpenFolderResponse,
   UpdateTreeRequest,
   UpdateTreeResponse,
+  DeleteFolderRequest,
 } from "@shared/channels/file-system";
 import { ResponseMessage, RequestMessage, NotificationMessage, RequestMethod } from "@shared/types";
 
@@ -30,6 +31,7 @@ declare global {
       saveFile: (req: SaveFileRequest) => Promise<void>;
       createFolder: (req: CreateFolderRequest) => Promise<{ success: boolean; error?: string }>;
       openFolder: () => Promise<OpenFolderResponse | null>;
+      deleteFolder: (req: DeleteFolderRequest) => Promise<{ success: boolean; error?: string }>;
       updateTree: (req: UpdateTreeRequest) => Promise<UpdateTreeResponse>;
       resolvePath: (...rest: string[]) => string;
       launch: (exePath: string, args: string[] = []) => Promise<number | null>;
