@@ -2,6 +2,7 @@ import { CompilerPhase } from "@renderer/types";
 import { useOutput } from "@renderer/hooks/use-output";
 import { TokensPanel } from "../components/panels/tokens-panel.component";
 import { AstPanel } from "../components/panels/ast-panel.component";
+import { IntermediateRepresentationPanel } from "../components/panels/ir-panel.component";
 
 export const usePanel = (): React.ReactNode => {
   const { output } = useOutput();
@@ -12,6 +13,9 @@ export const usePanel = (): React.ReactNode => {
 
     case CompilerPhase.Parse:
       return <AstPanel />;
+
+    case CompilerPhase.IrGeneration:
+      return <IntermediateRepresentationPanel />;
   }
 
   return <></>;

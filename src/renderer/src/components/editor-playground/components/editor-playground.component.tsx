@@ -3,6 +3,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { useMemo, useRef } from "react";
 import { useCurrentProject } from "@renderer/hooks/use-current-project";
 import { useEditorDidMount } from "@renderer/hooks/use-editor-did-mount";
+
 export const EditorPlayground: React.FC = () => {
   const { currentFile, onUpdateCurrentFile } = useCurrentProject();
 
